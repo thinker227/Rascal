@@ -111,4 +111,17 @@ public readonly partial struct Result<T>
             return new(new ExceptionError(e));
         }
     }
+
+    /// <summary>
+    /// Maps the error in the result if it contains one
+    /// and returns a new result containing the mapped error.
+    /// Otherwise, returns the current result.
+    /// </summary>
+    /// <param name="mapping">The function used to map the error.</param>
+    /// <returns>A result which contains either the mapped error
+    /// or the value of the original result.</returns>
+    public Result<T> MapError(Func<Error, Error> mapping) =>
+        !hasValue
+            ? new(mapping(Error))
+            : this;
 }
