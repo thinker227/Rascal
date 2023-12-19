@@ -8,6 +8,8 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="mapping">The function used to map the value.</param>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
+    /// <returns>A new result containing either the mapped value
+    /// or the error of the original result.</returns>
     public Result<TNew> Map<TNew>(Func<T, TNew> mapping) =>
         hasValue
             ? new(mapping(value!))
@@ -19,7 +21,8 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="mapping">The function used to map the value to a new result.</param>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
-    /// <returns></returns>
+    /// <returns>A result which is either the mapped result
+    /// or a new result containing the error of the original result.</returns>
     public Result<TNew> Bind<TNew>(Func<T, Result<TNew>> mapping) =>
         hasValue
             ? mapping(value!)
@@ -45,7 +48,10 @@ public readonly partial struct Result<T>
     /// <param name="mapping">The function used to map the value to a new result.</param>
     /// <typeparam name="TOther">The type of the intermediate value.</typeparam>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
-    /// <returns>The result of</returns>
+    /// <returns>A result constructed by applying <paramref name="mapping"/>
+    /// onto the value contained in the result returned by <paramref name="other"/>
+    /// as well as the value in the original result,
+    /// or a new result containing the error of the original or intermediate results.</returns>
     public Result<TNew> SelectMany<TOther, TNew>(
         Func<T, Result<TOther>> other,
         Func<T, TOther, TNew> mapping)
@@ -68,6 +74,9 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="mapping">The function used to map the value.</param>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
+    /// <returns>A new result containing either the mapped value,
+    /// the exception thrown by <paramref name="mapping"/> wrapped in an <see cref="ExceptionError"/>,
+    /// or the error of the original result.</returns>
     public Result<TNew> TryMap<TNew>(Func<T, TNew> mapping)
     {
         try
@@ -88,7 +97,9 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="mapping">The function used to map the value to a new result.</param>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
-    /// <returns></returns>
+    /// <returns>A result which is either the mapped result,
+    /// the exception thrown by <paramref name="mapping"/> wrapped in an <see cref="ExceptionError"/>,
+    /// or a new result containing the error of the original result.</returns>
     public Result<TNew> TryBind<TNew>(Func<T, Result<TNew>> mapping)
     {
         try
