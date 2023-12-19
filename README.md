@@ -48,7 +48,8 @@ The above expression for `val` can alternatively be written using query syntax:
 var val =
     from a in num
     from b in den
-    select DivSafe(a, b);
+    from x in DivSafe(a, b)
+    select x;
 ```
 
 ### Various utilities
