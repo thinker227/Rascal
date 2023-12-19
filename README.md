@@ -34,7 +34,7 @@ Another operation, quite similar to mapping, exists, known as a "bind". A bind o
 var num = ParseR<int>(Console.ReadLine()!);
 var den = ParseR<int>(Console.ReadLine()!);
 
-var val = num.Bind(a => den
+var val = num.Then(a => den
     .Map(b => DiveSafe(a, b)));
 
 static Result<int> DivSafe(int a, int b) =>

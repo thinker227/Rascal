@@ -23,7 +23,7 @@ public readonly partial struct Result<T>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
     /// <returns>A result which is either the mapped result
     /// or a new result containing the error of the original result.</returns>
-    public Result<TNew> Bind<TNew>(Func<T, Result<TNew>> mapping) =>
+    public Result<TNew> Then<TNew>(Func<T, Result<TNew>> mapping) =>
         hasValue
             ? mapping(value!)
             : new(Error);
@@ -32,9 +32,9 @@ public readonly partial struct Result<T>
     public Result<TNew> Select<TNew>(Func<T, TNew> mapping) =>
         Map(mapping);
 
-    /// <inheritdoc cref="Bind{TNew}"/>
+    /// <inheritdoc cref="Then{TNew}"/>
     public Result<TNew> SelectMany<TNew>(Func<T, Result<TNew>> mapping) =>
-        Bind(mapping);
+        Then(mapping);
 
     /// <summary>
     /// Maps the value of the result to an intermediate result using a mapping function,
@@ -100,11 +100,11 @@ public readonly partial struct Result<T>
     /// <returns>A result which is either the mapped result,
     /// the exception thrown by <paramref name="mapping"/> wrapped in an <see cref="ExceptionError"/>,
     /// or a new result containing the error of the original result.</returns>
-    public Result<TNew> TryBind<TNew>(Func<T, Result<TNew>> mapping)
+    public Result<TNew> ThenTry<TNew>(Func<T, Result<TNew>> mapping)
     {
         try
         {
-            return Bind(mapping);
+            return Then(mapping);
         }
         catch (Exception e)
         {

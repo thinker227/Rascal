@@ -9,13 +9,13 @@ public static class ResultExtensions
     /// Takes a result containing another result and un-nests the inner result.
     /// </summary>
     /// <remarks>
-    /// This operation is the same as applying <see cref="Result{T}.Bind{TNew}"/>
-    /// with the identity function, eg. <c>r.Bind(x => x)</c>.
+    /// This operation is the same as applying <see cref="Result{T}.Then{TNew}"/>
+    /// with the identity function, eg. <c>r.Then(x => x)</c>.
     /// </remarks>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <param name="result">The result to un-nest.</param>
     public static Result<T> Unnest<T>(this Result<Result<T>> result) =>
-        result.Bind(x => x);
+        result.Then(x => x);
 
     /// <summary>
     /// Turns a nullable value into a result containing a non-null value
