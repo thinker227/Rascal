@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Package properties -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <!-- Package metadata -->
+  <PropertyGroup>
+    <PackageId>Rascal</PackageId>
+    <PackageVersion>1.0.0-pre</PackageVersion>
+    <Description>
+      A simple and lightweight result type implementation for C#.
+    </Description>
+    <Tags>result monad functional utility</Tags>
+    <Authors>thinker227</Authors>
+    <Copyright>thinker227 2023</Copyright>
+    <License>LICENSE.txt</License>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/thinker227/Rascal</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- Include additional files -->
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../../LICENSE.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+
+</Project>
