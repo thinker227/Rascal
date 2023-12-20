@@ -73,24 +73,31 @@ public class UtilityTests
     }
 
     [Fact]
-    public void ErrorIf()
+    public void Validate()
     {
         {
-            var r = Ok(2).Validate(_ => true, _ => "error");
+            var r = Ok(2).Validate(_ => false);
+
+            r.hasValue.ShouldBeFalse();
+            r.error?.Message.ShouldNotBeNull();
+        }
+
+        {
+            var r = Ok(2).Validate(_ => false, _ => "error");
             
             r.hasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error");
         }
 
         {
-            var r = Ok(2).Validate(_ => false, _ => "error");
+            var r = Ok(2).Validate(_ => true, _ => "error");
 
             r.hasValue.ShouldBeTrue();
             r.value.ShouldBe(2);
         }
 
         {
-            var r = Err<int>("error a").Validate(_ => true, _ => "error b");
+            var r = Err<int>("error a").Validate(_ => false, _ => "error b");
 
             r.hasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error a");
