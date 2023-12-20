@@ -55,11 +55,11 @@ public readonly partial struct Result<T>
     /// if the value matches <paramref name="predicate"/>, otherwise an
     /// error produced by <paramref name="getError"/>.
     /// If the original result does not contain a value, that result will be returned.</returns>
-    public Result<T> ErrorIf(Func<T, bool> predicate, Func<T, Error> getError) =>
+    public Result<T> Validate(Func<T, bool> predicate, Func<T, Error> getError) =>
         hasValue
             ? predicate(value!)
-                ? new(getError(value!))
-                : this
+                ? this
+                : new(getError(value!))
             : new(Error);
 
     /// <summary>

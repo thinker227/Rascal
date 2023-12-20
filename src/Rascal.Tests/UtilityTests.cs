@@ -76,21 +76,21 @@ public class UtilityTests
     public void ErrorIf()
     {
         {
-            var r = Ok(2).ErrorIf(_ => true, _ => "error");
+            var r = Ok(2).Validate(_ => true, _ => "error");
             
             r.hasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error");
         }
 
         {
-            var r = Ok(2).ErrorIf(_ => false, _ => "error");
+            var r = Ok(2).Validate(_ => false, _ => "error");
 
             r.hasValue.ShouldBeTrue();
             r.value.ShouldBe(2);
         }
 
         {
-            var r = Err<int>("error a").ErrorIf(_ => true, _ => "error b");
+            var r = Err<int>("error a").Validate(_ => true, _ => "error b");
 
             r.hasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error a");

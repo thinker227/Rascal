@@ -74,8 +74,8 @@ var result = Try(() => File.ReadAllText(path));
 Validate inputs directly inside a result expression chain, replacing the original value with an error if the predicate fails.
 ```cs
 var input = ParseR<int>(Console.ReadLine()!)
-    .ErrorIf(
-        x => x < 0,
+    .Validate(
+        x => x >= 0,
         x => $"Input {x} is less than 0.")
 ```
 
