@@ -35,8 +35,23 @@ public sealed class StringError(string message) : Error
 /// <summary>
 /// An error which is constructed from an exception.
 /// </summary>
-/// <param name="exception">The exception to display.</param>
+/// <param name="exception">The exception in the error.</param>
 public sealed class ExceptionError(Exception exception) : Error
 {
-    public override string Message => exception.Message;
+    public Exception Exception { get; } = exception;
+
+    /// <summary>
+    /// The exception in the error.
+    /// </summary>
+    public override string Message => Exception.Message;
+}
+
+/// <summary>
+/// An error which is a combination of other errors.
+/// </summary>
+public sealed class AggregateError(IReadOnlyCollection<Error> errors) : Error
+{
+    public IReadOnlyCollection<Error> Errors { get; } = errors;
+
+    public override string Message => string.Join("\n", Errors.Select(x => x.Message));
 }
