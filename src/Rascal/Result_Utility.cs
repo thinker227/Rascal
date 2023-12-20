@@ -10,6 +10,24 @@ public readonly partial struct Result<T>
         new(value);
 
     /// <summary>
+    /// Combines the result with another result.
+    /// </summary>
+    /// <typeparam name="TOther">The type of the value in the other result.</typeparam>
+    /// <param name="other">The result to combine the current result with.</param>
+    /// <returns>A result containing a tuple of the value
+    /// of the current result and the value of <paramref name="other"/>.
+    /// If either of the results do contain an error, returns a result containing
+    /// that error, or both errors if both results contain errors.</returns>
+    public Result<(T first, TOther second)> Combine<TOther>(Result<TOther> other) =>
+        (hasValue, other.hasValue) switch
+    {
+        (true, true) => new((value!, other.value!)),
+        (false, true) => new(Error),
+        (true, false) => new(other.Error),
+        (false, false) => new(new AggregateError([Error, other.Error])),
+    };
+
+    /// <summary>
     /// Tries to convert the result value to another type.
     /// </summary>
     /// <typeparam name="TDerived">The type derived from <typeparamref name="T"/>
