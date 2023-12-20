@@ -6,11 +6,11 @@
 /// <typeparam name="T">The type of a successful value.</typeparam>
 public readonly partial struct Result<T>
 {
-    private readonly bool hasValue;
-    private readonly T? value;
-    private readonly Error? error;
+    internal readonly bool hasValue;
+    internal readonly T? value;
+    internal readonly Error? error;
 
-    private Error Error => error ?? StringError.DefaultError;
+    internal Error Error => error ?? StringError.DefaultError;
 
     /// <summary>
     /// Creates a new result with a successful value.
