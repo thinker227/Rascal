@@ -48,7 +48,8 @@ The above expression for `val` can alternatively be written using query syntax:
 var val =
     from a in num
     from b in den
-    select DivSafe(a, b);
+    from x in DivSafe(a, b)
+    select x;
 ```
 
 ### Various utilities
@@ -65,9 +66,7 @@ var result = F().NotNull();
 static int? F();
 ```
 
-A function for running another function in a `try` block and returning a result containing either the successful value of the function or the thrown exception. Quite useful for functions which provide no good way of checking whether success is expected before running it, such as IO.
-
-> **note** `Try` variants are also available for `Map` and `Bind`.
+A function for running another function in a `try` block and returning a result containing either the successful value of the function or the thrown exception. Quite useful for functions which provide no good way of checking whether success is expected before running it, such as IO. `Try` variants are also available for `Map` and `Then`.
 ```cs
 var result = Try(() => File.ReadAllText(path));
 ```
