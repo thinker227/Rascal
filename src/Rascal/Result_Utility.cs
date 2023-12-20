@@ -58,8 +58,8 @@ public readonly partial struct Result<T>
     public Result<T> ErrorIf(Func<T, bool> predicate, Func<T, Error> getError) =>
         hasValue
             ? predicate(value!)
-                ? new(value!)
-                : new(getError(value!))
+                ? new(getError(value!))
+                : this
             : new(Error);
 
     /// <summary>
