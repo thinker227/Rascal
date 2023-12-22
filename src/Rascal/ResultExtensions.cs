@@ -45,4 +45,39 @@ public static class ResultExtensions
         x is not null
             ? new(x.Value)
             : new(error ?? new StringError("Value was null."));
+
+    /// <summary>
+    /// Gets a result containing the value that is associated with the specified key in a dictionary,
+    /// or an error if the key is not present.
+    /// </summary>
+    /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of values in the  dictionary.</typeparam>
+    /// <param name="dict">The dictionary to try locate the key in.</param>
+    /// <param name="key">The key to locate.</param>
+    /// <returns>A result containing the value associated with <paramref name="key"/> in the dictionary,
+    /// or an error if the key is not present.</returns>
+    public static Result<TValue> TryGetValueR<TKey, TValue>(
+        this IReadOnlyDictionary<TKey, TValue> dict,
+        TKey key,
+        Error? error = null) =>
+        dict.TryGetValue(key, out var x)
+            ? new(x)
+            : new(error
+                ?? new StringError($"Dictionary does not contain key '{key}'."));
+
+    /// <summary>
+    /// Gets a result containing the element at the specified index in the list,
+    /// or an error if the index is out of range of the list.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the list.</typeparam>
+    /// <param name="list">The list to index.</param>
+    /// <param name="index">The zero-based index of the element to get.</param>
+    /// <returns>A result containing the value at <paramref name="index"/> in the list,
+    /// or an error if the index is out of range of the list.</returns>
+    public static Result<T> Index<T>(this IReadOnlyList<T> list, int index, Error? error = null) =>
+        index < list.Count
+            ? new(list[index])
+            : new(error
+                ?? $"Index {index} is out of range for the list, "
+                 + $"which has a count of {list.Count}.");
 }
