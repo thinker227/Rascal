@@ -63,15 +63,25 @@ public readonly partial struct Result<T>
     /// error produced by <paramref name="getError"/>.
     /// If the original result does not contain a value, that result will be returned.</returns>
     [Pure]
+#if NETCOREAPP
     public Result<T> Validate(
         Func<T, bool> predicate,
         Func<T, Error>? getError = null,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
+#else
+    public Result<T> Validate(
+        Func<T, bool> predicate,
+        Func<T, Error>? getError = null) =>
+#endif
         HasValue
-            ? predicate(value)
+            ? predicate(value!)
                 ? this
-                : new(getError?.Invoke(value)
+                : new(getError?.Invoke(value!)
+#if NETCOREAPP
                     ?? new StringError($"Value did not match predicate '{expr}'."))
+#else
+                    ?? new StringError("Value did not match predicate."))
+#endif
             : new(Error);
 
     /// <summary>
@@ -86,9 +96,14 @@ public readonly partial struct Result<T>
     /// If the original result does not contain a value, that result will be returned.</returns>
     [Pure]
     public Result<T> Where(
+#if NETCOREAPP
         Func<T, bool> predicate,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
         Validate(predicate, null, expr);
+#else
+        Func<T, bool> predicate) =>
+        Validate(predicate, null);
+#endif
 
     /// <summary>
     /// Creates a <see cref="IEnumerable{T}"/> from the result.
@@ -99,6 +114,6 @@ public readonly partial struct Result<T>
     [Pure]
     public IEnumerable<T> ToEnumerable() =>
         HasValue
-            ? [value]
+            ? [value!]
             : [];
 }

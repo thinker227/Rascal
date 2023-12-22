@@ -20,7 +20,7 @@ public readonly partial struct Result<T>
     [Pure]
     public TResult Match<TResult>(Func<T, TResult> ifValue, Func<Error, TResult> ifError) =>
         HasValue
-            ? ifValue(value)
+            ? ifValue(value!)
             : ifError(Error);
 
     /// <summary>
@@ -34,7 +34,7 @@ public readonly partial struct Result<T>
     /// result's error if it does not contain a value.</param>
     public void Switch(Action<T> ifValue, Action<Error> ifError)
     {
-        if (HasValue) ifValue(value);
+        if (HasValue) ifValue(value!);
         else ifError(Error);
     }
 
@@ -44,9 +44,13 @@ public readonly partial struct Result<T>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value)
+#else
+    public bool TryGetValue(out T value)
+#endif
     {
-        value = this.value;
+        value = this.value!;
         return HasValue;
     }
 
@@ -57,12 +61,16 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value, [MaybeNullWhen(true)] out Error error)
+#else
+    public bool TryGetValue(out T value, out Error error)
+#endif
     {
-        value = this.value;
+        value = this.value!;
         error = !HasValue
             ? Error
-            : null;
+            : null!;
         
         return HasValue;
     }
@@ -73,11 +81,15 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error)
+#else
+    public bool TryGetError(out Error error)
+#endif
     {
         error = !HasValue
             ? Error
-            : null;
+            : null!;
 
         return !HasValue;
     }
@@ -89,12 +101,16 @@ public readonly partial struct Result<T>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error, [MaybeNullWhen(true)] out T value)
+#else
+    public bool TryGetError(out Error error, out T value)
+#endif
     {
         error = !HasValue
             ? Error
-            : null;
-        value = this.value;
+            : null!;
+        value = this.value!;
 
         return !HasValue;
     }
@@ -117,7 +133,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T GetValueOrDefault(T @default) =>
         HasValue
-            ? value
+            ? value!
             : @default;
 
     /// <summary>
@@ -129,7 +145,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T GetValueOrDefault(Func<T> getDefault) =>
         HasValue
-            ? value
+            ? value!
             : getDefault();
 
     /// <summary>
@@ -146,7 +162,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T Unwrap() =>
         HasValue
-            ? value
+            ? value!
             : throw new UnwrapException();
 
     /// <inheritdoc cref="Unwrap"/>
@@ -170,6 +186,6 @@ public readonly partial struct Result<T>
     [Pure]
     public T Expect(string error) =>
         HasValue
-            ? value
+            ? value!
             : throw new UnwrapException(error);
 }
