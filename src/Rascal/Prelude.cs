@@ -89,4 +89,40 @@ public static class Prelude
             return new(new ExceptionError(e));
         }
     }
+
+    /// <summary>
+    /// Applies a transform function onto a value until the function returns an error.
+    /// </summary>
+    /// <typeparam name="T">The type of the value transform.</typeparam>
+    /// <param name="start">The starting value.</param>
+    /// <param name="transform">A function which transforms a value into
+    /// either a new value or an error.</param>
+    /// <returns>A sequence of successful values produced by repeatedly applying
+    /// <paramref name="transform"/> onto the previous value until an error is returned.
+    /// Includes <paramref name="start"/> if it has a value,
+    /// otherwise the sequence will be empty.</returns>
+    public static IEnumerable<T> Iterate<T>(Result<T> start, Func<T, Result<T>> transform)
+    {
+        var current = start;
+
+        while (current.TryGetValue(out var x))
+        {
+            yield return x;
+            current = transform(x);
+        }
+    }
+
+    /// <summary>
+    /// Applies a transform function onto a value until the function returns an error.
+    /// </summary>
+    /// <typeparam name="T">The type of the value transform.</typeparam>
+    /// <param name="start">The starting value.</param>
+    /// <param name="transform">A function which transforms a value into
+    /// either a new value or an error.</param>
+    /// <returns>A sequence of successful values produced by repeatedly applying
+    /// <paramref name="transform"/> onto the previous value
+    /// starting with <paramref name="start"/> until an error is returned.
+    /// <paramref name="start"/> will always be the first element.</returns>
+    public static IEnumerable<T> Iterate<T>(T start, Func<T, Result<T>> transform) =>
+        Iterate(Ok(start), transform);
 }
