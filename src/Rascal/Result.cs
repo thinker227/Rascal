@@ -1,4 +1,6 @@
-﻿namespace Rascal;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Rascal;
 
 /// <summary>
 /// A type which contains either a successful value or an error.
@@ -6,11 +8,16 @@
 /// <typeparam name="T">The type of a successful value.</typeparam>
 public readonly partial struct Result<T>
 {
-    internal readonly bool hasValue;
     internal readonly T? value;
     internal readonly Error? error;
 
     internal Error Error => error ?? StringError.DefaultError;
+
+    /// <summary>
+    /// Whether the result has a value or not.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(value))]
+    public bool HasValue { get; }
 
     /// <summary>
     /// Creates a new result with a successful value.
@@ -18,7 +25,7 @@ public readonly partial struct Result<T>
     /// <param name="value">The successful value.</param>
     public Result(T value)
     {
-        hasValue = true;
+        HasValue = true;
         this.value = value;
         error = null;
     }
@@ -29,13 +36,13 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     public Result(Error error)
     {
-        hasValue = false;
+        HasValue = false;
         value = default;
         this.error = error;
     }
 
     public override string ToString() =>
-        hasValue
+        HasValue
             ? $"Ok {{ {value} }}"
             : $"Error {{ {Error.Message} }}";
 }

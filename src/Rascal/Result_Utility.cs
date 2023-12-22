@@ -21,7 +21,7 @@ public readonly partial struct Result<T>
     /// If either of the results do contain an error, returns a result containing
     /// that error, or both errors if both results contain errors.</returns>
     public Result<(T first, TOther second)> Combine<TOther>(Result<TOther> other) =>
-        (hasValue, other.hasValue) switch
+        (HasValue, other.HasValue) switch
     {
         (true, true) => new((value!, other.value!)),
         (false, true) => new(Error),
@@ -39,7 +39,7 @@ public readonly partial struct Result<T>
     /// <typeparamref name="TDerived"/>, </returns>
     public Result<TDerived> ToType<TDerived>(string? error = null)
         where TDerived : T =>
-        hasValue
+        HasValue
             ? value is TDerived derived
                 ? new(derived)
                 : new(new StringError(
@@ -63,10 +63,10 @@ public readonly partial struct Result<T>
         Func<T, bool> predicate,
         Func<T, Error>? getError = null,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
-        hasValue
-            ? predicate(value!)
+        HasValue
+            ? predicate(value)
                 ? this
-                : new(getError?.Invoke(value!)
+                : new(getError?.Invoke(value)
                     ?? new StringError($"Value did not match predicate '{expr}'."))
             : new(Error);
 
@@ -92,7 +92,7 @@ public readonly partial struct Result<T>
     /// containing either only the value of the result,
     /// or no values at all if the result does not contain a value</returns>
     public IEnumerable<T> ToEnumerable() =>
-        hasValue
-            ? [value!]
+        HasValue
+            ? [value]
             : [];
 }

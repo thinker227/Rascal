@@ -11,8 +11,8 @@ public readonly partial struct Result<T>
     /// <returns>A new result containing either the mapped value
     /// or the error of the original result.</returns>
     public Result<TNew> Map<TNew>(Func<T, TNew> mapping) =>
-        hasValue
-            ? new(mapping(value!))
+        HasValue
+            ? new(mapping(value))
             : new(Error);
 
     /// <summary>
@@ -24,8 +24,8 @@ public readonly partial struct Result<T>
     /// <returns>A result which is either the mapped result
     /// or a new result containing the error of the original result.</returns>
     public Result<TNew> Then<TNew>(Func<T, Result<TNew>> mapping) =>
-        hasValue
-            ? mapping(value!)
+        HasValue
+            ? mapping(value)
             : new(Error);
 
     /// <inheritdoc cref="Map{TNew}"/> 
@@ -56,12 +56,12 @@ public readonly partial struct Result<T>
         Func<T, Result<TOther>> other,
         Func<T, TOther, TNew> mapping)
     {
-        if (!hasValue) return new(Error);
-        var a = value!;
+        if (!HasValue) return new(Error);
+        var a = value;
 
         var br = other(a);
-        if (!br.hasValue) return new(br.Error);
-        var b = br.value!;
+        if (!br.HasValue) return new(br.Error);
+        var b = br.value;
 
         return new(mapping(a, b));
     }
@@ -121,7 +121,7 @@ public readonly partial struct Result<T>
     /// <returns>A result which contains either the mapped error
     /// or the value of the original result.</returns>
     public Result<T> MapError(Func<Error, Error> mapping) =>
-        !hasValue
+        !HasValue
             ? new(mapping(Error))
             : this;
 }

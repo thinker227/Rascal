@@ -9,18 +9,18 @@ public readonly partial struct Result<T> :
     IEqualityOperators<Result<T>, T, bool>
 {
     public bool Equals(T? other) =>
-        hasValue && (other?.Equals(value) ?? value is null);
+        HasValue && (other?.Equals(value) ?? value is null);
 
     public bool Equals(Result<T> other) =>
-        hasValue && other.hasValue && (other.value?.Equals(value) ?? value is null) ||
-        !hasValue && !other.hasValue;
+        HasValue && other.HasValue && (other.value?.Equals(value) ?? value is null) ||
+        !HasValue && !other.HasValue;
 
     public override bool Equals(object? other) =>
         other is T x && Equals(x) ||
         other is Result<T> r && Equals(r);
 
     public override int GetHashCode() =>
-        hasValue
+        HasValue
             ? value?.GetHashCode() ?? 0
             : 0;
 

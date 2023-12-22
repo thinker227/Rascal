@@ -8,7 +8,7 @@ public class UtilityTests
         Result<int> x = 2;
 
         x.value.ShouldBe(2);
-        x.hasValue.ShouldBeTrue();
+        x.HasValue.ShouldBeTrue();
     }
 
     [Fact]
@@ -19,7 +19,7 @@ public class UtilityTests
             var b = Ok("uwu");
             var r = a.Combine(b);
 
-            r.hasValue.ShouldBeTrue();
+            r.HasValue.ShouldBeTrue();
             r.value.ShouldBe((2, "uwu"));
         }
 
@@ -28,7 +28,7 @@ public class UtilityTests
             var b = Err<string>("error");
             var r = a.Combine(b);
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error");
         }
 
@@ -37,7 +37,7 @@ public class UtilityTests
             var b = Ok("uwu");
             var r = a.Combine(b);
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error");
         }
 
@@ -46,7 +46,7 @@ public class UtilityTests
             var b = Err<string>("error b");
             var r = a.Combine(b);
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             var error = r.error.ShouldBeOfType<AggregateError>();
             error.Errors.Length.ShouldBe(2);
             error.Errors[0].Message.ShouldBe("error a");
@@ -60,14 +60,14 @@ public class UtilityTests
         {
             var r = Ok<object>("uwu").ToType<string>();
 
-            r.hasValue.ShouldBeTrue();
+            r.HasValue.ShouldBeTrue();
             r.value.ShouldBe("uwu");
         }
 
         {
             var r = Ok<object>("uwu").ToType<int>();
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldNotBeNull();
         }
     }
@@ -78,28 +78,28 @@ public class UtilityTests
         {
             var r = Ok(2).Validate(_ => false);
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldNotBeNull();
         }
 
         {
             var r = Ok(2).Validate(_ => false, _ => "error");
             
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error");
         }
 
         {
             var r = Ok(2).Validate(_ => true, _ => "error");
 
-            r.hasValue.ShouldBeTrue();
+            r.HasValue.ShouldBeTrue();
             r.value.ShouldBe(2);
         }
 
         {
             var r = Err<int>("error a").Validate(_ => false, _ => "error b");
 
-            r.hasValue.ShouldBeFalse();
+            r.HasValue.ShouldBeFalse();
             r.error?.Message.ShouldBe("error a");
         }
     }
