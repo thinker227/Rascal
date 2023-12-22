@@ -44,7 +44,11 @@ public readonly partial struct Result<T>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value)
+#else
+    public bool TryGetValue(out T value)
+#endif
     {
         value = this.value!;
         return HasValue;
@@ -57,12 +61,16 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value, [MaybeNullWhen(true)] out Error error)
+#else
+    public bool TryGetValue(out T value, out Error error)
+#endif
     {
-        value = this.value;
+        value = this.value!;
         error = !HasValue
             ? Error
-            : null;
+            : null!;
         
         return HasValue;
     }
@@ -73,11 +81,15 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error)
+#else
+    public bool TryGetError(out Error error)
+#endif
     {
         error = !HasValue
             ? Error
-            : null;
+            : null!;
 
         return !HasValue;
     }
@@ -89,11 +101,15 @@ public readonly partial struct Result<T>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
     [Pure]
+#if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error, [MaybeNullWhen(true)] out T value)
+#else
+    public bool TryGetError(out Error error, out T value)
+#endif
     {
         error = !HasValue
             ? Error
-            : null;
+            : null!;
         value = this.value!;
 
         return !HasValue;

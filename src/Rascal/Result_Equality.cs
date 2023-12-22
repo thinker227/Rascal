@@ -1,12 +1,13 @@
-using System.Numerics;
-
 namespace Rascal;
 
 public readonly partial struct Result<T> :
     IEquatable<T>,
-    IEquatable<Result<T>>,
-    IEqualityOperators<Result<T>, Result<T>, bool>,
-    IEqualityOperators<Result<T>, T, bool>
+    IEquatable<Result<T>>
+#if NET7_0_OR_GREATER
+    ,
+    System.Numerics.IEqualityOperators<Result<T>, Result<T>, bool>,
+    System.Numerics.IEqualityOperators<Result<T>, T, bool>
+#endif
 {
     [Pure]
     public bool Equals(T? other) =>

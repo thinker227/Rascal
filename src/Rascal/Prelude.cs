@@ -27,6 +27,8 @@ public static class Prelude
     public static Result<T> Err<T>(Error error) =>
         new(error);
 
+#if NET7_0_OR_GREATER // Support for generic math
+
     /// <summary>
     /// Tries to parse a string into a value,
     /// returning a result indicating whether the operation succeeded.
@@ -70,6 +72,8 @@ public static class Prelude
             ? new(x)
             : new(error ?? new StringError(
                 $"Could not parse '{s}' to type {typeof(T)}."));
+
+#endif
 
     /// <summary>
     /// Tries to execute a function and return the result.
