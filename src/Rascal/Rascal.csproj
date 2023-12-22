@@ -31,8 +31,17 @@
 
   <!-- Include additional files -->
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="/"/>
-    <None Include="../../LICENSE.md" Pack="true" PackagePath="/"/>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <!-- Polyfills for netstandard2.0 -->
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageReference Include="PolySharp" Version="1.14.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
