@@ -77,6 +77,12 @@ var input = ParseR<int>(Console.ReadLine()!)
     .Validate(
         x => x >= 0,
         x => $"Input {x} is less than 0.")
+
+// can also be written as
+var input =
+    from x in ParseR<int>(Console.ReadLine()!)
+    where x >= 0
+    select x;
 ```
 
 ### "Unsafe" operations
