@@ -10,6 +10,7 @@ public readonly partial struct Result<T>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
     /// <returns>A new result containing either the mapped value
     /// or the error of the original result.</returns>
+    [Pure]
     public Result<TNew> Map<TNew>(Func<T, TNew> mapping) =>
         HasValue
             ? new(mapping(value))
@@ -23,16 +24,19 @@ public readonly partial struct Result<T>
     /// <typeparam name="TNew">The type of the new value.</typeparam>
     /// <returns>A result which is either the mapped result
     /// or a new result containing the error of the original result.</returns>
+    [Pure]
     public Result<TNew> Then<TNew>(Func<T, Result<TNew>> mapping) =>
         HasValue
             ? mapping(value)
             : new(Error);
 
     /// <inheritdoc cref="Map{TNew}"/> 
+    [Pure]
     public Result<TNew> Select<TNew>(Func<T, TNew> mapping) =>
         Map(mapping);
 
     /// <inheritdoc cref="Then{TNew}"/>
+    [Pure]
     public Result<TNew> SelectMany<TNew>(Func<T, Result<TNew>> mapping) =>
         Then(mapping);
 
@@ -52,6 +56,7 @@ public readonly partial struct Result<T>
     /// onto the value contained in the result returned by <paramref name="other"/>
     /// as well as the value in the original result,
     /// or a new result containing the error of the original or intermediate results.</returns>
+    [Pure]
     public Result<TNew> SelectMany<TOther, TNew>(
         Func<T, Result<TOther>> other,
         Func<T, TOther, TNew> mapping)
@@ -77,6 +82,7 @@ public readonly partial struct Result<T>
     /// <returns>A new result containing either the mapped value,
     /// the exception thrown by <paramref name="mapping"/> wrapped in an <see cref="ExceptionError"/>,
     /// or the error of the original result.</returns>
+    [Pure]
     public Result<TNew> TryMap<TNew>(Func<T, TNew> mapping)
     {
         try
@@ -100,6 +106,7 @@ public readonly partial struct Result<T>
     /// <returns>A result which is either the mapped result,
     /// the exception thrown by <paramref name="mapping"/> wrapped in an <see cref="ExceptionError"/>,
     /// or a new result containing the error of the original result.</returns>
+    [Pure]
     public Result<TNew> ThenTry<TNew>(Func<T, Result<TNew>> mapping)
     {
         try
@@ -120,6 +127,7 @@ public readonly partial struct Result<T>
     /// <param name="mapping">The function used to map the error.</param>
     /// <returns>A result which contains either the mapped error
     /// or the value of the original result.</returns>
+    [Pure]
     public Result<T> MapError(Func<Error, Error> mapping) =>
         !HasValue
             ? new(mapping(Error))

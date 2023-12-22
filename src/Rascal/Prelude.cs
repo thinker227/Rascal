@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace Rascal;
 
 /// <summary>
@@ -16,6 +14,7 @@ public static class Prelude
     /// </summary>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <param name="value">The value to create the result from.</param>
+    [Pure]
     public static Result<T> Ok<T>(T value) =>
         new(value);
 
@@ -24,6 +23,7 @@ public static class Prelude
     /// </summary>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <param name="error">The error to create the result from.</param>
+    [Pure]
     public static Result<T> Err<T>(Error error) =>
         new(error);
 
@@ -38,6 +38,7 @@ public static class Prelude
     /// <param name="error">The error produced if the string cannot be parsed.</param>
     /// <returns>A result containing either the successfully parsed value
     /// or <paramref name="error"/> if the string could not be parsed.</returns>
+    [Pure]
     public static Result<T> ParseR<T>(
         string? s,
         IFormatProvider? provider = null,
@@ -59,6 +60,7 @@ public static class Prelude
     /// <param name="error">The error produced if the string cannot be parsed.</param>
     /// <returns>A result containing either the successfully parsed value
     /// or <paramref name="error"/> if the string could not be parsed.</returns>
+    [Pure]
     public static Result<T> ParseR<T>(
         ReadOnlySpan<char> s,
         IFormatProvider? provider = null,
@@ -78,6 +80,7 @@ public static class Prelude
     /// <param name="function">The function to try execute.</param>
     /// <returns>A result containing the return value of the function
     /// or an <see cref="ExceptionError"/> containing the exception thrown by the function.</returns>
+    [Pure]
     public static Result<T> Try<T>(Func<T> function)
     {
         try
@@ -101,6 +104,7 @@ public static class Prelude
     /// <paramref name="transform"/> onto the previous value until an error is returned.
     /// Includes <paramref name="start"/> if it has a value,
     /// otherwise the sequence will be empty.</returns>
+    [Pure]
     public static IEnumerable<T> Iterate<T>(Result<T> start, Func<T, Result<T>> transform)
     {
         var current = start;
@@ -123,6 +127,7 @@ public static class Prelude
     /// <paramref name="transform"/> onto the previous value
     /// starting with <paramref name="start"/> until an error is returned.
     /// <paramref name="start"/> will always be the first element.</returns>
+    [Pure]
     public static IEnumerable<T> Iterate<T>(T start, Func<T, Result<T>> transform) =>
         Iterate(Ok(start), transform);
 }

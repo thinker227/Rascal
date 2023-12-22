@@ -14,6 +14,7 @@ public static class ResultExtensions
     /// </remarks>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <param name="result">The result to un-nest.</param>
+    [Pure]
     public static Result<T> Unnest<T>(this Result<Result<T>> result) =>
         result.Then(x => x);
 
@@ -30,6 +31,7 @@ public static class ResultExtensions
     /// <param name="error">The error to return if the value is null.</param>
     /// <returns>A result containing <paramref name="x"/> if it is not <see langword="null"/>,
     /// or otherwise <paramref name="error"/>.</returns>
+    [Pure]
     public static Result<T> NotNull<T>(this T? x, Error? error = null)
         where T : class =>
         x is not null
@@ -37,6 +39,7 @@ public static class ResultExtensions
             : new(error ?? new StringError("Value was null."));
 
     /// <inheritdoc cref="NotNull{T}(T, Error)"/>
+    [Pure]
     public static Result<T> NotNull<T>(this T? x, Error? error = null)
         where T : struct =>
         x is not null

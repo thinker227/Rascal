@@ -17,6 +17,7 @@ public readonly partial struct Result<T>
     /// <returns>The result of applying either
     /// <paramref name="ifValue"/> or <paramref name="ifError"/>
     /// on the value or error of the result.</returns>
+    [Pure]
     public TResult Match<TResult>(Func<T, TResult> ifValue, Func<Error, TResult> ifError) =>
         HasValue
             ? ifValue(value)
@@ -42,6 +43,7 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
+    [Pure]
     public bool TryGetValue([MaybeNullWhen(false)] out T value)
     {
         value = this.value;
@@ -54,6 +56,7 @@ public readonly partial struct Result<T>
     /// <param name="value">The value of the result.</param>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains a value.</returns>
+    [Pure]
     public bool TryGetValue([MaybeNullWhen(false)] out T value, [MaybeNullWhen(true)] out Error error)
     {
         value = this.value;
@@ -69,6 +72,7 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="error">The error of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
+    [Pure]
     public bool TryGetError([MaybeNullWhen(false)] out Error error)
     {
         error = !HasValue
@@ -84,6 +88,7 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     /// <param name="value">The value of the result.</param>
     /// <returns>Whether the result contains an error.</returns>
+    [Pure]
     public bool TryGetError([MaybeNullWhen(false)] out Error error, [MaybeNullWhen(true)] out T value)
     {
         error = !HasValue
@@ -98,6 +103,7 @@ public readonly partial struct Result<T>
     /// Gets the value within the result,
     /// or <see langword="default"/> if the result does not contain a value.
     /// </summary>
+    [Pure]
     public T? GetValueOrDefault() =>
         HasValue
             ? value
@@ -108,6 +114,7 @@ public readonly partial struct Result<T>
     /// or a default value if the result does not contain a value.
     /// </summary>
     /// <param name="default">The default value to return if the result does not contain a value.</param>
+    [Pure]
     public T GetValueOrDefault(T @default) =>
         HasValue
             ? value
@@ -119,6 +126,7 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="default">A function to get a default value to return
     /// if the result does not contain a value.</param>
+    [Pure]
     public T GetValueOrDefault(Func<T> getDefault) =>
         HasValue
             ? value
@@ -135,12 +143,14 @@ public readonly partial struct Result<T>
     /// </remarks>
     /// <returns>The value in the result.</returns>
     /// <exception cref="UnwrapException">The result does not contain a value.</exception>
+    [Pure]
     public T Unwrap() =>
         HasValue
             ? value
             : throw new UnwrapException();
 
     /// <inheritdoc cref="Unwrap"/>
+    [Pure]
     public static explicit operator T(Result<T> result) =>
         result.Unwrap();
 
@@ -157,6 +167,7 @@ public readonly partial struct Result<T>
     /// </remarks>
     /// <returns>The value in the result.</returns>
     /// <exception cref="UnwrapException">The result does not contain a value.</exception>
+    [Pure]
     public T Expect(string error) =>
         HasValue
             ? value

@@ -8,6 +8,7 @@ public readonly partial struct Result<T>
     /// Implicitly constructs a result from a value.
     /// </summary>
     /// <param name="value">The value to construct the result from.</param>
+    [Pure]
     public static implicit operator Result<T>(T value) =>
         new(value);
 
@@ -20,6 +21,7 @@ public readonly partial struct Result<T>
     /// of the current result and the value of <paramref name="other"/>.
     /// If either of the results do contain an error, returns a result containing
     /// that error, or both errors if both results contain errors.</returns>
+    [Pure]
     public Result<(T first, TOther second)> Combine<TOther>(Result<TOther> other) =>
         (HasValue, other.HasValue) switch
     {
@@ -37,6 +39,7 @@ public readonly partial struct Result<T>
     /// <param name="error">The error to return </param>
     /// <returns>A result which contains the current result's value converted to
     /// <typeparamref name="TDerived"/>, </returns>
+    [Pure]
     public Result<TDerived> ToType<TDerived>(string? error = null)
         where TDerived : T =>
         HasValue
@@ -59,6 +62,7 @@ public readonly partial struct Result<T>
     /// if the value matches <paramref name="predicate"/>, otherwise an
     /// error produced by <paramref name="getError"/>.
     /// If the original result does not contain a value, that result will be returned.</returns>
+    [Pure]
     public Result<T> Validate(
         Func<T, bool> predicate,
         Func<T, Error>? getError = null,
@@ -80,6 +84,7 @@ public readonly partial struct Result<T>
     /// <returns>A result which contains the value of the original result
     /// if the value matches <paramref name="predicate"/>, otherwise an error.
     /// If the original result does not contain a value, that result will be returned.</returns>
+    [Pure]
     public Result<T> Where(
         Func<T, bool> predicate,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
@@ -91,6 +96,7 @@ public readonly partial struct Result<T>
     /// <returns>A <see cref="IEnumerable{T}"/>
     /// containing either only the value of the result,
     /// or no values at all if the result does not contain a value</returns>
+    [Pure]
     public IEnumerable<T> ToEnumerable() =>
         HasValue
             ? [value]

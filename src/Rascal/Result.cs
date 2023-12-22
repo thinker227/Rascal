@@ -41,6 +41,7 @@ public readonly partial struct Result<T>
         this.error = error;
     }
 
+    [Pure]
     public override string ToString() =>
         HasValue
             ? $"Ok {{ {value} }}"
