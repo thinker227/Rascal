@@ -16,7 +16,6 @@ public readonly partial struct Result<T>
     /// <summary>
     /// Whether the result has a value or not.
     /// </summary>
-    [MemberNotNullWhen(true, nameof(value))]
     public bool HasValue { get; }
 
     /// <summary>

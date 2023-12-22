@@ -20,7 +20,7 @@ public readonly partial struct Result<T>
     [Pure]
     public TResult Match<TResult>(Func<T, TResult> ifValue, Func<Error, TResult> ifError) =>
         HasValue
-            ? ifValue(value)
+            ? ifValue(value!)
             : ifError(Error);
 
     /// <summary>
@@ -34,7 +34,7 @@ public readonly partial struct Result<T>
     /// result's error if it does not contain a value.</param>
     public void Switch(Action<T> ifValue, Action<Error> ifError)
     {
-        if (HasValue) ifValue(value);
+        if (HasValue) ifValue(value!);
         else ifError(Error);
     }
 
@@ -46,7 +46,7 @@ public readonly partial struct Result<T>
     [Pure]
     public bool TryGetValue([MaybeNullWhen(false)] out T value)
     {
-        value = this.value;
+        value = this.value!;
         return HasValue;
     }
 
@@ -94,7 +94,7 @@ public readonly partial struct Result<T>
         error = !HasValue
             ? Error
             : null;
-        value = this.value;
+        value = this.value!;
 
         return !HasValue;
     }
@@ -117,7 +117,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T GetValueOrDefault(T @default) =>
         HasValue
-            ? value
+            ? value!
             : @default;
 
     /// <summary>
@@ -129,7 +129,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T GetValueOrDefault(Func<T> getDefault) =>
         HasValue
-            ? value
+            ? value!
             : getDefault();
 
     /// <summary>
@@ -146,7 +146,7 @@ public readonly partial struct Result<T>
     [Pure]
     public T Unwrap() =>
         HasValue
-            ? value
+            ? value!
             : throw new UnwrapException();
 
     /// <inheritdoc cref="Unwrap"/>
@@ -170,6 +170,6 @@ public readonly partial struct Result<T>
     [Pure]
     public T Expect(string error) =>
         HasValue
-            ? value
+            ? value!
             : throw new UnwrapException(error);
 }

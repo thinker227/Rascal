@@ -13,7 +13,7 @@ public readonly partial struct Result<T>
     [Pure]
     public Result<TNew> Map<TNew>(Func<T, TNew> mapping) =>
         HasValue
-            ? new(mapping(value))
+            ? new(mapping(value!))
             : new(Error);
 
     /// <summary>
@@ -27,7 +27,7 @@ public readonly partial struct Result<T>
     [Pure]
     public Result<TNew> Then<TNew>(Func<T, Result<TNew>> mapping) =>
         HasValue
-            ? mapping(value)
+            ? mapping(value!)
             : new(Error);
 
     /// <inheritdoc cref="Map{TNew}"/> 
@@ -64,11 +64,11 @@ public readonly partial struct Result<T>
         if (!HasValue) return new(Error);
         var a = value;
 
-        var br = other(a);
+        var br = other(a!);
         if (!br.HasValue) return new(br.Error);
         var b = br.value;
 
-        return new(mapping(a, b));
+        return new(mapping(a!, b!));
     }
 
     /// <summary>

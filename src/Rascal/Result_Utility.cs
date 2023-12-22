@@ -68,9 +68,9 @@ public readonly partial struct Result<T>
         Func<T, Error>? getError = null,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
         HasValue
-            ? predicate(value)
+            ? predicate(value!)
                 ? this
-                : new(getError?.Invoke(value)
+                : new(getError?.Invoke(value!)
                     ?? new StringError($"Value did not match predicate '{expr}'."))
             : new(Error);
 
@@ -99,6 +99,6 @@ public readonly partial struct Result<T>
     [Pure]
     public IEnumerable<T> ToEnumerable() =>
         HasValue
-            ? [value]
+            ? [value!]
             : [];
 }
