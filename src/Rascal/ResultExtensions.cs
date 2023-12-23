@@ -61,6 +61,7 @@ public static class ResultExtensions
     /// <param name="result">The result to get the value in.</param>
     /// <returns>The value contained in <paramref name="result"/>,
     /// or <see langword="null"/> if <paramref name="result"/> does not contain a value.</returns>
+    [Pure]
     public static T? GetValueOrNull<T>(this Result<T> result) where T : struct =>
         result.Map(x => (T?)x).GetValueOrDefault();
 
