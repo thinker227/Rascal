@@ -50,4 +50,46 @@ public class ThrowAnalyzerTests
         }
     }
     """);
+
+    [Fact]
+    public Task ThrowInsideLambda() => VerifyCS.VerifyAnalyzerAsync("""
+    using System;
+    using Rascal;
+
+    public static class Foo
+    {
+        public static Func<Result<int>> func = () =>
+        {
+            {|RASCAL0001:throw|} new Exception();
+        };
+    }
+    """);
+
+    [Fact]
+    public Task ThrowInsideExpressionProperty() => VerifyCS.VerifyAnalyzerAsync("""
+    using System;
+    using Rascal;
+
+    public static class Foo
+    {
+        public static Result<int> X => {|RASCAL0001:throw|} new Exception();
+    }
+    """);
+
+    [Fact]
+    public Task ThrowInsideExplicitProperty() => VerifyCS.VerifyAnalyzerAsync("""
+    using System;
+    using Rascal;
+
+    public static class Foo
+    {
+        public static Result<int> X
+        {
+            get
+            {
+                {|RASCAL0001:throw|} new Exception();
+            }
+        }
+    }
+    """);
 }
