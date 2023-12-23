@@ -53,6 +53,24 @@ public class ResultExtensionsTests
     }
 
     [Fact]
+    public void GetValueOrNull()
+    {
+        {
+            var r = Ok(2);
+            var x = r.GetValueOrNull();
+
+            x.ShouldBe(2);
+        }
+
+        {
+            var r = Err<int>("error");
+            var x = r.GetValueOrNull();
+
+            x.ShouldBe(null);
+        }
+    }
+
+    [Fact]
     public void TryGetValueR()
     {
         {

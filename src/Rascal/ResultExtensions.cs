@@ -47,6 +47,24 @@ public static class ResultExtensions
             : new(error ?? new StringError("Value was null."));
 
     /// <summary>
+    /// Gets the value within the result,
+    /// or <see langword="null"/> if the result does not contain a value.
+    /// </summary>
+    /// <remarks>
+    /// This method differs from <see cref="Result{T}.GetValueOrDefault()"/> in that
+    /// it specifically targets value types and returns <see langword="null"/> as opposed
+    /// to the default value for the type in case the result does not contain a value.
+    /// Can also be understood as mapping the value to <c>T?</c> and calling
+    /// <see cref="Result{T}.GetValueOrDefault()"/> on the returned result.
+    /// </remarks>
+    /// <typeparam name="T">The type of the value in the result.</typeparam>
+    /// <param name="result">The result to get the value in.</param>
+    /// <returns>The value contained in <paramref name="result"/>,
+    /// or <see langword="null"/> if <paramref name="result"/> does not contain a value.</returns>
+    public static T? GetValueOrNull<T>(this Result<T> result) where T : struct =>
+        result.Map(x => (T?)x).GetValueOrDefault();
+
+    /// <summary>
     /// Gets a result containing the value that is associated with the specified key in a dictionary,
     /// or an error if the key is not present.
     /// </summary>
