@@ -12,111 +12,128 @@ public class UtilityTests
     }
 
     [Fact]
-    public void Combine()
+    public void Combine_ReturnsOk_ForOkAndOk()
     {
-        {
-            var a = Ok(2);
-            var b = Ok("uwu");
-            var r = a.Combine(b);
+        var a = Ok(2);
+        var b = Ok("uwu");
+        var r = a.Combine(b);
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe((2, "uwu"));
-        }
-
-        {
-            var a = Ok(2);
-            var b = Err<string>("error");
-            var r = a.Combine(b);
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
-
-        {
-            var a = Err<int>("error");
-            var b = Ok("uwu");
-            var r = a.Combine(b);
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
-
-        {
-            var a = Err<int>("error a");
-            var b = Err<string>("error b");
-            var r = a.Combine(b);
-
-            r.HasValue.ShouldBeFalse();
-            var error = r.error.ShouldBeOfType<AggregateError>();
-            error.Errors.Length.ShouldBe(2);
-            error.Errors[0].Message.ShouldBe("error a");
-            error.Errors[1].Message.ShouldBe("error b");
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe((2, "uwu"));
     }
 
     [Fact]
-    public void OfType()
+    public void Combine_ReturnsErr_ForOkAndErr()
     {
-        {
-            var r = Ok<object>("uwu").ToType<string>();
+        var a = Ok(2);
+        var b = Err<string>("error");
+        var r = a.Combine(b);
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe("uwu");
-        }
-
-        {
-            var r = Ok<object>("uwu").ToType<int>();
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldNotBeNull();
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 
     [Fact]
-    public void Validate()
+    public void Combine_ReturnsErr_ForErrAndOk()
     {
-        {
-            var r = Ok(2).Validate(_ => false);
+        var a = Err<int>("error");
+        var b = Ok("uwu");
+        var r = a.Combine(b);
 
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldNotBeNull();
-        }
-
-        {
-            var r = Ok(2).Validate(_ => false, _ => "error");
-            
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
-
-        {
-            var r = Ok(2).Validate(_ => true, _ => "error");
-
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var r = Err<int>("error a").Validate(_ => false, _ => "error b");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error a");
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 
     [Fact]
-    public void ToEnumerable()
+    public void Combine_ReturnsErr_ForErrAndErr()
     {
-        {
-            var r = Ok(2).ToEnumerable();
+        var a = Err<int>("error a");
+        var b = Err<string>("error b");
+        var r = a.Combine(b);
 
-            r.ShouldHaveSingleItem().ShouldBe(2);
-        }
+        r.HasValue.ShouldBeFalse();
+        var error = r.error.ShouldBeOfType<AggregateError>();
+        error.Errors.Length.ShouldBe(2);
+        error.Errors[0].Message.ShouldBe("error a");
+        error.Errors[1].Message.ShouldBe("error b");
+    }
 
-        {
-            var r = Err<int>("error").ToEnumerable();
+    [Fact]
+    public void OfType_ReturnsOk_ForOkToValidType()
+    {
+        var r = Ok<object>("uwu").ToType<string>();
 
-            r.ShouldBeEmpty();
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe("uwu");
+    }
+
+    [Fact]
+    public void OfType_ReturnsErr_ForOkToInvalidType()
+    {
+        var r = Ok<object>("uwu").ToType<int>();
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void OfType_ReturnsErr_ForErr()
+    {
+        var r = Err<object>("error").ToType<int>();
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public void Validate_ReturnsErrWithDefaultError_ForOkAndFalse()
+    {
+        var r = Ok(2).Validate(_ => false);
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Validate_ReturnsErrWithError_ForOkAndFalse()
+    {
+        var r = Ok(2).Validate(_ => false, _ => "error");
+        
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+    
+    [Fact]
+    public void Validate_ReturnsOk_ForOk()
+    {
+        var r = Ok(2).Validate(_ => true, _ => "error");
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void Validate_ReturnsErr_ForErr()
+    {
+        var r = Err<int>("error a").Validate(_ => false, _ => "error b");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error a");
+    }
+
+    [Fact]
+    public void ToEnumerable_ReturnsSingleItem_ForOk()
+    {
+        var r = Ok(2).ToEnumerable();
+
+        r.ShouldHaveSingleItem().ShouldBe(2);
+    }
+
+    [Fact]
+    public void ToEnumerable_ReturnsNoItems_ForErr()
+    {
+        var r = Err<int>("error").ToEnumerable();
+
+        r.ShouldBeEmpty();
     }
 }

@@ -5,7 +5,7 @@ namespace Rascal.Tests;
 public class PreludeTests
 {
     [Fact]
-    public void Ok_()
+    public void Ok_ReturnsOk()
     {
         var r = Ok(2);
 
@@ -14,7 +14,7 @@ public class PreludeTests
     }
 
     [Fact]
-    public void Err_()
+    public void Err_ReturnsErr()
     {
         var r = Err<int>("error");
 
@@ -23,78 +23,78 @@ public class PreludeTests
     }
 
     [Fact]
-    public void ParseR_String()
+    public void ParseR_String_ReturnsOk_ForValidString()
     {
-        {
-            var r = ParseR<int>("123", CultureInfo.InvariantCulture);
-            
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(123);
-        }
-
-        {
-            var r = ParseR<int>("24a", CultureInfo.InvariantCulture);
-
-            r.HasValue.ShouldBeFalse();
-            r.error.ShouldNotBeNull();
-        }
+        var r = ParseR<int>("123", CultureInfo.InvariantCulture);
+        
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(123);
     }
 
     [Fact]
-    public void ParseR_Span()
+    public void ParseR_String_ReturnsErr_ForInvalidString()
     {
-        {
-            var s = "123".AsSpan();
-            var r = ParseR<int>(s, CultureInfo.InvariantCulture);
+        var r = ParseR<int>("24a", CultureInfo.InvariantCulture);
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(123);
-        }
-
-        {
-            var s = "24a".AsSpan();
-            var r = ParseR<int>(s, CultureInfo.InvariantCulture);
-
-            r.HasValue.ShouldBeFalse();
-            r.error.ShouldNotBeNull();
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error.ShouldNotBeNull();
     }
 
     [Fact]
-    public void Try_()
+    public void ParseR_Span_ReturnsOk_ForValidString()
     {
-        {
-            var r = Try(() => 2);
-
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var r = Try<int>(() => throw new TestException());
-
-            r.HasValue.ShouldBeFalse();
-            var e = r.error.ShouldBeOfType<ExceptionError>();
-            e.Exception.ShouldBeOfType<TestException>();
-        }
+        var s = "123".AsSpan();
+        var r = ParseR<int>(s, CultureInfo.InvariantCulture);
+        
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(123);
     }
 
     [Fact]
-    public void Iterate_()
+    public void ParseR_Span_ReturnsErr_ForInvalidString()
     {
-        static Result<int> F(int x) =>
-            x < 3
-                ? Ok(x + 1)
-                : Err<int>("error");
+        var s = "24a".AsSpan();
+        var r = ParseR<int>(s, CultureInfo.InvariantCulture);
 
-        {
-            var xs = Iterate(1, F);
-            xs.ShouldBe([1, 2, 3]);
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error.ShouldNotBeNull();
+    }
 
-        {
-            var xs = Iterate(Err<int>("error"), F);
-            xs.ShouldBeEmpty();
-        }
+    [Fact]
+    public void Try_ReturnsOk_ForNoException()
+    {
+        var r = Try(() => 2);
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void Try_ReturnsErr_ForException()
+    {
+        var r = Try<int>(() => throw new TestException());
+
+        r.HasValue.ShouldBeFalse();
+        var e = r.error.ShouldBeOfType<ExceptionError>();
+        e.Exception.ShouldBeOfType<TestException>();
+    }
+
+    private static Result<int> IterateFunc(int x) =>
+        x < 3
+            ? Ok(x + 1)
+            : Err<int>("error");
+
+    [Fact]
+    public void Iterate_ReturnsUntilError()
+    {
+        var xs = Iterate(1, IterateFunc);
+        xs.ShouldBe([1, 2, 3]);
+    }
+
+    [Fact]
+    public void Iterate_ReturnsEmpty_ForErr()
+    {
+        var xs = Iterate(Err<int>("error"), IterateFunc);
+        xs.ShouldBeEmpty();
     }
 }
