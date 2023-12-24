@@ -36,7 +36,7 @@ public static class ResultExtensions
         where T : class =>
         x is not null
             ? new(x)
-            : new(error ?? new StringError("Value was null."));
+            : new(error ?? new NullError("Value was null."));
 
     /// <inheritdoc cref="NotNull{T}(T, Error)"/>
     [Pure]
@@ -44,7 +44,7 @@ public static class ResultExtensions
         where T : struct =>
         x is not null
             ? new(x.Value)
-            : new(error ?? new StringError("Value was null."));
+            : new(error ?? new NullError("Value was null."));
 
     /// <summary>
     /// Gets the value within the result,
@@ -82,7 +82,7 @@ public static class ResultExtensions
         dict.TryGetValue(key, out var x)
             ? new(x)
             : new(error
-                ?? new StringError($"Dictionary does not contain key '{key}'."));
+                ?? new NotFoundError($"Dictionary does not contain key '{key}'."));
 
     /// <summary>
     /// Gets a result containing the element at the specified index in the list,
@@ -96,7 +96,7 @@ public static class ResultExtensions
     public static Result<T> Index<T>(this IReadOnlyList<T> list, int index, Error? error = null) =>
         index < list.Count
             ? new(list[index])
-            : new(error
-                ?? $"Index {index} is out of range for the list, "
-                 + $"which has a count of {list.Count}.");
+            : new(error ?? new NotFoundError(
+                   $"Index {index} is out of range for the list, " +
+                   $"which has a count of {list.Count}."));
 }

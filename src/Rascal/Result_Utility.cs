@@ -45,8 +45,9 @@ public readonly partial struct Result<T>
         HasValue
             ? value is TDerived derived
                 ? new(derived)
-                : new(new StringError(
-                    error ?? $"Value was not of type '{typeof(TDerived)}'."))
+                : new(new ValidationError(
+                    error ?? $"Value was not of type '{typeof(TDerived)}'.",
+                    value))
             : new(Error);
 
     /// <summary>
@@ -78,9 +79,9 @@ public readonly partial struct Result<T>
                 ? this
                 : new(getError?.Invoke(value!)
 #if NETCOREAPP
-                    ?? new StringError($"Value did not match predicate '{expr}'."))
+                    ?? new ValidationError($"Value did not match predicate '{expr}'.", value))
 #else
-                    ?? new StringError("Value did not match predicate."))
+                    ?? new ValidationError("Value did not match predicate.", value))
 #endif
             : new(Error);
 
