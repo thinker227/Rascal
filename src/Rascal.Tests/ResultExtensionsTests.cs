@@ -13,100 +13,100 @@ public class ResultExtensionsTests
     }
 
     [Fact]
-    public void NotNull_Class()
+    public void NotNull_Class_ReturnsOk_ForNotNull()
     {
-        {
-            var x = "uwu";
-            var r = x.NotNull("error");
+        var x = "uwu";
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe("uwu");
-        }
-
-        {
-            var x = null as string;
-            var r = x.NotNull("error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe("uwu");
     }
 
     [Fact]
-    public void NotNull_Struct()
+    public void NotNull_Class_ReturnsErr_ForNull()
     {
-        {
-            var x = 2 as int?;
-            var r = x.NotNull("error");
+        var x = null as string;
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var x = null as int?;
-            var r = x.NotNull("error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 
     [Fact]
-    public void GetValueOrNull()
+    public void NotNull_Struct_ReturnsOk_ForNotNull()
     {
-        {
-            var r = Ok(2);
-            var x = r.GetValueOrNull();
+        var x = 2 as int?;
+        var r = x.NotNull("error");
 
-            x.ShouldBe(2);
-        }
-
-        {
-            var r = Err<int>("error");
-            var x = r.GetValueOrNull();
-
-            x.ShouldBe(null);
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
     }
 
     [Fact]
-    public void TryGetValueR()
+    public void NotNull_Struct_ReturnsErr_ForNull()
     {
-        {
-            var dict = new Dictionary<string, int>() { ["a"] = 2 };
-            var r = dict.TryGetValueR("a", "error");
+        var x = null as int?;
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var dict = new Dictionary<string, int>();
-            var r = dict.TryGetValueR("a", "error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 
     [Fact]
-    public void Index()
+    public void GeTValueOrNull_ReturnsValue_ForOk()
     {
-        {
-            var xs = new[] { 2 };
-            var r = xs.Index(0, "error");
+        var r = Ok(2);
+        var x = r.GetValueOrNull();
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
+        x.ShouldBe(2);
+    }
 
-        {
-            var xs = Array.Empty<int>();
-            var r = xs.Index(0, "error");
+    [Fact]
+    public void GetValueOrNull_ReturnsNull_ForErr()
+    {
+        var r = Err<int>("error");
+        var x = r.GetValueOrNull();
 
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        x.ShouldBe(null);
+    }
+
+    [Fact]
+    public void TryGetValueR_ReturnsOk_IfKeyExists()
+    {
+        var dict = new Dictionary<string, int>() { ["a"] = 2 };
+        var r = dict.TryGetValueR("a", "error");
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void TryGetValueR_ReturnsErr_IfKeyIsMissing()
+    {
+        var dict = new Dictionary<string, int>();
+        var r = dict.TryGetValueR("a", "error");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public void Index_ReturnsOk_IfWithinRange()
+    {
+        var xs = new[] { 2 };
+        var r = xs.Index(0, "error");
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void Index_ReturnsErr_IfOutsideRange()
+    {
+        var xs = Array.Empty<int>();
+        var r = xs.Index(0, "error");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 }
