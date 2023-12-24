@@ -66,6 +66,16 @@ public static class ResultExtensions
         result.Map(x => (T?)x).GetValueOrDefault();
 
     /// <summary>
+    /// Gets an immutable reference to the value within a result.
+    /// </summary>
+    /// <typeparam name="T">The type of the value in the result.</typeparam>
+    /// <param name="result">The result to get a reference to the value within.</param>
+    /// <returns>An immutable reference to the value in <paramref name="result"/>.
+    /// The value might be <see langword="default"/> if the result does not contain a value.</returns>
+    public static ref readonly T? AsRef<T>(this ref Result<T> result) =>
+        ref result.value;
+
+    /// <summary>
     /// Gets a result containing the value that is associated with the specified key in a dictionary,
     /// or an error if the key is not present.
     /// </summary>

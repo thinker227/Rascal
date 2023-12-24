@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Rascal.Tests;
 
 public class ResultExtensionsTests
@@ -68,6 +70,30 @@ public class ResultExtensionsTests
         var x = r.GetValueOrNull();
 
         x.ShouldBe(null);
+    }
+
+    [Fact]
+    public void AsRef_ReturnsRefToValue_ForOk()
+    {
+        var r = Ok(2);
+        ref readonly var v = ref r.value;
+
+        ref readonly var x = ref r.AsRef();
+
+        Unsafe.AreSame(in x, in v).ShouldBeTrue();
+        x.ShouldBe(2);
+    }
+
+    [Fact]
+    public void AsRef_ReturnsRefToDefault_ForErr()
+    {
+        var r = Err<int>("error");
+        ref readonly var v = ref r.value;
+
+        ref readonly var x = ref r.AsRef();
+
+        Unsafe.AreSame(in x, in v).ShouldBeTrue();
+        x.ShouldBe(default);
     }
 
     [Fact]
