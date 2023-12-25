@@ -109,4 +109,33 @@ public class ResultExtensionsTests
         r.HasValue.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
+
+    [Fact]
+    public async Task CatchCancellation_ReturnsOk_IfFinished()
+    {
+        var r = await Task.FromResult(2).CatchCancellation();
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task CatchCancellation_ReturnsErr_IfCanceled()
+    {
+        var cts = new CancellationTokenSource();
+
+        var task = GetTask(cts.Token);
+        await cts.CancelAsync();
+        var r = await task.CatchCancellation();
+
+        r.HasValue.ShouldBeFalse();
+        r.error.ShouldBeOfType<CancellationError>();
+        return;
+
+        static async Task<int> GetTask(CancellationToken cancellationToken)
+        {
+            await Task.Delay(-1, cancellationToken);
+            return 0;
+        }
+    }
 }

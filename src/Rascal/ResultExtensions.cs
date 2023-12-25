@@ -99,4 +99,41 @@ public static class ResultExtensions
             : new(error ?? new NotFoundError(
                    $"Index {index} is out of range for the list, " +
                    $"which has a count of {list.Count}."));
+
+    /// <summary>
+    /// Catches the cancellation of a task and wraps the value or exception in a result.
+    /// </summary>
+    /// <param name="task">The task to catch.</param>
+    /// <param name="error">A function which produces an error in case of a cancellation.</param>
+    /// <typeparam name="T">The type returned by the task.</typeparam>
+    /// <returns>A result which contains either the value returned by awaiting <paramref name="task"/>,
+    /// or an error in case the task is cancelled.</returns>
+    public static async Task<Result<T>> CatchCancellation<T>(this Task<T> task, Func<Error>? error = null)
+    {
+        try
+        {
+            var value = await task;
+            return new(value);
+        }
+        catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
+        {
+            return new(error?.Invoke() ?? new CancellationError());
+        }
+    }
+
+#if NETCOREAPP
+    /// <inheritdoc cref="CatchCancellation{T}(System.Threading.Tasks.Task{T},System.Func{Rascal.Error}?)"/>
+    public static async Task<Result<T>> CatchCancellation<T>(this ValueTask<T> task, Func<Error>? error = null)
+    {
+        try
+        {
+            var value = await task;
+            return new(value);
+        }
+        catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
+        {
+            return new(error?.Invoke() ?? new CancellationError());
+        }
+    }
+#endif
 }

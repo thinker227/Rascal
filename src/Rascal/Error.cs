@@ -118,3 +118,12 @@ public sealed class ParseError(string message, object? source) : Error
 
     public override string Message => message;
 }
+
+/// <summary>
+/// An error which represents the cancellation of a task.
+/// </summary>
+/// <param name="message">The optional message describing the task cancellation.</param>
+public sealed class CancellationError(string? message = null) : Error
+{
+    public override string Message => message ?? "Task was cancelled.";
+}
