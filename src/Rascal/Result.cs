@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
 
 namespace Rascal;
 
@@ -6,6 +6,7 @@ namespace Rascal;
 /// A type which contains either a successful value or an error.
 /// </summary>
 /// <typeparam name="T">The type of a successful value.</typeparam>
+[DebuggerTypeProxy(typeof(ResultDebugProxy<>))]
 public readonly partial struct Result<T>
 {
     internal readonly T? value;
