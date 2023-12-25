@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Rascal;
@@ -117,4 +118,14 @@ public readonly partial struct Result<T>
         HasValue
             ? [value!]
             : [];
+
+    /// <summary>
+    /// Gets an immutable reference to the value of the result.
+    /// </summary>
+    /// <returns>An immutable reference to the result's value.
+    /// The value might be <see langword="default"/> if the result does not contain a value.</returns>
+    [UnscopedRef]
+    [Pure]
+    public ref readonly T? AsRef() =>
+        ref value;
 }
