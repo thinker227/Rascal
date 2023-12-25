@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rascal\Rascal.csproj" />
+    <ProjectReference Include="..\Rascal.Json\Rascal.Json.csproj" />
   </ItemGroup>
 
 </Project>
