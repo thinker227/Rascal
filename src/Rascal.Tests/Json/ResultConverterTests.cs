@@ -18,7 +18,7 @@ public class ResultConverterTests
     }
 
     [Fact]
-    public void SerializedErr()
+    public void SerializesErr()
     {
         var result = Err<int>("error");
         var options = new JsonSerializerOptions().AddResultConverters();
