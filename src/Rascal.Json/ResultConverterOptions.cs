@@ -22,6 +22,16 @@ public readonly struct ResultConverterOptions
     public JsonConverter<Error> ErrorConverter { get; init; } = new DefaultErrorConverter();
 
     /// <summary>
+    /// The name for the property which ok values are written to and read from.
+    /// </summary>
+    public string OkPropertyName { get; init; } = "ok";
+
+    /// <summary>
+    /// The name for the property which error values are written to and read from.
+    /// </summary>
+    public string ErrorPropertyName { get; init; } = "err";
+
+    /// <summary>
     /// Sets what to prefer when deserializing a JSON object where both <c>ok</c> and <c>err</c> are present.
     /// </summary>
     /// <param name="propertyPreference">The preference to set.</param>
@@ -33,9 +43,25 @@ public readonly struct ResultConverterOptions
     /// Sets the converter used to serialize <see cref="Error"/>s.
     /// </summary>
     /// <param name="errorConverter">The converter to use.</param>
-    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="PropertyPreference"/> set.</returns>
+    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="ErrorConverter"/> set.</returns>
     public ResultConverterOptions WithErrorConverter(JsonConverter<Error> errorConverter) =>
         this with { ErrorConverter = errorConverter };
+
+    /// <summary>
+    /// Sets the name for the property which ok values are written to and read from.
+    /// </summary>
+    /// <param name="okPropertyName">The name to set.</param>
+    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="OkPropertyName"/> set.</returns>
+    public ResultConverterOptions WithOkPropertyName(string okPropertyName) =>
+        this with { OkPropertyName = okPropertyName };
+
+    /// <summary>
+    /// Sets the name for the property which error values are written to and read from.
+    /// </summary>
+    /// <param name="errorPropertyName">The name to set.</param>
+    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="ErrorPropertyName"/> set.</returns>
+    public ResultConverterOptions WithErrorPropertyName(string errorPropertyName) =>
+        this with { ErrorPropertyName = errorPropertyName };
 }
 
 /// <summary>

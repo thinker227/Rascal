@@ -31,6 +31,9 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         var valueConverter = options.GetConverter<T>();
         var errorConverter = options.GetConverter<Error>();
 
+        var okName = converterOptions.OkPropertyName;
+        var errorName = converterOptions.ErrorPropertyName;
+
         var ok = default(T);
         var readOk = false;
 
@@ -39,7 +42,7 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
 
         bool readOkFirst;
         
-        if (reader.ValueTextEquals("ok"))
+        if (reader.ValueTextEquals(okName))
         {
             reader.Read();
             
@@ -49,7 +52,7 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
             readOk = true;
             readOkFirst = true;
         }
-        else if (reader.ValueTextEquals("err"))
+        else if (reader.ValueTextEquals(errorName))
         {
             reader.Read();
             
@@ -59,33 +62,33 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
             readErr = true;
             readOkFirst = false;
         }
-        else throw new JsonException("Expected property 'ok' or 'err'.");
+        else throw new JsonException($"Expected property '{okName}' or '{errorName}'.");
 
         if (reader.TokenType == JsonTokenType.PropertyName)
         {
-            if (reader.ValueTextEquals("ok"))
+            if (reader.ValueTextEquals(converterOptions.OkPropertyName))
             {
                 reader.Read();
                 
-                if (readOk) throw new JsonException("Duplicate 'ok' properties.");
+                if (readOk) throw new JsonException($"Duplicate '{okName}' properties.");
             
                 ok = valueConverter.Read(ref reader, typeof(T), options);
                 reader.Read();
                 
                 readOk = true;
             }
-            else if (reader.ValueTextEquals("err"))
+            else if (reader.ValueTextEquals(errorName))
             {
                 reader.Read();
                 
-                if (readErr) throw new JsonException("Duplicate 'err' properties.");
+                if (readErr) throw new JsonException($"Duplicate '{errorName}' properties.");
             
                 err = errorConverter.Read(ref reader, typeof(Error), options);
                 reader.Read();
                 
                 readErr = true;
             }
-            else throw new JsonException("Expected property 'ok' or 'err'.");
+            else throw new JsonException($"Expected property '{okName}' or '{errorName}'.");
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)
@@ -119,12 +122,12 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
             {
                 var converter = (JsonConverter<T>)options.GetConverter(typeof(T));
                 
-                writer.WritePropertyName("ok");
+                writer.WritePropertyName(converterOptions.OkPropertyName);
                 converter.Write(writer, x, options);
             },
             e =>
             {
-                writer.WritePropertyName("err");
+                writer.WritePropertyName(converterOptions.ErrorPropertyName);
                 writer.WriteStringValue(e.Message);
             }
         );

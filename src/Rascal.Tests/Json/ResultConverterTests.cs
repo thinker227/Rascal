@@ -125,4 +125,62 @@ public class ResultConverterTests
         result.HasValue.ShouldBeFalse();
         result.error?.Message.ShouldBe("error");
     }
+
+    [Fact]
+    public void SerializesUsingOkPropertyName()
+    {
+        var result = Ok(2);
+        var options = new JsonSerializerOptions().AddResultConverters(o => o
+            .WithOkPropertyName("foo"));
+
+        var json = JsonSerializer.Serialize(result, options);
+
+        json.ShouldBe("""
+        {"foo":2}
+        """);
+    }
+
+    [Fact]
+    public void SerializesUsingErrorPropertyName()
+    {
+        var result = Err<int>("error");
+        var options = new JsonSerializerOptions().AddResultConverters(o => o
+            .WithErrorPropertyName("foo"));
+
+        var json = JsonSerializer.Serialize(result, options);
+
+        json.ShouldBe("""
+        {"foo":"error"}
+        """);
+    }
+
+    [Fact]
+    public void DeserializesUsingOkPropertyName()
+    {
+        var json = """
+        {"foo":2}
+        """;
+        var options = new JsonSerializerOptions().AddResultConverters(o => o
+            .WithOkPropertyName("foo"));
+
+        var result = JsonSerializer.Deserialize<Result<int>>(json, options);
+
+        result.HasValue.ShouldBeTrue();
+        result.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void DeserializesUsingErrorPropertyName()
+    {
+        var json = """
+        {"foo":"error"}
+        """;
+        var options = new JsonSerializerOptions().AddResultConverters(o => o
+            .WithErrorPropertyName("foo"));
+
+        var result = JsonSerializer.Deserialize<Result<int>>(json, options);
+
+        result.HasValue.ShouldBeFalse();
+        result.error?.Message.ShouldBe("error");
+    }
 }
