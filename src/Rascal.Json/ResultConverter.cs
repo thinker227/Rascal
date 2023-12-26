@@ -28,8 +28,8 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         if (reader.TokenType != JsonTokenType.PropertyName)
             throw new JsonException("Expected property name.");
 
-        var valueConverter = (JsonConverter<T>)options.GetConverter(typeof(T));
-        var errorConverter = (JsonConverter<Error>)options.GetConverter(typeof(Error));
+        var valueConverter = options.GetConverter<T>();
+        var errorConverter = options.GetConverter<Error>();
 
         var ok = default(T);
         var readOk = false;
