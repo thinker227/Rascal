@@ -10,7 +10,7 @@ public readonly struct ResultConverterOptions
     public ResultConverterOptions() {}
     
     /// <summary>
-    /// What to prefer when deserializing a JSON string where both <c>ok</c> and <c>err</c> are present.
+    /// What to prefer when deserializing a JSON object where both <c>ok</c> and <c>err</c> are present.
     /// The default is <see cref="ResultPropertyPreference.PreferOk"/>.
     /// </summary>
     public ResultPropertyPreference PropertyPreference { get; init; } = ResultPropertyPreference.PreferOk;
@@ -19,6 +19,22 @@ public readonly struct ResultConverterOptions
     /// The converter used to serialize <see cref="Error"/>s.
     /// </summary>
     public JsonConverter<Error> ErrorConverter { get; init; } = new DefaultErrorConverter();
+
+    /// <summary>
+    /// Sets what to prefer when deserializing a JSON object where both <c>ok</c> and <c>err</c> are present.
+    /// </summary>
+    /// <param name="propertyPreference">The preference to set.</param>
+    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="PropertyPreference"/> set.</returns>
+    public ResultConverterOptions WithPropertyPreference(ResultPropertyPreference propertyPreference) =>
+        this with { PropertyPreference = propertyPreference };
+
+    /// <summary>
+    /// Sets the converter used to serialize <see cref="Error"/>s.
+    /// </summary>
+    /// <param name="errorConverter">The converter to use.</param>
+    /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="PropertyPreference"/> set.</returns>
+    public ResultConverterOptions WithErrorConverter(JsonConverter<Error> errorConverter) =>
+        this with { ErrorConverter = errorConverter };
 }
 
 /// <summary>
