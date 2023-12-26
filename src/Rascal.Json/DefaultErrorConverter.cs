@@ -5,6 +5,8 @@ namespace Rascal.Json;
 
 /// <summary>
 /// The default converter for <see cref="Error"/> values.
+/// Uses <see cref="Error.Message"/> to read from and write to JSON.
+/// Error types are erased and uniformly replaced with <see cref="FromJsonError"/>.
 /// </summary>
 public sealed class DefaultErrorConverter : JsonConverter<Error>
 {

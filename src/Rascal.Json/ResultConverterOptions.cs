@@ -17,6 +17,7 @@ public readonly struct ResultConverterOptions
 
     /// <summary>
     /// The converter used to serialize <see cref="Error"/>s.
+    /// The default is <see cref="DefaultErrorConverter"/>.
     /// </summary>
     public JsonConverter<Error> ErrorConverter { get; init; } = new DefaultErrorConverter();
 
