@@ -29,12 +29,12 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
             throw new JsonException("Expected property name.");
 
         var valueConverter = (JsonConverter<T>)options.GetConverter(typeof(T));
-        var errorConverter = (JsonConverter<string>)options.GetConverter(typeof(string));
+        var errorConverter = (JsonConverter<Error>)options.GetConverter(typeof(Error));
 
         var ok = default(T);
         var readOk = false;
 
-        var err = null as string;
+        var err = null as Error;
         var readErr = false;
 
         bool readOkFirst;
@@ -80,7 +80,7 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
                 
                 if (readErr) throw new JsonException("Duplicate 'err' properties.");
             
-                err = errorConverter.Read(ref reader, typeof(string), options);
+                err = errorConverter.Read(ref reader, typeof(Error), options);
                 reader.Read();
                 
                 readErr = true;
@@ -91,19 +91,17 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         if (reader.TokenType != JsonTokenType.EndObject)
             throw new JsonException("Expected '}'.");
 
-        reader.Read();
-
         var result = (readOk, readErr) switch
         {
             (true, false) => new Result<T>(ok!),
-            (false, true) => new Result<T>(new StringError(err!)),
+            (false, true) => new Result<T>(err!),
             (true, true) => converterOptions.PropertyPreference switch
             {
                 ResultPropertyPreference.PreferOk => new Result<T>(ok!),
-                ResultPropertyPreference.PreferErr => new Result<T>(new StringError(err!)),
+                ResultPropertyPreference.PreferErr => new Result<T>(err!),
                 ResultPropertyPreference.First => readOkFirst
                     ? new Result<T>(ok!)
-                    : new Result<T>(new StringError(err!)),
+                    : new Result<T>(err!),
                 _ => throw new UnreachableException(),
             },
             _ => throw new UnreachableException(),

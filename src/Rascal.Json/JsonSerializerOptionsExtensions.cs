@@ -19,6 +19,8 @@ public static class JsonSerializerOptionsExtensions
         var converterOptions = new ResultConverterOptions();
         if (configureOptions is not null) converterOptions = configureOptions(converterOptions);
         
+        options.Converters.Add(converterOptions.ErrorConverter);
+        
         var factory = new ResultConverterFactory(converterOptions);
         options.Converters.Add(factory);
         

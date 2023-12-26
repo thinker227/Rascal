@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Rascal.Json;
 
 /// <summary>
@@ -12,6 +14,11 @@ public readonly struct ResultConverterOptions
     /// The default is <see cref="ResultPropertyPreference.PreferOk"/>.
     /// </summary>
     public ResultPropertyPreference PropertyPreference { get; init; } = ResultPropertyPreference.PreferOk;
+
+    /// <summary>
+    /// The converter used to serialize <see cref="Error"/>s.
+    /// </summary>
+    public JsonConverter<Error> ErrorConverter { get; init; } = new DefaultErrorConverter();
 }
 
 /// <summary>
