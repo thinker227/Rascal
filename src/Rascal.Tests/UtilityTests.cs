@@ -55,9 +55,7 @@ public class UtilityTests
 
         r.HasValue.ShouldBeFalse();
         var error = r.error.ShouldBeOfType<AggregateError>();
-        error.Errors.Length.ShouldBe(2);
-        error.Errors[0].Message.ShouldBe("error a");
-        error.Errors[1].Message.ShouldBe("error b");
+        error.Errors.Select(x => x.Message).ShouldBe(["error a", "error b"]);
     }
 
     [Fact]

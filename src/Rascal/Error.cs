@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Rascal;
 
 /// <summary>
@@ -57,7 +55,7 @@ public sealed class AggregateError(IEnumerable<Error> errors) : Error
     /// <summary>
     /// The errors the error consists of.
     /// </summary>
-    public ImmutableArray<Error> Errors { get; } = errors.ToImmutableArray();
+    public IReadOnlyCollection<Error> Errors { get; } = errors.ToList();
 
     public override string Message => string.Join("\n", Errors.Select(x => x.Message));
 }
