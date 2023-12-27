@@ -71,6 +71,39 @@ public class ResultExtensionsTests
     }
 
     [Fact]
+    public void Sequence_ReturnsAllOk_ForSequenceContainingAllOks()
+    {
+        IEnumerable<Result<int>> xs = [1, 2, 3, 4, 5];
+
+        var result = xs.Sequence();
+        
+        result.HasValue.ShouldBeTrue();
+        result.value.ShouldBe([1, 2, 3, 4, 5]);
+    }
+
+    [Fact]
+    public void Sequence_ReturnsFirstError_ForSequenceContainingErrors()
+    {
+        IEnumerable<Result<int>> xs = [Ok(1), Ok(2), Err<int>("error 1"), Ok(4), Err<int>("error 2")];
+
+        var result = xs.Sequence();
+
+        result.HasValue.ShouldBeFalse();
+        result.error?.Message.ShouldBe("error 1");
+    }
+
+    [Fact]
+    public void Sequence_ReturnsOk_ForEmptySequence()
+    {
+        IEnumerable<Result<int>> xs = [];
+
+        var result = xs.Sequence();
+
+        result.HasValue.ShouldBeTrue();
+        result.value.ShouldBeEmpty();
+    }
+
+    [Fact]
     public void TryGetValueR_ReturnsOk_IfKeyExists()
     {
         var dict = new Dictionary<string, int>() { ["a"] = 2 };

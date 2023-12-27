@@ -66,6 +66,33 @@ public static class ResultExtensions
         result.Map(x => (T?)x).GetValueOrDefault();
 
     /// <summary>
+    /// Turns a sequence of results into a single result containing the values in the sequence
+    /// only if all the results have a value.
+    /// Can also been seen as turning an <c>IEnumerable&lt;Result&lt;T&gt;&gt;</c> "inside out".
+    /// </summary>
+    /// <param name="results">The results to turn into a single sequence.</param>
+    /// <typeparam name="T">The type of the values in the results.</typeparam>
+    /// <returns>A single result containing a sequence of all the values from the original sequence of results,
+    /// or the first error encountered within the sequence.</returns>
+    /// <remarks>
+    /// This method completely enumerates the input sequence before returning and is not lazy.
+    /// As a consequence of this, the sequence within the returned result is an <see cref="IReadOnlyList{T}"/>.
+    /// </remarks>
+    public static Result<IReadOnlyList<T>> Sequence<T>(this IEnumerable<Result<T>> results)
+    {
+        var list = new List<T>();
+
+        foreach (var result in results)
+        {
+            if (!result.TryGetValue(out var x, out var e)) return new(e);
+
+            list.Add(x);
+        }
+
+        return list;
+    }
+
+    /// <summary>
     /// Gets a result containing the value that is associated with the specified key in a dictionary,
     /// or an error if the key is not present.
     /// </summary>
