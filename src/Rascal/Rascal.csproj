@@ -16,7 +16,7 @@
   <!-- Package metadata -->
   <PropertyGroup>
     <PackageId>Rascal</PackageId>
-    <PackageVersion>1.0.0-pre</PackageVersion>
+    <PackageVersion>1.0.1-pre</PackageVersion>
     <Description>
       A simple and lightweight result type implementation for C#.
     </Description>
@@ -25,6 +25,7 @@
     <Copyright>thinker227 2023</Copyright>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/thinker227/Rascal</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
