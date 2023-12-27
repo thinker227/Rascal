@@ -15,7 +15,7 @@ Rascal is first and foremost an aggregate of the result types I personally find 
 # Installation
 ```ps1
 # .NET CLI
-dotnet add package Rascal
+dotnet add package Rascal --prerelease
 ```
 
 # Using the package
