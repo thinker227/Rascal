@@ -24,6 +24,7 @@ public abstract class Error
 /// <param name="message">The message to display.</param>
 public sealed class StringError(string message) : Error
 {
+    /// <inheritdoc/>
     public override string Message => message;
 
     /// <summary>
@@ -38,6 +39,9 @@ public sealed class StringError(string message) : Error
 /// <param name="exception">The exception in the error.</param>
 public sealed class ExceptionError(Exception exception) : Error
 {
+    /// <summary>
+    /// The exception in the error.
+    /// </summary>
     public Exception Exception { get; } = exception;
 
     /// <summary>
@@ -57,6 +61,7 @@ public sealed class AggregateError(IEnumerable<Error> errors) : Error
     /// </summary>
     public IReadOnlyCollection<Error> Errors { get; } = errors.ToList();
 
+    /// <inheritdoc/>
     public override string Message => string.Join("\n", Errors.Select(x => x.Message));
 }
 
@@ -66,6 +71,7 @@ public sealed class AggregateError(IEnumerable<Error> errors) : Error
 /// <param name="message">A message which describes the thing which wasn't found.</param>
 public sealed class NotFoundError(string message) : Error
 {
+    /// <inheritdoc/>
     public override string Message => message;
 }
 
@@ -75,6 +81,7 @@ public sealed class NotFoundError(string message) : Error
 /// <param name="message">An optional message describing the operation and why it is invalid.</param>
 public sealed class InvalidOperationError(string? message = null) : Error
 {
+    /// <inheritdoc/>
     public override string Message => message ?? "Invalid operation.";
 }
 
@@ -84,6 +91,7 @@ public sealed class InvalidOperationError(string? message = null) : Error
 /// <param name="message">An optional message describing the thing which is <see langword="null"/>.</param>
 public sealed class NullError(string? message = null) : Error
 {
+    /// <inheritdoc/>
     public override string Message => message ?? "Value is null.";
 }
 
@@ -99,6 +107,7 @@ public sealed class ValidationError(string message, object? source) : Error
     /// </summary>
     public object? Source => source;
 
+    /// <inheritdoc/>
     public override string Message => message;
 }
 
@@ -114,6 +123,7 @@ public sealed class ParseError(string message, object? source) : Error
     /// </summary>
     public object? Source => source;
 
+    /// <inheritdoc/>
     public override string Message => message;
 }
 
@@ -123,5 +133,6 @@ public sealed class ParseError(string message, object? source) : Error
 /// <param name="message">The optional message describing the task cancellation.</param>
 public sealed class CancellationError(string? message = null) : Error
 {
+    /// <inheritdoc/>
     public override string Message => message ?? "Task was cancelled.";
 }

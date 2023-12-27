@@ -100,6 +100,7 @@ public static class ResultExtensions
     /// <typeparam name="TValue">The type of values in the  dictionary.</typeparam>
     /// <param name="dict">The dictionary to try locate the key in.</param>
     /// <param name="key">The key to locate.</param>
+    /// <param name="error">The error to return if the key is not present.</param>
     /// <returns>A result containing the value associated with <paramref name="key"/> in the dictionary,
     /// or an error if the key is not present.</returns>
     public static Result<TValue> TryGetValueR<TKey, TValue>(
@@ -118,6 +119,7 @@ public static class ResultExtensions
     /// <typeparam name="T">The type of the elements in the list.</typeparam>
     /// <param name="list">The list to index.</param>
     /// <param name="index">The zero-based index of the element to get.</param>
+    /// <param name="error">The error to return if the index is out of range.</param>
     /// <returns>A result containing the value at <paramref name="index"/> in the list,
     /// or an error if the index is out of range of the list.</returns>
     public static Result<T> Index<T>(this IReadOnlyList<T> list, int index, Error? error = null) =>

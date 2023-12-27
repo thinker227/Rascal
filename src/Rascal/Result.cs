@@ -41,6 +41,9 @@ public readonly partial struct Result<T>
         this.error = error;
     }
 
+    /// <summary>
+    /// Gets a string representation of the result.
+    /// </summary>
     [Pure]
     public override string ToString() =>
         HasValue

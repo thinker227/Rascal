@@ -51,6 +51,7 @@ public readonly partial struct Result<T>
                     value))
             : new(Error);
 
+#if NETCOREAPP
     /// <summary>
     /// Checks whether the value in the result matches a predicate,
     /// and if not replaces the value with an error.
@@ -65,12 +66,23 @@ public readonly partial struct Result<T>
     /// error produced by <paramref name="getError"/>.
     /// If the original result does not contain a value, that result will be returned.</returns>
     [Pure]
-#if NETCOREAPP
     public Result<T> Validate(
         Func<T, bool> predicate,
         Func<T, Error>? getError = null,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
 #else
+    /// <summary>
+    /// Checks whether the value in the result matches a predicate,
+    /// and if not replaces the value with an error.
+    /// </summary>
+    /// <param name="predicate">The predicate to match the value against.</param>
+    /// <param name="getError">A function to produce an error
+    /// if the value doesn't match the predicate.</param>
+    /// <returns>A result which contains the value of the original result
+    /// if the value matches <paramref name="predicate"/>, otherwise an
+    /// error produced by <paramref name="getError"/>.
+    /// If the original result does not contain a value, that result will be returned.</returns>
+    [Pure]
     public Result<T> Validate(
         Func<T, bool> predicate,
         Func<T, Error>? getError = null) =>
@@ -86,6 +98,7 @@ public readonly partial struct Result<T>
 #endif
             : new(Error);
 
+#if NETCOREAPP
     /// <summary>
     /// Checks whether the value in the result matches a predicate,
     /// and if not replaces the value with an error.
@@ -98,13 +111,22 @@ public readonly partial struct Result<T>
     /// If the original result does not contain a value, that result will be returned.</returns>
     [Pure]
     public Result<T> Where(
-#if NETCOREAPP
         Func<T, bool> predicate,
         [CallerArgumentExpression(nameof(predicate))] string expr = "") =>
         Validate(predicate, null, expr);
 #else
+    /// <summary>
+    /// Checks whether the value in the result matches a predicate,
+    /// and if not replaces the value with an error.
+    /// </summary>
+    /// <param name="predicate">The predicate to match the value against.</param>
+    /// <returns>A result which contains the value of the original result
+    /// if the value matches <paramref name="predicate"/>, otherwise an error.
+    /// If the original result does not contain a value, that result will be returned.</returns>
+    [Pure]
+    public Result<T> Where(
         Func<T, bool> predicate) =>
-        Validate(predicate, null);
+        Validate(predicate);
 #endif
 
     /// <summary>
