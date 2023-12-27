@@ -13,22 +13,10 @@ Rascal is first and foremost an aggregate of the result types I personally find 
 <br/>
 
 # Installation
-- .NET CLI
 ```ps1
-dotnet add package Rascal --version 1.0.0-pre
+# .NET CLI
+dotnet add package Rascal
 ```
-- Visual Studio Package Manager Console
-```ps1
-NuGet\Install-Package Rascal -Version 1.0.0-pre
-```
-- Project reference
-```xml
-<ItemGroup>
-  <PackageReference Include="Rascal" Version="1.0.0-pre" />
-</ItemGroup>
-```
-
-<br/>
 
 # Using the package
 
