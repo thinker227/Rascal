@@ -12,7 +12,7 @@ public readonly partial struct Result<T>
     /// or the error of the original result.</returns>
     [Pure]
     public Result<TNew> Map<TNew>(Func<T, TNew> mapping) =>
-        HasValue
+        IsOk
             ? new(mapping(value!))
             : new(Error);
 
@@ -26,7 +26,7 @@ public readonly partial struct Result<T>
     /// or a new result containing the error of the original result.</returns>
     [Pure]
     public Result<TNew> Then<TNew>(Func<T, Result<TNew>> mapping) =>
-        HasValue
+        IsOk
             ? mapping(value!)
             : new(Error);
 
@@ -62,11 +62,11 @@ public readonly partial struct Result<T>
         Func<T, Result<TOther>> other,
         Func<T, TOther, TNew> mapping)
     {
-        if (!HasValue) return new(Error);
+        if (!IsOk) return new(Error);
         var a = value;
 
         var br = other(a!);
-        if (!br.HasValue) return new(br.Error);
+        if (!br.IsOk) return new(br.Error);
         var b = br.value;
 
         return new(mapping(a!, b!));
@@ -130,7 +130,7 @@ public readonly partial struct Result<T>
     /// or the value of the original result.</returns>
     [Pure]
     public Result<T> MapError(Func<Error, Error> mapping) =>
-        !HasValue
+        !IsOk
             ? new(mapping(Error))
             : this;
 }

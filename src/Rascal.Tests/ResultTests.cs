@@ -7,7 +7,7 @@ public class ResultTests
     {
         var r = new Result<int>(2);
         
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
         r.error.ShouldBeNull();
     }
@@ -17,7 +17,7 @@ public class ResultTests
     {
         var r = new Result<int>(new TestError());
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.value.ShouldBe(default);
         r.error.ShouldBeOfType<TestError>();
     }
@@ -27,7 +27,7 @@ public class ResultTests
     {
         var r = default(Result<int>);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.value.ShouldBe(default);
         r.error.ShouldBe(default);
         r.Error.ShouldBe(Error.DefaultValueError);

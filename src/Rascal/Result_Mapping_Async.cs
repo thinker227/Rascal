@@ -18,7 +18,7 @@ public readonly partial struct Result<T>
     [Pure]
     public ValueTask<Result<TNew>> MapAsync<TNew>(Func<T, Task<TNew>> mapping)
     {
-        if (!HasValue) return new(new Result<TNew>(Error));
+        if (!IsOk) return new(new Result<TNew>(Error));
 
         var task = mapping(value!);
         return new(CreateResult(task));
@@ -43,7 +43,7 @@ public readonly partial struct Result<T>
     [Pure]
     public ValueTask<Result<TNew>> ThenAsync<TNew>(Func<T, Task<Result<TNew>>> mapping)
     {
-        if (!HasValue) return new(new Result<TNew>(Error));
+        if (!IsOk) return new(new Result<TNew>(Error));
 
         var task = mapping(value!);
         return new(task);
@@ -66,7 +66,7 @@ public readonly partial struct Result<T>
     [Pure]
     public ValueTask<Result<TNew>> TryMapAsync<TNew>(Func<T, Task<TNew>> mapping)
     {
-        if (!HasValue) return new(new Result<TNew>(Error));
+        if (!IsOk) return new(new Result<TNew>(Error));
 
         try
         {
@@ -109,7 +109,7 @@ public readonly partial struct Result<T>
     [Pure]
     public ValueTask<Result<TNew>> ThenTryAsync<TNew>(Func<T, Task<Result<TNew>>> mapping)
     {
-        if (!HasValue) return new(new Result<TNew>(Error));
+        if (!IsOk) return new(new Result<TNew>(Error));
 
         try
         {
@@ -134,7 +134,7 @@ public readonly partial struct Result<T>
     /// or the error of the original result.</returns>
     [Pure]
     public async Task<Result<TNew>> MapAsync<TNew>(Func<T, Task<TNew>> mapping) =>
-        HasValue
+        IsOk
             ? new(await mapping(value!))
             : new(Error);
 
@@ -148,7 +148,7 @@ public readonly partial struct Result<T>
     /// or a new result containing the error of the original result.</returns>
     [Pure]
     public async Task<Result<TNew>> ThenAsync<TNew>(Func<T, Task<Result<TNew>>> mapping) =>
-        HasValue
+        IsOk
             ? await mapping(value!)
             : new(Error);
 
@@ -166,7 +166,7 @@ public readonly partial struct Result<T>
     [Pure]
     public async Task<Result<TNew>> TryMapAsync<TNew>(Func<T, Task<TNew>> mapping)
     {
-        if (!HasValue) return new(Error);
+        if (!IsOk) return new(Error);
 
         try
         {
@@ -193,7 +193,7 @@ public readonly partial struct Result<T>
     [Pure]
     public async Task<Result<TNew>> ThenTryAsync<TNew>(Func<T, Task<Result<TNew>>> mapping)
     {
-        if (!HasValue) return new Result<TNew>(Error);
+        if (!IsOk) return new Result<TNew>(Error);
 
         try
         {

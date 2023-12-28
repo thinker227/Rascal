@@ -15,7 +15,7 @@ public readonly partial struct Result<T> :
     /// <param name="other">The value to check for equality with the value in the result.</param>
     [Pure]
     public bool Equals(T? other) =>
-        HasValue && (other?.Equals(value) ?? value is null);
+        IsOk && (other?.Equals(value) ?? value is null);
 
     /// <summary>
     /// Checks whether the result is equal to another result.
@@ -25,8 +25,8 @@ public readonly partial struct Result<T> :
     /// <param name="other">The result to check for equality with the current result.</param>
     [Pure]
     public bool Equals(Result<T> other) =>
-        HasValue && other.HasValue && (other.value?.Equals(value) ?? value is null) ||
-        !HasValue && !other.HasValue;
+        IsOk && other.IsOk && (other.value?.Equals(value) ?? value is null) ||
+        !IsOk && !other.IsOk;
 
     /// <inheritdoc/>
     [Pure]
@@ -37,7 +37,7 @@ public readonly partial struct Result<T> :
     /// <inheritdoc/>
     [Pure]
     public override int GetHashCode() =>
-        HasValue
+        IsOk
             ? value?.GetHashCode() ?? 0
             : 0;
 

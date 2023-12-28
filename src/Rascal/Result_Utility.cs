@@ -24,7 +24,7 @@ public readonly partial struct Result<T>
     /// that error, or both errors if both results contain errors.</returns>
     [Pure]
     public Result<(T first, TOther second)> Combine<TOther>(Result<TOther> other) =>
-        (HasValue, other.HasValue) switch
+        (IsOk, other.IsOk) switch
     {
         (true, true) => new((value!, other.value!)),
         (false, true) => new(Error),
@@ -43,7 +43,7 @@ public readonly partial struct Result<T>
     [Pure]
     public Result<TDerived> ToType<TDerived>(string? error = null)
         where TDerived : T =>
-        HasValue
+        IsOk
             ? value is TDerived derived
                 ? new(derived)
                 : new(new ValidationError(
@@ -87,7 +87,7 @@ public readonly partial struct Result<T>
         Func<T, bool> predicate,
         Func<T, Error>? getError = null) =>
 #endif
-        HasValue
+        IsOk
             ? predicate(value!)
                 ? this
                 : new(getError?.Invoke(value!)
@@ -137,7 +137,7 @@ public readonly partial struct Result<T>
     /// or no values at all if the result does not contain a value</returns>
     [Pure]
     public IEnumerable<T> ToEnumerable() =>
-        HasValue
+        IsOk
             ? [value!]
             : [];
 

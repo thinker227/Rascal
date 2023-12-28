@@ -17,7 +17,7 @@ public readonly partial struct Result<T>
     /// <summary>
     /// Whether the result has a value or not.
     /// </summary>
-    public bool HasValue { get; }
+    public bool IsOk { get; }
 
     /// <summary>
     /// Creates a new result with a successful value.
@@ -25,7 +25,7 @@ public readonly partial struct Result<T>
     /// <param name="value">The successful value.</param>
     public Result(T value)
     {
-        HasValue = true;
+        IsOk = true;
         this.value = value;
         error = null;
     }
@@ -36,7 +36,7 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     public Result(Error error)
     {
-        HasValue = false;
+        IsOk = false;
         value = default;
         this.error = error;
     }
@@ -46,7 +46,7 @@ public readonly partial struct Result<T>
     /// </summary>
     [Pure]
     public override string ToString() =>
-        HasValue
+        IsOk
             ? $"Ok {{ {value} }}"
             : $"Error {{ {Error.Message} }}";
 }
