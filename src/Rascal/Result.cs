@@ -12,7 +12,7 @@ public readonly partial struct Result<T>
     internal readonly T? value;
     internal readonly Error? error;
 
-    internal Error Error => error ?? StringError.DefaultError;
+    internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
     /// Whether the result has a value or not.

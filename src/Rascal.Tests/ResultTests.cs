@@ -30,7 +30,7 @@ public class ResultTests
         r.HasValue.ShouldBeFalse();
         r.value.ShouldBe(default);
         r.error.ShouldBe(default);
-        r.Error.ShouldBe(StringError.DefaultError);
+        r.Error.ShouldBe(Error.DefaultValueError);
     }
 
     [Fact]

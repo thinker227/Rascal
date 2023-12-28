@@ -11,6 +11,11 @@ public abstract class Error
     public abstract string Message { get; }
 
     /// <summary>
+    /// A statically accessible default "Result has no value." error.
+    /// </summary>
+    internal static Error DefaultValueError { get; } = new StringError("Result has no value.");
+    
+    /// <summary>
     /// Implicitly converts a string into a <see cref="StringError"/>.
     /// </summary>
     /// <param name="message">The message of the error.</param>
@@ -26,11 +31,6 @@ public sealed class StringError(string message) : Error
 {
     /// <inheritdoc/>
     public override string Message => message;
-
-    /// <summary>
-    /// A statically accessible default "Result has no value." error.
-    /// </summary>
-    internal static StringError DefaultError { get; } = new("Result has no value.");
 }
 
 /// <summary>
