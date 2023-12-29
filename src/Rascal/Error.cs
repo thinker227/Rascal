@@ -1,8 +1,17 @@
 namespace Rascal;
 
 /// <summary>
-/// An abstract error.
+/// An error containing a simple message.
+/// Makes up the other half of a <see cref="Result{T}"/> which might be an error.
 /// </summary>
+/// <remarks>
+/// An error is conceptually akin to an exception but without the ability to be thrown,
+/// meant to be a more lightweight type meant to be wrapped in a <see cref="Result{T}"/>.
+/// An error fundamentally only contains a single string message, however other more concrete types such as
+/// <see cref="ExceptionError"/> or <see cref="AggregateError"/> may define other properties.
+/// Errors are meant to be small, specific, and descriptive, such that they are easy to match over
+/// and provide specific handling for specific kinds of errors.
+/// </remarks>
 public abstract class Error
 {
     /// <summary>

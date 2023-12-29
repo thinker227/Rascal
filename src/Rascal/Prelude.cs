@@ -10,10 +10,10 @@ namespace Rascal;
 public static class Prelude
 {
     /// <summary>
-    /// Creates a result containing a value.
+    /// Creates a result containing an ok value.
     /// </summary>
-    /// <typeparam name="T">The type of the value in the result.</typeparam>
-    /// <param name="value">The value to create the result from.</param>
+    /// <typeparam name="T">The type of the ok value.</typeparam>
+    /// <param name="value">The ok value to create the result from.</param>
     [Pure]
     public static Result<T> Ok<T>(T value) =>
         new(value);
@@ -21,7 +21,7 @@ public static class Prelude
     /// <summary>
     /// Creates a result containing an error.
     /// </summary>
-    /// <typeparam name="T">The type of the value in the result.</typeparam>
+    /// <typeparam name="T">The type of an ok value in the result.</typeparam>
     /// <param name="error">The error to create the result from.</param>
     [Pure]
     public static Result<T> Err<T>(Error error) =>

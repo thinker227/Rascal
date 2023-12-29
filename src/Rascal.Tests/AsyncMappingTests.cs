@@ -8,7 +8,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.MapAsync(x => Task.FromResult(x.ToString()));
 
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
         x.value.ShouldBe("2");
     }
 
@@ -18,7 +18,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = await r.MapAsync(x => Task.FromResult(x.ToString()));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
 
@@ -28,7 +28,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.ThenAsync(x => Task.FromResult(Ok(x.ToString())));
 
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
         x.value.ShouldBe("2");
     }
 
@@ -38,7 +38,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.ThenAsync(_ => Task.FromResult(Err<string>("error")));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
 
@@ -48,7 +48,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = await r.ThenAsync(x => Task.FromResult(Ok(x.ToString())));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
     
@@ -58,7 +58,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.TryMapAsync(x => Task.FromResult(x.ToString()));
 
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
         x.value.ShouldBe("2");
     }
 
@@ -68,7 +68,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = r.TryMap(x => Task.FromResult(x.ToString()));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
 
@@ -78,7 +78,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.TryMapAsync<string>(_ => throw new TestException());
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         var e = x.error.ShouldBeOfType<ExceptionError>();
         e.Exception.ShouldBeOfType<TestException>();
     }
@@ -89,7 +89,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = await r.TryMapAsync<string>(_ => throw new TestException());
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         var e = x.error.ShouldBeOfType<StringError>();
         e.Message.ShouldBe("error");
     }
@@ -100,7 +100,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.ThenTryAsync(x => Task.FromResult(Ok(x.ToString())));
 
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
         x.value.ShouldBe("2");
     }
 
@@ -110,7 +110,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.ThenTryAsync(_ => Task.FromResult(Err<string>("error")));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
 
@@ -120,7 +120,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = await r.ThenTryAsync(x => Task.FromResult(Ok(x.ToString())));
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
     }
 
@@ -130,7 +130,7 @@ public class AsyncMappingTests
         var r = Ok(2);
         var x = await r.ThenTryAsync<string>(_ => throw new TestException());
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         var e = x.error.ShouldBeOfType<ExceptionError>();
         e.Exception.ShouldBeOfType<TestException>();
     }
@@ -141,7 +141,7 @@ public class AsyncMappingTests
         var r = Err<int>("error");
         var x = await r.ThenTryAsync<string>(_ => throw new TestException());
 
-        x.HasValue.ShouldBeFalse();
+        x.IsOk.ShouldBeFalse();
         var e = x.error.ShouldBeOfType<StringError>();
         e.Message.ShouldBe("error");
     }
