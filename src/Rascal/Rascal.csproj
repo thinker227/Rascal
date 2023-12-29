@@ -34,6 +34,7 @@
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../LICENSE.txt" Pack="true" PackagePath="/" />
+    <None Include="../../CHANGELOG.md" Pack="true" PackagePath="/"/>
   </ItemGroup>
 
   <!-- Polyfills for netstandard2.0 -->
