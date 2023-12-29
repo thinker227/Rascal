@@ -3,9 +3,9 @@
 namespace Rascal;
 
 /// <summary>
-/// A type which contains either a successful value or an error.
+/// A type which contains either an ok value or an error.
 /// </summary>
-/// <typeparam name="T">The type of a successful value.</typeparam>
+/// <typeparam name="T">The type of an ok value.</typeparam>
 [DebuggerTypeProxy(typeof(ResultDebugProxy<>))]
 public readonly partial struct Result<T>
 {
@@ -15,14 +15,14 @@ public readonly partial struct Result<T>
     internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
-    /// Whether the result has a value or not.
+    /// Whether the result has an ok value or not.
     /// </summary>
     public bool IsOk { get; }
 
     /// <summary>
-    /// Creates a new result with a successful value.
+    /// Creates a new result with an ok value.
     /// </summary>
-    /// <param name="value">The successful value.</param>
+    /// <param name="value">The ok value.</param>
     public Result(T value)
     {
         IsOk = true;

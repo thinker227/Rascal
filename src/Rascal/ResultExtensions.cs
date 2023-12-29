@@ -1,7 +1,7 @@
 namespace Rascal;
 
 /// <summary>
-/// Class containing extensions for or relating to <see cref="Result{T}"/>.
+/// Extensions for or relating to <see cref="Result{T}"/>.
 /// </summary>
 public static class ResultExtensions
 {
@@ -12,14 +12,14 @@ public static class ResultExtensions
     /// This operation is the same as applying <see cref="Result{T}.Then{TNew}"/>
     /// with the identity function, eg. <c>r.Then(x => x)</c>.
     /// </remarks>
-    /// <typeparam name="T">The type of the value in the result.</typeparam>
+    /// <typeparam name="T">The type of the ok value in the result.</typeparam>
     /// <param name="result">The result to un-nest.</param>
     [Pure]
     public static Result<T> Unnest<T>(this Result<Result<T>> result) =>
         result.Then(x => x);
 
     /// <summary>
-    /// Turns a nullable value into a result containing a non-null value
+    /// Turns a nullable value into a result containing a non-null ok value
     /// or an error if the value is <see langword="null"/>.
     /// </summary>
     /// <remarks>
@@ -47,32 +47,32 @@ public static class ResultExtensions
             : new(error ?? new NullError("Value was null."));
 
     /// <summary>
-    /// Gets the value within the result,
-    /// or <see langword="null"/> if the result does not contain a value.
+    /// Gets the ok value of the result,
+    /// or <see langword="null"/> if the result is an error.
     /// </summary>
     /// <remarks>
     /// This method differs from <see cref="Result{T}.GetValueOrDefault()"/> in that
     /// it specifically targets value types and returns <see langword="null"/> as opposed
-    /// to the default value for the type in case the result does not contain a value.
+    /// to the default value for the type in case the result is an error.
     /// Can also be understood as mapping the value to <c>T?</c> and calling
     /// <see cref="Result{T}.GetValueOrDefault()"/> on the returned result.
     /// </remarks>
-    /// <typeparam name="T">The type of the value in the result.</typeparam>
-    /// <param name="result">The result to get the value in.</param>
-    /// <returns>The value contained in <paramref name="result"/>,
-    /// or <see langword="null"/> if <paramref name="result"/> does not contain a value.</returns>
+    /// <typeparam name="T">The type of the ok value of the result.</typeparam>
+    /// <param name="result">The result to get the ok value of.</param>
+    /// <returns>The ok value of <paramref name="result"/>,
+    /// or <see langword="null"/> if <paramref name="result"/> is an error.</returns>
     [Pure]
     public static T? GetValueOrNull<T>(this Result<T> result) where T : struct =>
         result.Map(x => (T?)x).GetValueOrDefault();
 
     /// <summary>
-    /// Turns a sequence of results into a single result containing the values in the sequence
-    /// only if all the results have a value.
+    /// Turns a sequence of results into a single result containing the ok values in the results
+    /// only if all the results are ok.
     /// Can also been seen as turning an <c>IEnumerable&lt;Result&lt;T&gt;&gt;</c> "inside out".
     /// </summary>
     /// <param name="results">The results to turn into a single sequence.</param>
-    /// <typeparam name="T">The type of the values in the results.</typeparam>
-    /// <returns>A single result containing a sequence of all the values from the original sequence of results,
+    /// <typeparam name="T">The type of the ok values in the results.</typeparam>
+    /// <returns>A single result containing a sequence of all the ok values from the original sequence of results,
     /// or the first error encountered within the sequence.</returns>
     /// <remarks>
     /// This method completely enumerates the input sequence before returning and is not lazy.
@@ -97,7 +97,7 @@ public static class ResultExtensions
     /// or an error if the key is not present.
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
-    /// <typeparam name="TValue">The type of values in the  dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
     /// <param name="dict">The dictionary to try locate the key in.</param>
     /// <param name="key">The key to locate.</param>
     /// <param name="error">The error to return if the key is not present.</param>
@@ -130,7 +130,7 @@ public static class ResultExtensions
                    $"which has a count of {list.Count}."));
 
     /// <summary>
-    /// Catches the cancellation of a task and wraps the value or exception in a result.
+    /// Catches the cancellation of a task and wraps the returned value or thrown exception in a result.
     /// </summary>
     /// <param name="task">The task to catch.</param>
     /// <param name="error">A function which produces an error in case of a cancellation.</param>
