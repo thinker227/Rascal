@@ -1,5 +1,7 @@
 using VerifyCS = Rascal.Analysis.Tests.Verifiers.CodeFixVerifier<Rascal.Analysis.Analyzers.UnnecessaryIdMapAnalyzer, Rascal.Analysis.CodeFixes.RemoveMapIdCallCodeFix>;
 
+namespace Rascal.Analysis.CodeFixes.Tests;
+
 public class RemoveMapIdCallCodeFixProviderTests
 {
     [Fact]
