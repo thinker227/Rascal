@@ -8,6 +8,7 @@ public class ResultTests
         var r = new Result<int>(2);
         
         r.IsOk.ShouldBeTrue();
+        r.IsError.ShouldBeFalse();
         r.value.ShouldBe(2);
         r.error.ShouldBeNull();
     }
@@ -18,6 +19,7 @@ public class ResultTests
         var r = new Result<int>(new TestError());
 
         r.IsOk.ShouldBeFalse();
+        r.IsError.ShouldBeTrue();
         r.value.ShouldBe(default);
         r.error.ShouldBeOfType<TestError>();
     }
@@ -28,6 +30,7 @@ public class ResultTests
         var r = default(Result<int>);
 
         r.IsOk.ShouldBeFalse();
+        r.IsError.ShouldBeTrue();
         r.value.ShouldBe(default);
         r.error.ShouldBe(default);
         r.Error.ShouldBe(Error.DefaultValueError);
