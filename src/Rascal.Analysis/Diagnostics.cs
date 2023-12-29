@@ -5,7 +5,7 @@ namespace Rascal.Analysis;
 public static class Diagnostics
 {
     public static DiagnosticDescriptor DoNotThrow { get; } = new(
-        "RASCAL0001",
+        "RASCAL0002",
         "Do not throw inside a result method or property",
         "Do not throw exceptions inside method or property '{0}' which returns '{1}'",
         "Correctness",

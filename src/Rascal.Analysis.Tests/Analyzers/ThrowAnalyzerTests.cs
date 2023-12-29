@@ -27,7 +27,7 @@ public class ThrowAnalyzerTests
     {
         public static Result<int> Bar()
         {
-            {|RASCAL0001:throw|} new Exception();
+            {|RASCAL0002:throw|} new Exception();
         }
     }
     """);
@@ -45,7 +45,7 @@ public class ThrowAnalyzerTests
 
             static Result<int> Baz()
             {
-                {|RASCAL0001:throw|} new Exception();
+                {|RASCAL0002:throw|} new Exception();
             }
         }
     }
@@ -60,7 +60,7 @@ public class ThrowAnalyzerTests
     {
         public static Func<Result<int>> func = () =>
         {
-            {|RASCAL0001:throw|} new Exception();
+            {|RASCAL0002:throw|} new Exception();
         };
     }
     """);
@@ -72,7 +72,7 @@ public class ThrowAnalyzerTests
 
     public static class Foo
     {
-        public static Result<int> X => {|RASCAL0001:throw|} new Exception();
+        public static Result<int> X => {|RASCAL0002:throw|} new Exception();
     }
     """);
 
@@ -87,7 +87,7 @@ public class ThrowAnalyzerTests
         {
             get
             {
-                {|RASCAL0001:throw|} new Exception();
+                {|RASCAL0002:throw|} new Exception();
             }
         }
     }
