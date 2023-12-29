@@ -15,9 +15,17 @@ public readonly partial struct Result<T>
     internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
-    /// Whether the result has an ok value or not.
+    /// Whether the result is ok.
     /// </summary>
     public bool IsOk { get; }
+
+    /// <summary>
+    /// Whether the result is an error.
+    /// </summary>
+    /// <remarks>
+    /// This is always the inverse of <see cref="IsOk"/> but is more specific about intent.
+    /// </remarks>
+    public bool IsError => !IsOk;
 
     /// <summary>
     /// Creates a new result with an ok value.
