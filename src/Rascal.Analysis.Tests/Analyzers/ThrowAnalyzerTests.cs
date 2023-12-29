@@ -5,7 +5,7 @@ namespace Rascal.Analysis.Analyzers.Tests;
 public class ThrowAnalyzerTests
 {
     [Fact]
-    public Task DoesNothingUsually() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
@@ -19,7 +19,7 @@ public class ThrowAnalyzerTests
     """);
 
     [Fact]
-    public Task ThrowInsideResultMethod() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ThrowInsideResultMethod() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
@@ -33,7 +33,7 @@ public class ThrowAnalyzerTests
     """);
 
     [Fact]
-    public Task ThrowInsideLocalFunction() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ThrowInsideLocalFunction() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
@@ -52,7 +52,7 @@ public class ThrowAnalyzerTests
     """);
 
     [Fact]
-    public Task ThrowInsideLambda() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ThrowInsideLambda() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
@@ -66,7 +66,7 @@ public class ThrowAnalyzerTests
     """);
 
     [Fact]
-    public Task ThrowInsideExpressionProperty() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ThrowInsideExpressionProperty() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
@@ -77,7 +77,7 @@ public class ThrowAnalyzerTests
     """);
 
     [Fact]
-    public Task ThrowInsideExplicitProperty() => VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ThrowInsideExplicitProperty() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
 
