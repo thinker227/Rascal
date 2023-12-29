@@ -12,6 +12,11 @@ public readonly partial struct Result<T>
     internal readonly T? value;
     internal readonly Error? error;
 
+    /// <summary>
+    /// Same as <see cref="error"/> but returns <see cref="Error.DefaultValueError"/>
+    /// in case <see cref="error"/> is null. This is primarily meant as a fail-safe in case
+    /// the result is <see langword="default"/>.
+    /// </summary>
     internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
