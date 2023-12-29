@@ -30,6 +30,19 @@ public readonly partial struct Result<T>
             ? mapping(value!)
             : new(Error);
 
+    /// <summary>
+    /// Replaces the ok value of the result with a new value, or does nothing if the result is an error.
+    /// </summary>
+    /// <param name="newValue">The new value to replace the ok value of the result with.</param>
+    /// <typeparam name="TNew">The type of the new value.</typeparam>
+    /// <returns>A result which is either <paramref name="newValue"/> if the original result was ok,
+    /// or an error if the original result was an error.</returns>
+    [Pure]
+    public Result<TNew> Const<TNew>(TNew newValue) =>
+        IsOk
+            ? new(newValue)
+            : new(Error);
+
     /// <inheritdoc cref="Map{TNew}"/> 
     [Pure]
     public Result<TNew> Select<TNew>(Func<T, TNew> mapping) =>

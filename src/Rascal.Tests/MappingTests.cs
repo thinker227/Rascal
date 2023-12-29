@@ -53,6 +53,26 @@ public class MappingTests
     }
 
     [Fact]
+    public void Const_ReturnsNewValue_ForOk()
+    {
+        var r = Ok(2);
+        var x = r.Const("uwu");
+
+        x.IsOk.ShouldBeTrue();
+        x.value.ShouldBe("uwu");
+    }
+
+    [Fact]
+    public void Const_ReturnsErr_ForErr()
+    {
+        var r = Err<int>("error");
+        var x = r.Const("uwu");
+
+        x.IsOk.ShouldBeFalse();
+        x.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
     public void SelectMany_2_ReturnsOk_ForOkAndOtherReturningOk()
     {
         var r = Ok(2);
