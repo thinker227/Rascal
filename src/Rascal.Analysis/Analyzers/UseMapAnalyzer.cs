@@ -40,7 +40,7 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                 // Check that it is Then being called.
                 if (!operation.TargetMethod.OriginalDefinition.Equals(thenMethod, SymbolEqualityComparer.Default)) return;
 
-                // Check that the first argument is a lambda.
+                // Check that the first argument is a lambda with an immediate return.
                 if (operation.Arguments is not
                 [
                     {
@@ -48,17 +48,17 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                         {
                             Target: IAnonymousFunctionOperation
                             {
-                                Body: var body
+                                Body.Operations:
+                                [
+                                    IReturnOperation
+                                    {
+                                        ReturnedValue: IInvocationOperation returnInvocation
+                                    }
+                                ]
                             }
                         }
                     }
                 ]) return;
-
-                // Check that the body is a single return operation.
-                if (body.Operations is not [IReturnOperation returnOperation]) return;
-
-                // Check that the returned expression is an invocation.
-                if (returnOperation.ReturnedValue is not IInvocationOperation returnInvocation) return;
 
                 // Check that the return invocation expression is calling either Ok or new(T).
                 if (!returnInvocation.TargetMethod.OriginalDefinition.Equals(okMethod, SymbolEqualityComparer.Default) &&

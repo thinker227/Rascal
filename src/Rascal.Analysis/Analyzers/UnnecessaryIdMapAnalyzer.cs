@@ -35,7 +35,7 @@ public sealed class UnnecessaryIdMapAnalyzer : DiagnosticAnalyzer
                 if (!operation.TargetMethod.OriginalDefinition.Equals(mapMethod, SymbolEqualityComparer.Default))
                     return;
                 
-                // Check that the first argument is a lambda with a single parameter.
+                // Check that the first argument is a lambda with a single parameter which immediately returns.
                 if (operation.Arguments is not
                 [
                     {
@@ -43,21 +43,18 @@ public sealed class UnnecessaryIdMapAnalyzer : DiagnosticAnalyzer
                         {
                             Target: IAnonymousFunctionOperation
                             {
-                                Body: var body,
-                                Symbol.Parameters:
+                                Body.Operations:
                                 [
-                                    var lambdaParameter
-                                ]
+                                    IReturnOperation
+                                    {
+                                        ReturnedValue: IParameterReferenceOperation returnReference
+                                    }
+                                ],
+                                Symbol.Parameters: [var lambdaParameter]
                             }
                         }
                     }
                 ]) return;
-                
-                // Check that the body is a single return operation.
-                if (body.Operations is not [IReturnOperation returnOperation]) return;
-
-                // Check that the returned expression is a parameter reference.
-                if (returnOperation.ReturnedValue is not IParameterReferenceOperation returnReference) return;
 
                 // Check that the returned parameter is the same as the lambda parameter.
                 if (!returnReference.Parameter.Equals(lambdaParameter, SymbolEqualityComparer.Default)) return;
