@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
 
 namespace Rascal;
 
@@ -6,12 +6,13 @@ namespace Rascal;
 /// A type which contains either a successful value or an error.
 /// </summary>
 /// <typeparam name="T">The type of a successful value.</typeparam>
+[DebuggerTypeProxy(typeof(ResultDebugProxy<>))]
 public readonly partial struct Result<T>
 {
     internal readonly T? value;
     internal readonly Error? error;
 
-    internal Error Error => error ?? StringError.DefaultError;
+    internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
     /// Whether the result has a value or not.
@@ -40,6 +41,9 @@ public readonly partial struct Result<T>
         this.error = error;
     }
 
+    /// <summary>
+    /// Gets a string representation of the result.
+    /// </summary>
     [Pure]
     public override string ToString() =>
         HasValue

@@ -36,7 +36,7 @@ public static class ResultExtensions
         where T : class =>
         x is not null
             ? new(x)
-            : new(error ?? new StringError("Value was null."));
+            : new(error ?? new NullError("Value was null."));
 
     /// <inheritdoc cref="NotNull{T}(T, Error)"/>
     [Pure]
@@ -44,7 +44,53 @@ public static class ResultExtensions
         where T : struct =>
         x is not null
             ? new(x.Value)
-            : new(error ?? new StringError("Value was null."));
+            : new(error ?? new NullError("Value was null."));
+
+    /// <summary>
+    /// Gets the value within the result,
+    /// or <see langword="null"/> if the result does not contain a value.
+    /// </summary>
+    /// <remarks>
+    /// This method differs from <see cref="Result{T}.GetValueOrDefault()"/> in that
+    /// it specifically targets value types and returns <see langword="null"/> as opposed
+    /// to the default value for the type in case the result does not contain a value.
+    /// Can also be understood as mapping the value to <c>T?</c> and calling
+    /// <see cref="Result{T}.GetValueOrDefault()"/> on the returned result.
+    /// </remarks>
+    /// <typeparam name="T">The type of the value in the result.</typeparam>
+    /// <param name="result">The result to get the value in.</param>
+    /// <returns>The value contained in <paramref name="result"/>,
+    /// or <see langword="null"/> if <paramref name="result"/> does not contain a value.</returns>
+    [Pure]
+    public static T? GetValueOrNull<T>(this Result<T> result) where T : struct =>
+        result.Map(x => (T?)x).GetValueOrDefault();
+
+    /// <summary>
+    /// Turns a sequence of results into a single result containing the values in the sequence
+    /// only if all the results have a value.
+    /// Can also been seen as turning an <c>IEnumerable&lt;Result&lt;T&gt;&gt;</c> "inside out".
+    /// </summary>
+    /// <param name="results">The results to turn into a single sequence.</param>
+    /// <typeparam name="T">The type of the values in the results.</typeparam>
+    /// <returns>A single result containing a sequence of all the values from the original sequence of results,
+    /// or the first error encountered within the sequence.</returns>
+    /// <remarks>
+    /// This method completely enumerates the input sequence before returning and is not lazy.
+    /// As a consequence of this, the sequence within the returned result is an <see cref="IReadOnlyList{T}"/>.
+    /// </remarks>
+    public static Result<IReadOnlyList<T>> Sequence<T>(this IEnumerable<Result<T>> results)
+    {
+        var list = new List<T>();
+
+        foreach (var result in results)
+        {
+            if (!result.TryGetValue(out var x, out var e)) return new(e);
+
+            list.Add(x);
+        }
+
+        return list;
+    }
 
     /// <summary>
     /// Gets a result containing the value that is associated with the specified key in a dictionary,
@@ -54,6 +100,7 @@ public static class ResultExtensions
     /// <typeparam name="TValue">The type of values in the  dictionary.</typeparam>
     /// <param name="dict">The dictionary to try locate the key in.</param>
     /// <param name="key">The key to locate.</param>
+    /// <param name="error">The error to return if the key is not present.</param>
     /// <returns>A result containing the value associated with <paramref name="key"/> in the dictionary,
     /// or an error if the key is not present.</returns>
     public static Result<TValue> TryGetValueR<TKey, TValue>(
@@ -63,7 +110,7 @@ public static class ResultExtensions
         dict.TryGetValue(key, out var x)
             ? new(x)
             : new(error
-                ?? new StringError($"Dictionary does not contain key '{key}'."));
+                ?? new NotFoundError($"Dictionary does not contain key '{key}'."));
 
     /// <summary>
     /// Gets a result containing the element at the specified index in the list,
@@ -72,12 +119,50 @@ public static class ResultExtensions
     /// <typeparam name="T">The type of the elements in the list.</typeparam>
     /// <param name="list">The list to index.</param>
     /// <param name="index">The zero-based index of the element to get.</param>
+    /// <param name="error">The error to return if the index is out of range.</param>
     /// <returns>A result containing the value at <paramref name="index"/> in the list,
     /// or an error if the index is out of range of the list.</returns>
     public static Result<T> Index<T>(this IReadOnlyList<T> list, int index, Error? error = null) =>
         index < list.Count
             ? new(list[index])
-            : new(error
-                ?? $"Index {index} is out of range for the list, "
-                 + $"which has a count of {list.Count}.");
+            : new(error ?? new NotFoundError(
+                   $"Index {index} is out of range for the list, " +
+                   $"which has a count of {list.Count}."));
+
+    /// <summary>
+    /// Catches the cancellation of a task and wraps the value or exception in a result.
+    /// </summary>
+    /// <param name="task">The task to catch.</param>
+    /// <param name="error">A function which produces an error in case of a cancellation.</param>
+    /// <typeparam name="T">The type returned by the task.</typeparam>
+    /// <returns>A result which contains either the value returned by awaiting <paramref name="task"/>,
+    /// or an error in case the task is cancelled.</returns>
+    public static async Task<Result<T>> CatchCancellation<T>(this Task<T> task, Func<Error>? error = null)
+    {
+        try
+        {
+            var value = await task;
+            return new(value);
+        }
+        catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
+        {
+            return new(error?.Invoke() ?? new CancellationError());
+        }
+    }
+
+#if NETCOREAPP
+    /// <inheritdoc cref="CatchCancellation{T}(System.Threading.Tasks.Task{T},System.Func{Rascal.Error}?)"/>
+    public static async Task<Result<T>> CatchCancellation<T>(this ValueTask<T> task, Func<Error>? error = null)
+    {
+        try
+        {
+            var value = await task;
+            return new(value);
+        }
+        catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
+        {
+            return new(error?.Invoke() ?? new CancellationError());
+        }
+    }
+#endif
 }

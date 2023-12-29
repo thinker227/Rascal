@@ -1,7 +1,24 @@
-# Rascal
+<div align="center">
+    <h1>Rascal</h1>
+    <img alt="Build and test status" src="https://img.shields.io/github/actions/workflow/status/thinker227/Rascal/build-test.yml?style=for-the-badge&label=Build%20%26%20Test">
+    <img alt="Nuget" src="https://img.shields.io/nuget/vpre/Rascal?style=for-the-badge&label=Nuget%3A%20Rascal">
+</div>
+
+<br></br>
+
 Rascal is a simple and lightweight [result type](https://www.youtube.com/watch?v=srQt1NAHYC0&t=1018s) implementation for C#, containing a variety of utilities and standard functions for working with result types and integrating them into the rest of C#.
 
 Rascal is first and foremost an aggregate of the result types I personally find myself implementing in a majority of my own projects, and a competetor other result libraries second. As such, this library implements some things I think other result implementations are lacking, while omitting some features other libraries do implement.
+
+<br/>
+
+# Installation
+```ps1
+# .NET CLI
+dotnet add package Rascal --prerelease
+```
+
+# Using the package
 
 ## The prelude
 
@@ -28,6 +45,8 @@ var x = ParseR<int>(Console.ReadLine()!)
     .Map(x => Enumerable.Repeat("hewwo", x));
 ```
 
+<br/>
+
 Another operation, quite similar to mapping, exists, known as a "bind". A bind operation acts like a map, but the function applied to the value of type `T` returns another result, namely a `Result<TNew>`, which is then returned from the bind. This is the fundamental mechanism which allows chaining result operations together, making for a quite powerful tool.
 ```cs
 // Read input, parse to int, and apply a function to the value, which may fail
@@ -52,12 +71,16 @@ var val =
     select x;
 ```
 
+<br/>
+
 ### Various utilities
 
 Parse a string or `ReadOnlySpan<char>` to another type, returning a result. `ParseR` (short for `ParseResult`) works for any type implementing `IParsable<TSelf>` or `ISpanParsable<TSelf>`.
 ```cs
 var parsed = ParseR<int>(Console.ReadLine()!);
 ```
+
+<br/>
 
 Turn a nullable value into a result.
 ```cs
@@ -66,10 +89,14 @@ var result = F().NotNull();
 static int? F();
 ```
 
+<br/>
+
 A function for running another function in a `try` block and returning a result containing either the successful value of the function or the thrown exception. Quite useful for functions which provide no good way of checking whether success is expected before running it, such as IO. `Try` variants are also available for `Map` and `Then`.
 ```cs
 var result = Try(() => File.ReadAllText(path));
 ```
+
+<br/>
 
 Validate inputs directly inside a result expression chain, replacing the original value with an error if the predicate fails.
 ```cs
@@ -84,6 +111,8 @@ var input =
     where x >= 0
     select x;
 ```
+
+<br/>
 
 ### "Unsafe" operations
 

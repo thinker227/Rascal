@@ -1,0 +1,13 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  release:
+    name: Release
+    uses: Arthri/deploy-nuget/.github/workflows/deploy.yml@v1
+    secrets:
+      NUGET-API-KEY: ${{ secrets.NUGET_API_KEY }}

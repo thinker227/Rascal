@@ -3,7 +3,7 @@ namespace Rascal.Tests;
 public class ResultTests
 {
     [Fact]
-    public void New_T()
+    public void New_T_HasValue()
     {
         var r = new Result<int>(2);
         
@@ -13,7 +13,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void New_Error()
+    public void New_Error_HasError()
     {
         var r = new Result<int>(new TestError());
 
@@ -23,27 +23,27 @@ public class ResultTests
     }
 
     [Fact]
-    public void Error()
+    public void Default_IsDefault()
     {
         var r = default(Result<int>);
 
         r.HasValue.ShouldBeFalse();
         r.value.ShouldBe(default);
         r.error.ShouldBe(default);
-        r.Error.ShouldBe(StringError.DefaultError);
+        r.Error.ShouldBe(Error.DefaultValueError);
     }
 
     [Fact]
-    public void ToString_()
+    public void ToString_ReturnsOkString()
     {
-        {
-            var r = Ok(2);
-            r.ToString().ShouldBe("Ok { 2 }");
-        }
+        var r = Ok(2);
+        r.ToString().ShouldBe("Ok { 2 }");
+    }
 
-        {
-            var r = Err<int>(new StringError("error"));
-            r.ToString().ShouldBe("Error { error }");
-        }
+    [Fact]
+    public void ToString_ReturnsErrorString()
+    {
+        var r = Err<int>(new StringError("error"));
+        r.ToString().ShouldBe("Error { error }");
     }
 }

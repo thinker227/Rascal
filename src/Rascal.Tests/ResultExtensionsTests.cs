@@ -13,82 +13,162 @@ public class ResultExtensionsTests
     }
 
     [Fact]
-    public void NotNull_Class()
+    public void NotNull_Class_ReturnsOk_ForNotNull()
     {
-        {
-            var x = "uwu";
-            var r = x.NotNull("error");
+        var x = "uwu";
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe("uwu");
-        }
-
-        {
-            var x = null as string;
-            var r = x.NotNull("error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe("uwu");
     }
 
     [Fact]
-    public void NotNull_Struct()
+    public void NotNull_Class_ReturnsErr_ForNull()
     {
-        {
-            var x = 2 as int?;
-            var r = x.NotNull("error");
+        var x = null as string;
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var x = null as int?;
-            var r = x.NotNull("error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
     }
 
     [Fact]
-    public void TryGetValueR()
+    public void NotNull_Struct_ReturnsOk_ForNotNull()
     {
-        {
-            var dict = new Dictionary<string, int>() { ["a"] = 2 };
-            var r = dict.TryGetValueR("a", "error");
+        var x = 2 as int?;
+        var r = x.NotNull("error");
 
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var dict = new Dictionary<string, int>();
-            var r = dict.TryGetValueR("a", "error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
-        }
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
     }
 
     [Fact]
-    public void Index()
+    public void NotNull_Struct_ReturnsErr_ForNull()
     {
+        var x = null as int?;
+        var r = x.NotNull("error");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public void GeTValueOrNull_ReturnsValue_ForOk()
+    {
+        var r = Ok(2);
+        var x = r.GetValueOrNull();
+
+        x.ShouldBe(2);
+    }
+
+    [Fact]
+    public void GetValueOrNull_ReturnsNull_ForErr()
+    {
+        var r = Err<int>("error");
+        var x = r.GetValueOrNull();
+
+        x.ShouldBe(null);
+    }
+
+    [Fact]
+    public void Sequence_ReturnsAllOk_ForSequenceContainingAllOks()
+    {
+        IEnumerable<Result<int>> xs = [1, 2, 3, 4, 5];
+
+        var result = xs.Sequence();
+        
+        result.HasValue.ShouldBeTrue();
+        result.value.ShouldBe([1, 2, 3, 4, 5]);
+    }
+
+    [Fact]
+    public void Sequence_ReturnsFirstError_ForSequenceContainingErrors()
+    {
+        IEnumerable<Result<int>> xs = [Ok(1), Ok(2), Err<int>("error 1"), Ok(4), Err<int>("error 2")];
+
+        var result = xs.Sequence();
+
+        result.HasValue.ShouldBeFalse();
+        result.error?.Message.ShouldBe("error 1");
+    }
+
+    [Fact]
+    public void Sequence_ReturnsOk_ForEmptySequence()
+    {
+        IEnumerable<Result<int>> xs = [];
+
+        var result = xs.Sequence();
+
+        result.HasValue.ShouldBeTrue();
+        result.value.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void TryGetValueR_ReturnsOk_IfKeyExists()
+    {
+        var dict = new Dictionary<string, int>() { ["a"] = 2 };
+        var r = dict.TryGetValueR("a", "error");
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void TryGetValueR_ReturnsErr_IfKeyIsMissing()
+    {
+        var dict = new Dictionary<string, int>();
+        var r = dict.TryGetValueR("a", "error");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public void Index_ReturnsOk_IfWithinRange()
+    {
+        var xs = new[] { 2 };
+        var r = xs.Index(0, "error");
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void Index_ReturnsErr_IfOutsideRange()
+    {
+        var xs = Array.Empty<int>();
+        var r = xs.Index(0, "error");
+
+        r.HasValue.ShouldBeFalse();
+        r.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public async Task CatchCancellation_ReturnsOk_IfFinished()
+    {
+        var r = await Task.FromResult(2).CatchCancellation();
+
+        r.HasValue.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task CatchCancellation_ReturnsErr_IfCanceled()
+    {
+        var cts = new CancellationTokenSource();
+
+        var task = GetTask(cts.Token);
+        await cts.CancelAsync();
+        var r = await task.CatchCancellation();
+
+        r.HasValue.ShouldBeFalse();
+        r.error.ShouldBeOfType<CancellationError>();
+        return;
+
+        static async Task<int> GetTask(CancellationToken cancellationToken)
         {
-            var xs = new[] { 2 };
-            var r = xs.Index(0, "error");
-
-            r.HasValue.ShouldBeTrue();
-            r.value.ShouldBe(2);
-        }
-
-        {
-            var xs = Array.Empty<int>();
-            var r = xs.Index(0, "error");
-
-            r.HasValue.ShouldBeFalse();
-            r.error?.Message.ShouldBe("error");
+            await Task.Delay(-1, cancellationToken);
+            return 0;
         }
     }
 }

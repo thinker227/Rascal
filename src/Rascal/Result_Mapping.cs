@@ -49,6 +49,7 @@ public readonly partial struct Result<T>
     /// The expression <c>r.SelectMany(x => f(x), (x, y) => g(x, y))</c> can be written as
     /// <c>r.Bind(x => f(x).Map(y => g(x, y)))</c>.
     /// </remarks>
+    /// <param name="other">The function used to map the value to an intermediate result.</param>
     /// <param name="mapping">The function used to map the value to a new result.</param>
     /// <typeparam name="TOther">The type of the intermediate value.</typeparam>
     /// <typeparam name="TNew">The type of the new value.</typeparam>

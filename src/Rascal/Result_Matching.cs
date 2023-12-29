@@ -140,7 +140,7 @@ public readonly partial struct Result<T>
     /// Gets the value within the result,
     /// or a default value if the result does not contain a value.
     /// </summary>
-    /// <param name="default">A function to get a default value to return
+    /// <param name="getDefault">A function to get a default value to return
     /// if the result does not contain a value.</param>
     [Pure]
     public T GetValueOrDefault(Func<T> getDefault) =>

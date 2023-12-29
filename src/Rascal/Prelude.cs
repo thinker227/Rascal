@@ -48,8 +48,9 @@ public static class Prelude
         where T : IParsable<T> =>
         T.TryParse(s, provider, out var x)
             ? new(x)
-            : new(error ?? new StringError(
-                $"Could not parse '{s}' to type {typeof(T)}."));
+            : new(error ?? new ParseError(
+                $"Could not parse '{s}' to type {typeof(T)}.",
+                s));
 
     /// <summary>
     /// Tries to parse a span of characters into a value,
@@ -70,8 +71,9 @@ public static class Prelude
         where T : ISpanParsable<T> =>
         T.TryParse(s, provider, out var x)
             ? new(x)
-            : new(error ?? new StringError(
-                $"Could not parse '{s}' to type {typeof(T)}."));
+            : new(error ?? new ParseError(
+                $"Could not parse '{s}' to type {typeof(T)}.",
+                s.ToString()));
 
 #endif
 
