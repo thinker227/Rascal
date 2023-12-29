@@ -64,10 +64,10 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                 if (!returnInvocation.TargetMethod.OriginalDefinition.Equals(okMethod, SymbolEqualityComparer.Default) &&
                     !returnInvocation.TargetMethod.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)) return;
 
-                // Get the syntax of the method name.
+                // Get the location of the method name.
                 var invocationSyntax = (InvocationExpressionSyntax)operation.Syntax;
-                var memberAccess = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
-                var location = memberAccess.Name.GetLocation();
+                var memberAccessSyntax = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
+                var location = memberAccessSyntax.Name.GetLocation();
                 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(

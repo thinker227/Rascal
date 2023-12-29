@@ -35,9 +35,11 @@ public sealed class UseThenAnalyzer : DiagnosticAnalyzer
             {
                 var operation = (IInvocationOperation)operationCtx.Operation;
 
+                // Check that it is Unnest being called.
                 if (!operation.TargetMethod.OriginalDefinition.Equals(unnestMethod, SymbolEqualityComparer.Default))
                     return;
 
+                // Check that the first argument is an invocation.
                 if (operation.Arguments is not
                 [
                     {
@@ -45,14 +47,17 @@ public sealed class UseThenAnalyzer : DiagnosticAnalyzer
                     }
                 ]) return;
 
+                // Check that the invoked method is Map.
                 if (!argumentInvocation.TargetMethod.OriginalDefinition
                         .Equals(mapMethod, SymbolEqualityComparer.Default))
                     return;
 
+                // Get the location of the method name.
                 var invocationSyntax = (InvocationExpressionSyntax)argumentInvocation.Syntax;
                 var memberAccessSyntax = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
                 var location = memberAccessSyntax.Name.GetLocation();
 
+                // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
                     Diagnostics.UseThen,
                     location));

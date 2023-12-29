@@ -62,7 +62,7 @@ public sealed class UnnecessaryIdMapAnalyzer : DiagnosticAnalyzer
                 // Check that the returned parameter is the same as the lambda parameter.
                 if (!returnReference.Parameter.Equals(lambdaParameter, SymbolEqualityComparer.Default)) return;
                 
-                // Get the syntax of the method invocation.
+                // Get the location of the method invocation.
                 var invocationExpression = (InvocationExpressionSyntax)operation.Syntax;
                 var memberAccess = (MemberAccessExpressionSyntax)invocationExpression.Expression;
                 var start = memberAccess.Name.Span.Start;
