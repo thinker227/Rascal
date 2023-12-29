@@ -23,4 +23,15 @@ public static class Diagnostics
         true,
         "Calling Unnest directly after a Map call is equivalent to calling Then. " +
         "Use Then instead for clarity and performance.");
+
+    public static DiagnosticDescriptor UnnecessaryIdMap { get; } = new(
+        "RASCAL0003",
+        "Unnecessary Map call with identity function",
+        "This call maps {0} to itself. " +
+        "The call can be safely removed because it doesn't do anything",
+        "Correctness",
+        DiagnosticSeverity.Warning,
+        true,
+        "Calling Map with an identity function returns the same result as the input. " +
+        "Remove this call to Map.");
 }
