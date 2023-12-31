@@ -34,6 +34,36 @@ public readonly partial struct Result<T>
     }
 
     /// <summary>
+    /// Asynchronously matches over the ok value or error of the result and returns another value.
+    /// Can be conceptualized as an exhaustive <c>switch</c> expression matching
+    /// all possible values of the type.
+    /// </summary>
+    /// <typeparam name="TResult">The type to return from the match.</typeparam>
+    /// <param name="ifValue">The function to apply to the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to apply to the result's error if the result is an error.</param>
+    /// <returns>The result of applying either
+    /// <paramref name="ifValue"/> or <paramref name="ifError"/>
+    /// on the ok value or error of the result.</returns>
+    [Pure]
+    public async Task<TResult> MatchAsync<TResult>(Func<T, Task<TResult>> ifValue, Func<Error, Task<TResult>> ifError) =>
+        IsOk
+            ? await ifValue(value!)
+            : await ifError(Error);
+
+    /// <summary>
+    /// Asynchronously matches over the ok value or error of the result
+    /// and invokes an effect-ful action onto the ok value or error.
+    /// Can be conceptualized as an exhaustive <c>switch</c> statement matching all possible values of the type.
+    /// </summary>
+    /// <param name="ifValue">The function to call with the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to call with the result's error if the result is an error.</param>
+    public async Task SwitchAsync(Func<T, Task> ifValue, Func<Error, Task> ifError)
+    {
+        if (IsOk) await ifValue(value!);
+        else await ifError(Error);
+    }
+
+    /// <summary>
     /// Tries to get the ok value from the result.
     /// </summary>
     /// <param name="value">The ok value of the result.</param>

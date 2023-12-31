@@ -14,4 +14,6 @@
 
 - Add `object? key` parameter and `object? Key` property to `NotFoundError`.
 
-- Add `TryAsync` prelude function.
+- Add async version of `Prelude.Try`.
+
+- Add async versions of `Result<T>.Match` and `Result<T>.Switch`.

@@ -61,6 +61,68 @@ public class MatchingTests
 
         called.ShouldBeTrue();
     }
+    
+    [Fact]
+    public async Task MatchAsync_ReturnsOkFunc_ForOk()
+    {
+        var r = Ok(2);
+        var x = await r.MatchAsync(
+            Task.FromResult,
+            _ => throw new InvalidOperationException()
+        );
+
+        x.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task MatchAsync_CallsErrFunc_ForErr()
+    {
+        var r = Err<int>("error");
+        var x = await r.MatchAsync(
+            _ => throw new InvalidOperationException(),
+            Task.FromResult
+        );
+
+        x.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public async Task SwitchAsync_CallsOkAction_ForOk()
+    {
+        var called = false;
+
+        var r = Ok(2);
+        await r.SwitchAsync(
+            x =>
+            {
+                x.ShouldBe(2);
+                called = true;
+                return Task.CompletedTask;
+            },
+            _ => throw new InvalidOperationException()
+        );
+
+        called.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task SwitchAsync_CallsErrAction_ForErr()
+    {
+        var called = false;
+
+        var r = Err<int>("error");
+        await r.SwitchAsync(
+            _ => throw new InvalidOperationException(),
+            e =>
+            {
+                called = true;
+                e.Message.ShouldBe("error");
+                return Task.CompletedTask;
+            }
+        );
+
+        called.ShouldBeTrue();
+    }
 
     [Fact]
     public void TryGetValue_1_ReturnsTrueAndSetsValue_ForOk()
