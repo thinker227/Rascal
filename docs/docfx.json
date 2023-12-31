@@ -1,0 +1,45 @@
+{
+    "metadata": [
+        {
+            "src": [
+                {
+                    "src": "../src",
+                    "files": [
+                        "Rascal/Rascal.csproj"
+                    ]
+                }
+            ],
+            "dest": "api"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "**/*.{md,yml}"
+                ],
+                "exclude": [
+                    "_site/**"
+                ]
+            }
+        ],
+        "resource": [
+            {
+                "files": [
+                    "images/**"
+                ]
+            }
+        ],
+        "output": "_site",
+        "template": [
+            "default",
+            "modern"
+        ],
+        "globalMetadata": {
+            "_appName": "Rascal Docs",
+            "_appTitle": "Rascal Docs",
+            "_enableSearch": true,
+            "pdf": false
+        }
+    }
+}
