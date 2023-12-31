@@ -44,22 +44,19 @@ public readonly partial struct Result<T>
     /// <summary>
     /// Tries to convert the ok value of the result to another type.
     /// </summary>
-    /// <typeparam name="TDerived">The type derived from <typeparamref name="T"/>
-    /// to which to try convert the ok value.</typeparam>
+    /// <typeparam name="TOther">The type to which to try convert the ok value.</typeparam>
     /// <param name="error">The error to return
-    /// if the ok value cannot be converted to <typeparamref name="TDerived"/>.</param>
-    /// <returns>A result which contains the ok value converted to <typeparamref name="TDerived"/>,
-    /// <paramref name="error"/> if the ok value cannot be converted to <typeparamref name="TDerived"/>,
+    /// if the ok value cannot be converted to <typeparamref name="TOther"/>.</param>
+    /// <returns>A result which contains the ok value converted to <typeparamref name="TOther"/>,
+    /// <paramref name="error"/> if the ok value cannot be converted to <typeparamref name="TOther"/>,
     /// or the error of the result if it is an error.</returns>
     [Pure]
-    public Result<TDerived> ToType<TDerived>(string? error = null)
-        where TDerived : T =>
+    public Result<TOther> To<TOther>(Error? error = null) =>
         IsOk
-            ? value is TDerived derived
-                ? new(derived)
-                : new(new ValidationError(
-                    error ?? $"Value was not of type '{typeof(TDerived)}'.",
-                    value))
+            ? value is TOther x
+                ? new(x)
+                : new(error ?? new ValidationError(
+                    $"Value was not of type '{typeof(TOther)}'.", value))
             : new(Error);
 
 #if NETCOREAPP

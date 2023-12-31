@@ -70,27 +70,27 @@ public class UtilityTests
     }
 
     [Fact]
-    public void OfType_ReturnsOk_ForOkToValidType()
+    public void To_ReturnsOk_ForOkToValidType()
     {
-        var r = Ok<object>("uwu").ToType<string>();
+        var r = Ok<object>("uwu").To<string>();
 
         r.IsOk.ShouldBeTrue();
         r.value.ShouldBe("uwu");
     }
 
     [Fact]
-    public void OfType_ReturnsErr_ForOkToInvalidType()
+    public void To_ReturnsErr_ForOkToInvalidType()
     {
-        var r = Ok<object>("uwu").ToType<int>();
+        var r = Ok<object>("uwu").To<int>();
 
         r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldNotBeNull();
     }
 
     [Fact]
-    public void OfType_ReturnsErr_ForErr()
+    public void To_ReturnsErr_ForErr()
     {
-        var r = Err<object>("error").ToType<int>();
+        var r = Err<object>("error").To<int>();
 
         r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
