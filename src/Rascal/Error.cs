@@ -32,4 +32,11 @@ public abstract class Error
     /// <param name="message">The message of the error.</param>
     public static implicit operator Error(string message) =>
         new StringError(message);
+
+    /// <summary>
+    /// Implicitly converts an exception into an <see cref="ExceptionError"/>.
+    /// </summary>
+    /// <param name="exception">The exception to convert.</param>
+    public static implicit operator Error(Exception exception) =>
+        new ExceptionError(exception);
 }
