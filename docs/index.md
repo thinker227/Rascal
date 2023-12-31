@@ -8,6 +8,8 @@ Rascal is a simple and lightweight [result type](https://www.youtube.com/watch?v
 
 Rascal is first and foremost an aggregate of the result types I personally find myself implementing in a majority of my own projects, and a competetor other result libraries second. As such, this library implements some things I think other result implementations are lacking, while omitting some features other libraries do implement.
 
+<br/>
+
 ## Installation
 
 # [.NET CLI](#tab/cli)
@@ -60,6 +62,8 @@ Add under an `ItemGroup` node in your project file:
 Obviously, replace `1.0.1-pre` with the actual package version you want.
 
 ---
+
+<br/>
 
 ## Quick start
 
@@ -138,6 +142,8 @@ public sealed class UsersController(IUserService userService) : ControllerBase
 ```
 
 ---
+
+<br/>
 
 ## Other great libraries
 
