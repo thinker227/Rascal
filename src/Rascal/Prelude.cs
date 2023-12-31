@@ -102,6 +102,28 @@ public static class Prelude
     }
 
     /// <summary>
+    /// Tries to execute an asynchronous function and return the result.
+    /// If the function throws an exception, the exception will be returned wrapped in an
+    /// <see cref="ExceptionError"/>.
+    /// </summary>
+    /// <typeparam name="T">The type the function returns.</typeparam>
+    /// <param name="function">The function to try execute.</param>
+    /// <returns>A result containing the return value of the function
+    /// or an <see cref="ExceptionError"/> containing the exception thrown by the function.</returns>
+    [Pure]
+    public static async Task<Result<T>> TryAsync<T>(Func<Task<T>> function)
+    {
+        try
+        {
+            return new(await function());
+        }
+        catch (Exception e)
+        {
+            return new(new ExceptionError(e));
+        }
+    }
+
+    /// <summary>
     /// Applies a transform function onto a value until the function returns an error.
     /// </summary>
     /// <typeparam name="T">The type of the value transform.</typeparam>

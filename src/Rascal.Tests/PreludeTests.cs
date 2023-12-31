@@ -79,6 +79,25 @@ public class PreludeTests
         var e = r.error.ShouldBeOfType<ExceptionError>();
         e.Exception.ShouldBeOfType<TestException>();
     }
+    
+    [Fact]
+    public async Task TryAsync_ReturnsOk_ForNoException()
+    {
+        var r = await TryAsync(() => Task.FromResult(2));
+
+        r.IsOk.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task TryAsync_ReturnsErr_ForException()
+    {
+        var r = await TryAsync<int>(() => throw new TestException());
+
+        r.IsOk.ShouldBeFalse();
+        var e = r.error.ShouldBeOfType<ExceptionError>();
+        e.Exception.ShouldBeOfType<TestException>();
+    }
 
     private static Result<int> IterateFunc(int x) =>
         x < 3
