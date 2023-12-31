@@ -1,5 +1,0 @@
-- name: Getting Started
-  href: getting-started.md
-  items:
-  - name: Using Result<T>
-    href: using-result.md
