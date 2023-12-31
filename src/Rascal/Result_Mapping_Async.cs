@@ -1,3 +1,5 @@
+using Rascal.Errors;
+
 namespace Rascal;
 
 public readonly partial struct Result<T>

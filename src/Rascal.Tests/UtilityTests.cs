@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Rascal.Errors;
 
 namespace Rascal.Tests;
 
