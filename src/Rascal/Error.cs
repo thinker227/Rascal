@@ -25,7 +25,13 @@ public abstract class Error
     /// A statically accessible default "Result has no value." error.
     /// </summary>
     internal static Error DefaultValueError { get; } = new StringError("Result has no value.");
-    
+
+    /// <summary>
+    /// Gets a string representation of the error.
+    /// Returns <see cref="Message"/> by default.
+    /// </summary>
+    public override string ToString() => Message;
+
     /// <summary>
     /// Implicitly converts a string into a <see cref="StringError"/>.
     /// </summary>
