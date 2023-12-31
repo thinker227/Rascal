@@ -38,7 +38,7 @@
         "globalMetadata": {
             "_appName": "Rascal Docs",
             "_appTitle": "Rascal Docs",
-            "_enableSearch": true,
+            "_enableSearch": false,
             "pdf": false
         }
     }
