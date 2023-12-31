@@ -68,7 +68,7 @@ public class AsyncMappingTests
     public async Task TryMapAsync_ReturnsErr_ForErrWithoutException()
     {
         var r = Err<int>("error");
-        var x = r.TryMap(x => Task.FromResult(x.ToString()));
+        var x = await r.TryMapAsync(x => Task.FromResult(x.ToString()));
 
         x.IsOk.ShouldBeFalse();
         x.error?.Message.ShouldBe("error");
