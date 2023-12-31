@@ -99,7 +99,7 @@ public Task<Result<User>> GetUser(int userId) => TryAsync(() =>
 });
 ```
 
-This code will handle catching any exceptions thrown by `FirstOrDefaultAsync` and will return a `NotFoundError` if the user isn't found. Now you can use this method as such:
+This code will handle catching any exceptions thrown by [`FirstOrDefaultAsync`](https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.queryableextensions.firstordefaultasync) and will return a [`NotFoundError`](/api/Rascal.Errors.NotFoundError.html) if the user isn't found. Now you can use this method as such:
 
 # [Minimal API](#tab/minimal)
 
