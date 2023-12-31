@@ -15,6 +15,14 @@ public readonly partial struct Result<T>
         new(value);
 
     /// <summary>
+    /// Implicitly constructs a result from an error.
+    /// </summary>
+    /// <param name="error">The error to construct the result from.</param>
+    [Pure]
+    public static implicit operator Result<T>(Error error) =>
+        new(error);
+
+    /// <summary>
     /// Combines the result with another result.
     /// </summary>
     /// <typeparam name="TOther">The type of the ok value in the other result.</typeparam>

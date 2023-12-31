@@ -112,7 +112,9 @@ public static class ResultExtensions
         dict.TryGetValue(key, out var x)
             ? new(x)
             : new(error
-                ?? new NotFoundError($"Dictionary does not contain key '{key}'."));
+                ?? new NotFoundError(
+                    key,
+                    $"Dictionary does not contain key '{key}'."));
 
     /// <summary>
     /// Gets a result containing the element at the specified index in the list,
@@ -128,6 +130,7 @@ public static class ResultExtensions
         index < list.Count
             ? new(list[index])
             : new(error ?? new NotFoundError(
+                    index,
                    $"Index {index} is out of range for the list, " +
                    $"which has a count of {list.Count}."));
 

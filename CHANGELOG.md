@@ -7,3 +7,11 @@
 - Add `Result<T>.IsError`.
 
 - Move error types into `Rascal.Errors` namespace.
+
+- Add implicit conversion from `Error` to `Result<T>`.
+  
+- Add implicit conversion from `Exception` to `Error`.
+
+- Add `object? key` parameter and `object? Key` property to `NotFoundError`.
+
+- Add `TryAsync` prelude function.

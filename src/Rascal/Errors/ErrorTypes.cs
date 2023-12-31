@@ -43,11 +43,17 @@ public sealed class AggregateError(IEnumerable<Error> errors) : Error
 }
 
 /// <summary>
-/// An error which represents something which isn't found.
+/// An error which represents something which wasn't found.
 /// </summary>
+/// <param name="key">The key corresponding to the thing which wasn't found.</param>
 /// <param name="message">A message which describes the thing which wasn't found.</param>
-public sealed class NotFoundError(string message) : Error
+public sealed class NotFoundError(object? key, string message) : Error
 {
+    /// <summary>
+    /// The key corresponding to the thing which wasn't found.
+    /// </summary>
+    public object? Key { get; } = key;
+    
     /// <inheritdoc/>
     public override string Message => message;
 }

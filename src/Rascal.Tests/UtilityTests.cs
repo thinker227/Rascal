@@ -6,12 +6,22 @@ namespace Rascal.Tests;
 public class UtilityTests
 {
     [Fact]
-    public void ImplicitConversion()
+    public void ImplicitConversion_FromValue_IsOk()
     {
         Result<int> x = 2;
 
         x.value.ShouldBe(2);
         x.IsOk.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void ImplicitConversion_FromError_IsErr()
+    {
+        var error = new TestError();
+        Result<int> x = error;
+
+        x.IsOk.ShouldBeFalse();
+        x.error.ShouldBeOfType<TestError>();
     }
 
     [Fact]
