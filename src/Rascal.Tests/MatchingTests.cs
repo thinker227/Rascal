@@ -93,7 +93,7 @@ public class MatchingTests
         var r = Err<int>("error");
         r.TryGetValue(out var x, out var e).ShouldBeFalse();
         x.ShouldBe(default);
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class MatchingTests
     {
         var r = Err<int>("error");
         r.TryGetError(out var e).ShouldBeTrue();
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class MatchingTests
     {
         var r = Err<int>("error");
         r.TryGetError(out var e, out var x).ShouldBeTrue();
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
         x.ShouldBe(default);
     }
 
