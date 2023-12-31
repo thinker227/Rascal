@@ -1,4 +1,5 @@
 using System.Globalization;
+using Rascal.Errors;
 
 namespace Rascal.Tests;
 

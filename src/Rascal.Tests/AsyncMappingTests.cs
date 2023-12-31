@@ -1,3 +1,5 @@
+using Rascal.Errors;
+
 namespace Rascal.Tests;
 
 public class AsyncMappingTests
