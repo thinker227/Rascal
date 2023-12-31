@@ -1,9 +1,28 @@
+using System.Globalization;
 using Rascal.Errors;
 
 namespace Rascal.Tests;
 
 public class ResultExtensionsTests
 {
+    [Fact]
+    public void ToString_UsesFormat_ForOk()
+    {
+        var result = Ok(15);
+        var str = result.ToString("b", CultureInfo.InvariantCulture);
+
+        str.ShouldBe("Ok { 1111 }");
+    }
+
+    [Fact]
+    public void ToString_ReturnsErrorMessage_ForErr()
+    {
+        var result = Err<int>("error");
+        var str = result.ToString("b", CultureInfo.InvariantCulture);
+
+        str.ShouldBe("Error { error }");
+    }
+    
     [Fact]
     public void Unnest()
     {

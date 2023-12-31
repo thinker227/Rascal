@@ -8,6 +8,43 @@ namespace Rascal;
 public static class ResultExtensions
 {
     /// <summary>
+    /// Returns a string representation of the result
+    /// using a specified format and <see cref="IFormatProvider"/> to format an ok value.
+    /// </summary>
+    /// <param name="result">The result to return a string representation of.</param>
+    /// <param name="format">The format to use.</param>
+    /// <param name="formatProvider">The provider to use to format the ok value.</param>
+    /// <typeparam name="T">The type of the ok value in the result.</typeparam>
+    public static string ToString<T>(this Result<T> result, string? format, IFormatProvider? formatProvider)
+        where T : IFormattable =>
+        result.Match(
+            x => $"Ok {{ {x.ToString(format, formatProvider)} }}",
+            e => $"Error {{ {e} }}"
+        );
+
+    /// <summary>
+    /// Returns a string representation of the result
+    /// using a specified format to format an ok value.
+    /// </summary>
+    /// <param name="result">The result to return a string representation of.</param>
+    /// <param name="format">The format to use.</param>
+    /// <typeparam name="T">The type of the ok value in the result.</typeparam>
+    public static string ToString<T>(this Result<T> result, string format)
+        where T : IFormattable =>
+        result.ToString(format, null);
+
+    /// <summary>
+    /// Returns a string representation of the result
+    /// using a specified <see cref="IFormatProvider"/> to format an ok value.
+    /// </summary>
+    /// <param name="result">The result to return a string representation of.</param>
+    /// <param name="formatProvider">The provider to use to format the ok value.</param>
+    /// <typeparam name="T">The type of the ok value in the result.</typeparam>
+    public static string ToString<T>(this Result<T> result, IFormatProvider formatProvider)
+        where T : IFormattable =>
+        result.ToString(null, formatProvider);
+    
+    /// <summary>
     /// Takes a result containing another result and un-nests the inner result.
     /// </summary>
     /// <remarks>
