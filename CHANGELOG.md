@@ -5,3 +5,5 @@
 - Rename `Result<T>.HasValue` to `IsOk`.
 
 - Add `Result<T>.IsError`.
+
+- Move error types into `Rascal.Errors` namespace.
