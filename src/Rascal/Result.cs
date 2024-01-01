@@ -61,5 +61,5 @@ public readonly partial struct Result<T>
     public override string ToString() =>
         IsOk
             ? $"Ok {{ {value} }}"
-            : $"Error {{ {Error.Message} }}";
+            : $"Error {{ {Error} }}";
 }

@@ -10,27 +10,57 @@ public readonly partial struct Result<T>
     /// all possible values of the type.
     /// </summary>
     /// <typeparam name="TResult">The type to return from the match.</typeparam>
-    /// <param name="ifValue">The function to apply to the ok value of the result if the result is ok.</param>
+    /// <param name="ifOk">The function to apply to the ok value of the result if the result is ok.</param>
     /// <param name="ifError">The function to apply to the result's error if the result is an error.</param>
     /// <returns>The result of applying either
-    /// <paramref name="ifValue"/> or <paramref name="ifError"/>
+    /// <paramref name="ifOk"/> or <paramref name="ifError"/>
     /// on the ok value or error of the result.</returns>
     [Pure]
-    public TResult Match<TResult>(Func<T, TResult> ifValue, Func<Error, TResult> ifError) =>
+    public TResult Match<TResult>(Func<T, TResult> ifOk, Func<Error, TResult> ifError) =>
         IsOk
-            ? ifValue(value!)
+            ? ifOk(value!)
             : ifError(Error);
 
     /// <summary>
     /// Matches over the ok value or error of the result and invokes an effect-ful action onto the ok value or error.
     /// Can be conceptualized as an exhaustive <c>switch</c> statement matching all possible values of the type.
     /// </summary>
-    /// <param name="ifValue">The function to call with the ok value of the result if the result is ok.</param>
+    /// <param name="ifOk">The function to call with the ok value of the result if the result is ok.</param>
     /// <param name="ifError">The function to call with the result's error if the result is an error.</param>
-    public void Switch(Action<T> ifValue, Action<Error> ifError)
+    public void Switch(Action<T> ifOk, Action<Error> ifError)
     {
-        if (IsOk) ifValue(value!);
+        if (IsOk) ifOk(value!);
         else ifError(Error);
+    }
+
+    /// <summary>
+    /// Asynchronously matches over the ok value or error of the result and returns another value.
+    /// Can be conceptualized as an exhaustive <c>switch</c> expression matching
+    /// all possible values of the type.
+    /// </summary>
+    /// <typeparam name="TResult">The type to return from the match.</typeparam>
+    /// <param name="ifOk">The function to apply to the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to apply to the result's error if the result is an error.</param>
+    /// <returns>The result of applying either
+    /// <paramref name="ifOk"/> or <paramref name="ifError"/>
+    /// on the ok value or error of the result.</returns>
+    [Pure]
+    public async Task<TResult> MatchAsync<TResult>(Func<T, Task<TResult>> ifOk, Func<Error, Task<TResult>> ifError) =>
+        IsOk
+            ? await ifOk(value!)
+            : await ifError(Error);
+
+    /// <summary>
+    /// Asynchronously matches over the ok value or error of the result
+    /// and invokes an effect-ful action onto the ok value or error.
+    /// Can be conceptualized as an exhaustive <c>switch</c> statement matching all possible values of the type.
+    /// </summary>
+    /// <param name="ifOk">The function to call with the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to call with the result's error if the result is an error.</param>
+    public async Task SwitchAsync(Func<T, Task> ifOk, Func<Error, Task> ifError)
+    {
+        if (IsOk) await ifOk(value!);
+        else await ifError(Error);
     }
 
     /// <summary>

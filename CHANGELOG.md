@@ -14,4 +14,10 @@
 
 - Add `object? key` parameter and `object? Key` property to `NotFoundError`.
 
-- Add `TryAsync` prelude function.
+- Add async version of `Prelude.Try`.
+
+- Add async versions of `Result<T>.Match` and `Result<T>.Switch`.
+
+- Rename `Result<T>.ToType` to `To` and allow attempting to convert to non-derived types.
+
+- Add ToString extensions supporting `IFormattable`.

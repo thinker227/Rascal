@@ -61,6 +61,68 @@ public class MatchingTests
 
         called.ShouldBeTrue();
     }
+    
+    [Fact]
+    public async Task MatchAsync_ReturnsOkFunc_ForOk()
+    {
+        var r = Ok(2);
+        var x = await r.MatchAsync(
+            Task.FromResult,
+            _ => throw new InvalidOperationException()
+        );
+
+        x.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task MatchAsync_CallsErrFunc_ForErr()
+    {
+        var r = Err<int>("error");
+        var x = await r.MatchAsync(
+            _ => throw new InvalidOperationException(),
+            Task.FromResult
+        );
+
+        x.Message.ShouldBe("error");
+    }
+
+    [Fact]
+    public async Task SwitchAsync_CallsOkAction_ForOk()
+    {
+        var called = false;
+
+        var r = Ok(2);
+        await r.SwitchAsync(
+            x =>
+            {
+                x.ShouldBe(2);
+                called = true;
+                return Task.CompletedTask;
+            },
+            _ => throw new InvalidOperationException()
+        );
+
+        called.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task SwitchAsync_CallsErrAction_ForErr()
+    {
+        var called = false;
+
+        var r = Err<int>("error");
+        await r.SwitchAsync(
+            _ => throw new InvalidOperationException(),
+            e =>
+            {
+                called = true;
+                e.Message.ShouldBe("error");
+                return Task.CompletedTask;
+            }
+        );
+
+        called.ShouldBeTrue();
+    }
 
     [Fact]
     public void TryGetValue_1_ReturnsTrueAndSetsValue_ForOk()
@@ -93,7 +155,7 @@ public class MatchingTests
         var r = Err<int>("error");
         r.TryGetValue(out var x, out var e).ShouldBeFalse();
         x.ShouldBe(default);
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
     }
 
     [Fact]
@@ -101,7 +163,7 @@ public class MatchingTests
     {
         var r = Err<int>("error");
         r.TryGetError(out var e).ShouldBeTrue();
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
     }
 
     [Fact]
@@ -117,7 +179,7 @@ public class MatchingTests
     {
         var r = Err<int>("error");
         r.TryGetError(out var e, out var x).ShouldBeTrue();
-        e.Message.ShouldBe("error");
+        e?.Message.ShouldBe("error");
         x.ShouldBe(default);
     }
 
