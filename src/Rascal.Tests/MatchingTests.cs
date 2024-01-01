@@ -235,6 +235,24 @@ public class MatchingTests
     }
 
     [Fact]
+    public void GetValueOr_ErrorFunction_ReturnsValue_ForOk()
+    {
+        var r = Ok(2);
+        r.GetValueOr(_ => throw new InvalidOperationException()).ShouldBe(2);
+    }
+
+    [Fact]
+    public void GetValueOr_ErrorFunction_CallsFunctionWithError_ForErr()
+    {
+        var r = Err<int>("error");
+        r.GetValueOr(e =>
+        {
+            e.Message.ShouldBe("error");
+            return 1;
+        }).ShouldBe(1);
+    }
+
+    [Fact]
     public void Unwrap_ReturnsValue_ForOk()
     {
         var r = Ok(2);

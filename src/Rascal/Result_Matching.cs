@@ -171,6 +171,17 @@ public readonly partial struct Result<T>
             : getDefault();
 
     /// <summary>
+    /// Gets the ok value of the result, or a default value if the result is an error.
+    /// </summary>
+    /// <param name="getValue">A function to get a value to return if the result is an error.</param>
+    /// <returns></returns>
+    [Pure]
+    public T GetValueOr(Func<Error, T> getValue) =>
+        IsOk
+            ? value!
+            : getValue(Error);
+
+    /// <summary>
     /// Unwraps the ok value of the result.
     /// Throws an <see cref="UnwrapException"/> if the result is not ok.
     /// </summary>
