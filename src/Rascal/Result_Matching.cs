@@ -154,7 +154,7 @@ public readonly partial struct Result<T>
     /// </summary>
     /// <param name="default">The default value to return if the result is not ok.</param>
     [Pure]
-    public T GetValueOrDefault(T @default) =>
+    public T GetValueOr(T @default) =>
         IsOk
             ? value!
             : @default;
@@ -165,7 +165,7 @@ public readonly partial struct Result<T>
     /// <param name="getDefault">A function to get a default value to return
     /// if the result is not ok.</param>
     [Pure]
-    public T GetValueOrDefault(Func<T> getDefault) =>
+    public T GetValueOr(Func<T> getDefault) =>
         IsOk
             ? value!
             : getDefault();

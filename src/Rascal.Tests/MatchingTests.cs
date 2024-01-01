@@ -207,31 +207,31 @@ public class MatchingTests
     }
 
     [Fact]
-    public void GetValueOrDefault_Value_ReturnsValue_ForOk()
+    public void GetValueOr_Value_ReturnsValue_ForOk()
     {
         var r = Ok(2);
-        r.GetValueOrDefault(1).ShouldBe(2);
+        r.GetValueOr(1).ShouldBe(2);
     }
 
     [Fact]
-    public void GetValueOrDefault_Value_ReturnsDefaultValue_ForErr()
+    public void GetValueOr_Value_ReturnsDefaultValue_ForErr()
     {
         var r = Err<int>("error");
-        r.GetValueOrDefault(1).ShouldBe(1);
+        r.GetValueOr(1).ShouldBe(1);
     }
 
     [Fact]
-    public void GEtValueOrDefault_Function_ReturnsValue_ForOk()
+    public void GEtValueOr_Function_ReturnsValue_ForOk()
     {
         var r = Ok(2);
-        r.GetValueOrDefault(() => 1).ShouldBe(2);
+        r.GetValueOr(() => 1).ShouldBe(2);
     }
 
     [Fact]
-    public void GetValueOrDefault_Function_CallsFunction_ForErr()
+    public void GetValueOr_Function_CallsFunction_ForErr()
     {
         var r = Err<int>("error");
-        r.GetValueOrDefault(() => 1).ShouldBe(1);
+        r.GetValueOr(() => 1).ShouldBe(1);
     }
 
     [Fact]
