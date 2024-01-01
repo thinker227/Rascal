@@ -20,4 +20,8 @@
 
 - Rename `Result<T>.ToType` to `To` and allow attempting to convert to non-derived types.
 
-- Add ToString extensions supporting `IFormattable`.
+- Add `ToString` extensions supporting `IFormattable`.
+
+- Add `ResultEqualityComparer<T>`.
+
+- Add additional overloads for `Result<T>.Equals` which allow specifying an equality comparer to use for comparing values.
