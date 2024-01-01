@@ -141,7 +141,7 @@ public readonly partial struct Result<T>
     }
 
     /// <summary>
-    /// Gets the ok value of the result, or <see langword="default"/> if the result is not ok.
+    /// Gets the ok value of the result, or <see langword="default"/> if the result is an error.
     /// </summary>
     [Pure]
     public T? GetValueOrDefault() =>
@@ -150,9 +150,9 @@ public readonly partial struct Result<T>
             : default;
 
     /// <summary>
-    /// Gets the ok value of the result, or a default value if the result is not ok.
+    /// Gets the ok value of the result, or a default value if the result is an error.
     /// </summary>
-    /// <param name="default">The default value to return if the result is not ok.</param>
+    /// <param name="default">The default value to return if the result is an error.</param>
     [Pure]
     public T GetValueOr(T @default) =>
         IsOk
@@ -160,10 +160,9 @@ public readonly partial struct Result<T>
             : @default;
 
     /// <summary>
-    /// Gets the ok value of the result, or a default value if the result is not ok.
+    /// Gets the ok value of the result, or a default value if the result is an error.
     /// </summary>
-    /// <param name="getDefault">A function to get a default value to return
-    /// if the result is not ok.</param>
+    /// <param name="getDefault">A function to get a default value to return if the result is an error.</param>
     [Pure]
     public T GetValueOr(Func<T> getDefault) =>
         IsOk
@@ -183,7 +182,7 @@ public readonly partial struct Result<T>
 
     /// <summary>
     /// Unwraps the ok value of the result.
-    /// Throws an <see cref="UnwrapException"/> if the result is not ok.
+    /// Throws an <see cref="UnwrapException"/> if the result is an error.
     /// </summary>
     /// <remarks>
     /// This API is <b>unsafe</b> in the sense that it might intentionally throw an exception.
@@ -205,17 +204,17 @@ public readonly partial struct Result<T>
 
     /// <summary>
     /// Expects the result to be ok, throwing an <see cref="UnwrapException"/>
-    /// with a specified message if the result is not ok.
+    /// with a specified message if the result is an error.
     /// </summary>
     /// <param name="error">The message to construct the <see cref="UnwrapException"/>
-    /// to throw using if the result is not ok.</param>
+    /// to throw using if the result is an error.</param>
     /// <remarks>
     /// This API is <b>unsafe</b> in the sense that it might intentionally throw an exception.
     /// Please only use this API if the caller knows without a reasonable shadow of a doubt
     /// that this operation is safe, or that an exception is acceptable to be thrown.
     /// </remarks>
     /// <returns>The ok value of the result.</returns>
-    /// <exception cref="UnwrapException">The result is not ok.</exception>
+    /// <exception cref="UnwrapException">The result is an error.</exception>
     [Pure]
     public T Expect(string error) =>
         IsOk
