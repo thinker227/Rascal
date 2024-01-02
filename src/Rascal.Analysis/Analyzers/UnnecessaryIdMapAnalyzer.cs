@@ -71,7 +71,7 @@ public sealed class UnnecessaryIdMapAnalyzer : DiagnosticAnalyzer
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
                     Diagnostics.UnnecessaryIdMap,
                     location,
-                    lambdaParameter.Name));
+                    lambdaParameter.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)));
             }, OperationKind.Invocation);
         });
     }
