@@ -65,7 +65,7 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                 {
                     Expression: MemberAccessExpressionSyntax memberAccessExpression
                 }) return;
-                var location = memberAccessExpression.GetLocation();
+                var location = memberAccessExpression.Name.GetLocation();
                 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(

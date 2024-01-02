@@ -53,7 +53,7 @@ public sealed class UseThenAnalyzer : DiagnosticAnalyzer
                 {
                     Expression: MemberAccessExpressionSyntax memberAccessExpression
                 }) return;
-                var location = memberAccessExpression.GetLocation();
+                var location = memberAccessExpression.Name.GetLocation();
 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
