@@ -29,9 +29,11 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
             {
                 var operation = (IInvocationOperation)operationCtx.Operation;
 
+                // Check that the target method is To
                 var method = operation.TargetMethod;
                 if (!method.OriginalDefinition.Equals(toMethod, SymbolEqualityComparer.Default)) return;
 
+                // Get the location of the type argument
                 if (operation.Syntax is not InvocationExpressionSyntax
                 {
                     Expression: MemberAccessExpressionSyntax
@@ -44,9 +46,11 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                 }) return;
                 var location = typeSyntax.GetLocation();
 
+                // Get the source and target type for the conversion
                 var sourceType = method.ContainingType.TypeArguments[0];
                 var targetType = method.TypeArguments[0];
 
+                // Report diagnostic if both source and target types are the same
                 if (sourceType.Equals(targetType, SymbolEqualityComparer.Default))
                 {
                     operationCtx.ReportDiagnostic(Diagnostic.Create(
