@@ -19,6 +19,7 @@
                     "**/*.{md,yml}"
                 ],
                 "exclude": [
+                    "apidocs/**.md",
                     "_site/**"
                 ]
             }
@@ -27,6 +28,13 @@
             {
                 "files": [
                     "images/**"
+                ]
+            }
+        ],
+        "overwrite": [
+            {
+                "files": [
+                    "apidocs/**.md"
                 ]
             }
         ],
