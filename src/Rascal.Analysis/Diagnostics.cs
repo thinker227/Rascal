@@ -34,4 +34,25 @@ public static class Diagnostics
         true,
         "Calling 'Map' with an identity function returns the same result as the input. " +
         "Remove this call to 'Map'.");
+
+    public static DiagnosticDescriptor ToSameType { get; } = new(
+        "RASCAL0004",
+        "'To' called with same type as result",
+        "This call converts '{0}' to itself and will always succeed. " +
+        "Remove this call to 'To'.",
+        "Correctness",
+        DiagnosticSeverity.Warning,
+        true,
+        "Calling 'To' with the same type as that of the result will always succeed. " +
+        "Remove this call to 'To'.");
+
+    public static DiagnosticDescriptor ToImpossibleType { get; } = new(
+        "RASCAL0005",
+        "'To' called with impossible type",
+        "This call tries to convert '{0}' to '{1}', but no value of type '{0}' can be of type '{1}'. " +
+        "The conversion will always fail",
+        "Correctness",
+        DiagnosticSeverity.Warning,
+        true,
+        "Calling 'To' with a type which no values of the type of the result permit will always fail.");
 }
