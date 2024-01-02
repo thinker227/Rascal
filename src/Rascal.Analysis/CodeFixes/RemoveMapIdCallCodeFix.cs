@@ -25,7 +25,8 @@ public sealed class RemoveMapIdCallCodeFix : CodeFixProvider
 
         var codeAction = CodeAction.Create(
             "Remove Map call",
-            _ => Task.FromResult(ExecuteFix(document, root, invocation)));
+            _ => Task.FromResult(ExecuteFix(document, root, invocation)),
+            nameof(RemoveMapIdCallCodeFix));
         
         ctx.RegisterCodeFix(codeAction, ctx.Diagnostics);
     }
