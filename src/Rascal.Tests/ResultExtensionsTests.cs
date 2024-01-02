@@ -1,14 +1,35 @@
+using System.Globalization;
+using Rascal.Errors;
+
 namespace Rascal.Tests;
 
 public class ResultExtensionsTests
 {
+    [Fact]
+    public void ToString_UsesFormat_ForOk()
+    {
+        var result = Ok(15);
+        var str = result.ToString("b", CultureInfo.InvariantCulture);
+
+        str.ShouldBe("Ok { 1111 }");
+    }
+
+    [Fact]
+    public void ToString_ReturnsErrorMessage_ForErr()
+    {
+        var result = Err<int>("error");
+        var str = result.ToString("b", CultureInfo.InvariantCulture);
+
+        str.ShouldBe("Error { error }");
+    }
+    
     [Fact]
     public void Unnest()
     {
         var r = Ok(Ok(2));
         var x = r.Unnest();
 
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
         x.value.ShouldBe(2);
     }
 
@@ -18,7 +39,7 @@ public class ResultExtensionsTests
         var x = "uwu";
         var r = x.NotNull("error");
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe("uwu");
     }
 
@@ -28,7 +49,7 @@ public class ResultExtensionsTests
         var x = null as string;
         var r = x.NotNull("error");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -38,7 +59,7 @@ public class ResultExtensionsTests
         var x = 2 as int?;
         var r = x.NotNull("error");
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -48,7 +69,7 @@ public class ResultExtensionsTests
         var x = null as int?;
         var r = x.NotNull("error");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -77,7 +98,7 @@ public class ResultExtensionsTests
 
         var result = xs.Sequence();
         
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBe([1, 2, 3, 4, 5]);
     }
 
@@ -88,7 +109,7 @@ public class ResultExtensionsTests
 
         var result = xs.Sequence();
 
-        result.HasValue.ShouldBeFalse();
+        result.IsOk.ShouldBeFalse();
         result.error?.Message.ShouldBe("error 1");
     }
 
@@ -99,7 +120,7 @@ public class ResultExtensionsTests
 
         var result = xs.Sequence();
 
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBeEmpty();
     }
 
@@ -109,7 +130,7 @@ public class ResultExtensionsTests
         var dict = new Dictionary<string, int>() { ["a"] = 2 };
         var r = dict.TryGetValueR("a", "error");
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -119,7 +140,7 @@ public class ResultExtensionsTests
         var dict = new Dictionary<string, int>();
         var r = dict.TryGetValueR("a", "error");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -129,7 +150,7 @@ public class ResultExtensionsTests
         var xs = new[] { 2 };
         var r = xs.Index(0, "error");
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -139,7 +160,7 @@ public class ResultExtensionsTests
         var xs = Array.Empty<int>();
         var r = xs.Index(0, "error");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -148,7 +169,7 @@ public class ResultExtensionsTests
     {
         var r = await Task.FromResult(2).CatchCancellation();
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -161,7 +182,7 @@ public class ResultExtensionsTests
         await cts.CancelAsync();
         var r = await task.CatchCancellation();
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error.ShouldBeOfType<CancellationError>();
         return;
 
