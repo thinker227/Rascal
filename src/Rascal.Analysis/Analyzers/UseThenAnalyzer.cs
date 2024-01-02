@@ -49,9 +49,11 @@ public sealed class UseThenAnalyzer : DiagnosticAnalyzer
                     return;
 
                 // Get the location of the method name.
-                var invocationSyntax = (InvocationExpressionSyntax)argumentInvocation.Syntax;
-                var memberAccessSyntax = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
-                var location = memberAccessSyntax.Name.GetLocation();
+                if (argumentInvocation.Syntax is not InvocationExpressionSyntax
+                {
+                    Expression: MemberAccessExpressionSyntax memberAccessExpression
+                }) return;
+                var location = memberAccessExpression.GetLocation();
 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(

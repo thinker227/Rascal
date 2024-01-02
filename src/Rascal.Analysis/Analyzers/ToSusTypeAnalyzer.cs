@@ -32,10 +32,16 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                 var method = operation.TargetMethod;
                 if (!method.OriginalDefinition.Equals(toMethod, SymbolEqualityComparer.Default)) return;
 
-                var invocationSyntax = (InvocationExpressionSyntax)operation.Syntax;
-                var memberAccessSyntax = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
-                var nameSyntax = (GenericNameSyntax)memberAccessSyntax.Name;
-                var typeSyntax = nameSyntax.TypeArgumentList.Arguments[0];
+                if (operation.Syntax is not InvocationExpressionSyntax
+                {
+                    Expression: MemberAccessExpressionSyntax
+                    {
+                        Name: GenericNameSyntax
+                        {
+                            TypeArgumentList.Arguments: [var typeSyntax]
+                        }
+                    }
+                }) return;
                 var location = typeSyntax.GetLocation();
 
                 var sourceType = method.ContainingType.TypeArguments[0];

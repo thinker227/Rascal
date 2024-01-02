@@ -56,12 +56,16 @@ public sealed class UnnecessaryIdMapAnalyzer : DiagnosticAnalyzer
                 if (!returnReference.Parameter.Equals(lambdaParameter, SymbolEqualityComparer.Default)) return;
                 
                 // Get the location of the method invocation.
-                var invocationExpression = (InvocationExpressionSyntax)operation.Syntax;
-                var memberAccess = (MemberAccessExpressionSyntax)invocationExpression.Expression;
-                var start = memberAccess.Name.Span.Start;
-                var end = invocationExpression.ArgumentList.Span.End;
+                if (operation.Syntax is not InvocationExpressionSyntax
+                {
+                    Expression: MemberAccessExpressionSyntax
+                    {
+                        Name.Span.Start: var start
+                    },
+                    Span.End: var end
+                }) return;
                 var span = TextSpan.FromBounds(start, end);
-                var location = Location.Create(invocationExpression.SyntaxTree, span);
+                var location = Location.Create(operation.Syntax.SyntaxTree, span);
                 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
