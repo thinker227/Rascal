@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Rascal.Analysis;
 
 public static class Diagnostics
@@ -54,4 +52,14 @@ public static class Diagnostics
         DiagnosticSeverity.Warning,
         true,
         "Calling 'To' with a type which no value of the type of the result permits will always fail.");
+
+    public static DiagnosticDescriptor UseDefaultOrForIdMatch { get; } = new(
+        "RASCAL0006",
+        "Use 'DefaultOr' instead of 'Match(x => x, ...)'",
+        "This call matches {x} using an identity function. " +
+        "Use 'DefaultOr' instead to reduce allocations.",
+        "Correctness",
+        DiagnosticSeverity.Warning,
+        true,
+        "Calling 'Match' with an identity function for the 'ifOk' parameter is equivalent to 'DefaultOr'.");
 }

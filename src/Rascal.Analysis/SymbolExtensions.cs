@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Rascal.Analysis;
 
 public static class SymbolExtensions
