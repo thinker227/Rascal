@@ -56,7 +56,7 @@ public static class Diagnostics
     public static DiagnosticDescriptor UseDefaultOrForIdMatch { get; } = new(
         "RASCAL0006",
         "Use 'DefaultOr' instead of 'Match(x => x, ...)'",
-        "This call matches {x} using an identity function. " +
+        "This call matches {0} using an identity function. " +
         "Use 'DefaultOr' instead to reduce allocations.",
         "Correctness",
         DiagnosticSeverity.Warning,
