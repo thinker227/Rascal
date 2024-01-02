@@ -4,10 +4,16 @@ namespace Rascal.Analysis;
 
 public static class SymbolExtensions
 {
-    public static bool Inherits(INamedTypeSymbol x, INamedTypeSymbol type)
+    public static bool Inherits(this ITypeSymbol x, ITypeSymbol type)
     {
         var t = x;
 
-        throw new NotImplementedException();
+        while (t is not null)
+        {
+            if (t.Equals(type, SymbolEqualityComparer.Default)) return true;
+            t = t.BaseType;
+        }
+
+        return false;
     }
 }

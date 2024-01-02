@@ -37,11 +37,12 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                 if (!method.OriginalDefinition.Equals(toMethod, SymbolEqualityComparer.Default)) return;
 
                 var invocationSyntax = (InvocationExpressionSyntax)operation.Syntax;
-                var nameSyntax = (GenericNameSyntax)invocationSyntax.Expression;
+                var memberAccessSyntax = (MemberAccessExpressionSyntax)invocationSyntax.Expression;
+                var nameSyntax = (GenericNameSyntax)memberAccessSyntax.Name;
                 var typeSyntax = nameSyntax.TypeArgumentList.Arguments[0];
                 var location = typeSyntax.GetLocation();
 
-                var sourceType = method.ContainingType;
+                var sourceType = method.ContainingType.TypeArguments[0];
                 var targetType = method.TypeArguments[0];
 
                 if (sourceType.Equals(targetType, SymbolEqualityComparer.Default))
@@ -53,17 +54,30 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                     return;
                 }
 
+                // Return early if the types are compatible
                 switch (sourceType.TypeKind, targetType.TypeKind)
                 {
-                case (_, _)
-                    when sourceType.Equals(objectType, SymbolEqualityComparer.Default) ||
-                         targetType.Equals(objectType, SymbolEqualityComparer.Default): return;
+                // One of the types is an interface
                 case (TypeKind.Interface, _) or (_, TypeKind.Interface): return;
-                // case (TypeKind.Class, TypeKind.Class) when // inherits
+                // One of the types is a type parameter
+                case (TypeKind.TypeParameter, _) or (_, TypeKind.TypeParameter): return;
+                // One of the types is object
+                case (_, _) when
+                    sourceType.Equals(objectType, SymbolEqualityComparer.Default) ||
+                    targetType.Equals(objectType, SymbolEqualityComparer.Default): return;
+                // Both types are classes and one inherits the other
+                case (TypeKind.Class, TypeKind.Class) when
+                    sourceType.Inherits(targetType) ||
+                    targetType.Inherits(sourceType): return;
                 }
+
+                // The types are sus
+                operationCtx.ReportDiagnostic(Diagnostic.Create(
+                    Diagnostics.ToImpossibleType,
+                    location,
+                    sourceType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                    targetType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)));
             }, OperationKind.Invocation);
         });
     }
-    
-    private static bool Inherits(INamedTypeSymbol type, INamedTypeSymbol inherits)
 }

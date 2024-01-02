@@ -39,20 +39,19 @@ public static class Diagnostics
         "RASCAL0004",
         "'To' called with same type as result",
         "This call converts '{0}' to itself and will always succeed. " +
-        "Remove this call to 'To'.",
+        "Remove this call to 'To' as it doesn't do anything.",
         "Correctness",
         DiagnosticSeverity.Warning,
         true,
-        "Calling 'To' with the same type as that of the result will always succeed. " +
-        "Remove this call to 'To'.");
+        "Calling 'To' with the same type as that of the result will always succeed.");
 
     public static DiagnosticDescriptor ToImpossibleType { get; } = new(
         "RASCAL0005",
         "'To' called with impossible type",
         "This call tries to convert '{0}' to '{1}', but no value of type '{0}' can be of type '{1}'. " +
-        "The conversion will always fail",
+        "The conversion will always fail.",
         "Correctness",
         DiagnosticSeverity.Warning,
         true,
-        "Calling 'To' with a type which no values of the type of the result permit will always fail.");
+        "Calling 'To' with a type which no value of the type of the result permits will always fail.");
 }
