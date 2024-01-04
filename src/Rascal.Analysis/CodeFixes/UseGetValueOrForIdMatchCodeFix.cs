@@ -5,10 +5,10 @@ using Microsoft.CodeAnalysis.Operations;
 namespace Rascal.Analysis.CodeFixes;
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public sealed class UseDefaultOrForIdMatchCodeFix : CodeFixProvider
+public sealed class UseGetValueOrForIdMatchCodeFix : CodeFixProvider
 {
     public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(
-        Diagnostics.UseDefaultOrForIdMatch.Id);
+        Diagnostics.UseGetValueOrForIdMatch.Id);
     
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -43,7 +43,7 @@ public sealed class UseDefaultOrForIdMatchCodeFix : CodeFixProvider
         if (lambda.Syntax is not LambdaExpressionSyntax lambdaSyntax) return;
 
         var codeAction = CodeAction.Create(
-            "Use DefaultOr",
+            "Use GetValueOr",
             _ => Task.FromResult(ExecuteFix(
                 document,
                 root,
@@ -52,7 +52,7 @@ public sealed class UseDefaultOrForIdMatchCodeFix : CodeFixProvider
                 lambdaSyntax,
                 body,
                 param)),
-            nameof(UseDefaultOrForIdMatchCodeFix));
+            nameof(UseGetValueOrForIdMatchCodeFix));
         
         ctx.RegisterCodeFix(codeAction, ctx.Diagnostics);
     }

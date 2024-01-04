@@ -53,11 +53,11 @@ public static class Diagnostics
         true,
         "Calling 'To' with a type which no value of the type of the result permits will always fail.");
 
-    public static DiagnosticDescriptor UseDefaultOrForIdMatch { get; } = new(
+    public static DiagnosticDescriptor UseGetValueOrForIdMatch { get; } = new(
         "RASCAL0006",
-        "Use 'DefaultOr' instead of 'Match(x => x, ...)'",
+        "Use 'GetValueOr' instead of 'Match(x => x, ...)'",
         "This call matches {0} using an identity function. " +
-        "Use 'DefaultOr' instead to reduce allocations.",
+        "Use 'GetValueOr' instead to reduce allocations.",
         "Correctness",
         DiagnosticSeverity.Warning,
         true,

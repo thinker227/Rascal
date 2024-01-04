@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis.Operations;
 namespace Rascal.Analysis.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class UseDefaultOrForIdMatchAnalyzer : DiagnosticAnalyzer
+public sealed class UseGetValueOrForIdMatchAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
-        Diagnostics.UseDefaultOrForIdMatch);
+        Diagnostics.UseGetValueOrForIdMatch);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -63,7 +63,7 @@ public sealed class UseDefaultOrForIdMatchAnalyzer : DiagnosticAnalyzer
 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
-                    Diagnostics.UseDefaultOrForIdMatch,
+                    Diagnostics.UseGetValueOrForIdMatch,
                     location,
                     lambdaParameter.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)));
             }, OperationKind.Invocation);

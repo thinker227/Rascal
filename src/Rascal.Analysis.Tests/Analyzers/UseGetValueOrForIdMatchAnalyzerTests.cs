@@ -1,8 +1,8 @@
-using VerifyCS = Rascal.Analysis.Tests.Verifiers.AnalyzerVerifier<Rascal.Analysis.Analyzers.UseDefaultOrForIdMatchAnalyzer>;
+using VerifyCS = Rascal.Analysis.Tests.Verifiers.AnalyzerVerifier<Rascal.Analysis.Analyzers.UseGetValueOrForIdMatchAnalyzer>;
 
 namespace Rascal.Analysis.Analyzers.Tests;
 
-public class UseDefaultOrForIdMatchAnalyzerTests
+public class UseGetValueOrForIdMatchAnalyzerTests
 {
     [Fact]
     public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""

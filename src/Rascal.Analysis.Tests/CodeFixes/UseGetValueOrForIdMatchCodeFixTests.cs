@@ -1,8 +1,8 @@
-using VerifyCS = Rascal.Analysis.Tests.Verifiers.CodeFixVerifier<Rascal.Analysis.Analyzers.UseDefaultOrForIdMatchAnalyzer, Rascal.Analysis.CodeFixes.UseDefaultOrForIdMatchCodeFix>;
+using VerifyCS = Rascal.Analysis.Tests.Verifiers.CodeFixVerifier<Rascal.Analysis.Analyzers.UseGetValueOrForIdMatchAnalyzer, Rascal.Analysis.CodeFixes.UseGetValueOrForIdMatchCodeFix>;
 
 namespace Rascal.Analysis.CodeFixes.Tests;
 
-public class UseDefaultOrForIdMatchCodeFixTests
+public class UseGetValueOrForIdMatchCodeFixTests
 {
     [Fact]
     public async Task Fixes_MatchIdCall_WithError() => await VerifyCS.VerifyCodeFixAsync("""
