@@ -65,7 +65,7 @@ public sealed class UseGetValueOrForIdMatchAnalyzer : DiagnosticAnalyzer
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
                     Diagnostics.UseGetValueOrForIdMatch,
                     location,
-                    lambdaParameter.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)));
+                    lambdaParameter.Name));
             }, OperationKind.Invocation);
         });
     }
