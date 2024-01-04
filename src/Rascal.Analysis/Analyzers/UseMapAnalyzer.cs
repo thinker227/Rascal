@@ -61,7 +61,7 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                     !returnInvocation.TargetMethod.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)) return;
 
                 // Get the location of the method name.
-                if (operation.Syntax is not MemberAccessExpressionSyntax
+                if (operation.Syntax is not InvocationExpressionSyntax
                 {
                     Expression: MemberAccessExpressionSyntax memberAccessExpression
                 }) return;
