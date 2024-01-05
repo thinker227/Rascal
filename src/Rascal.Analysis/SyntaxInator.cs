@@ -54,4 +54,18 @@ internal static class SyntaxInator
                     SingletonSeparatedList(
                         Argument(lambda))))
             .NormalizeWhitespace();
+
+    public static InvocationExpressionSyntax MapFrom(
+        ExpressionSyntax invocationTarget,
+        ExpressionSyntax expression) =>
+        InvocationExpression(
+                MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    invocationTarget,
+                    IdentifierName("Map")))
+            .WithArgumentList(
+                ArgumentList(
+                    SingletonSeparatedList(
+                        Argument(expression))))
+            .NormalizeWhitespace();
 }
