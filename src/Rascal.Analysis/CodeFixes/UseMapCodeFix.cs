@@ -90,7 +90,8 @@ public sealed class UseMapCodeFix : CodeFixProvider
         return null;
     }
 
-    private static Document ExecuteFix(Document document,
+    private static Document ExecuteFix(
+        Document document,
         SyntaxNode root,
         InvocationExpressionSyntax invocation,
         ExpressionSyntax invocationTarget,
