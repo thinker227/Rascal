@@ -28,6 +28,9 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
             var okMethod = (IMethodSymbol)preludeMembers.First(x => x.Name == "Ok");
             var okCtor = resultType.InstanceConstructors
                 .First(x => x.Parameters is [{ Type: ITypeParameterSymbol }]);
+            var okConversion = (IMethodSymbol)resultMembers
+                .OfType<IMethodSymbol>()
+                .First(x => x is { Name: "op_Implicit", Parameters: [{ Type: ITypeParameterSymbol }] });
             
             compilationCtx.RegisterOperationAction(operationCtx =>
             {
@@ -37,7 +40,7 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                 if (!operation.TargetMethod.OriginalDefinition.Equals(thenMethod, SymbolEqualityComparer.Default)) return;
 
                 // Check that the operation should be targeted.
-                if (!IsTargetOperation(operation, okMethod, okCtor)) return;
+                if (!IsTargetOperation(operation, okMethod, okCtor, okConversion)) return;
 
                 // Get the location of the method name.
                 var location = operation.Syntax is InvocationExpressionSyntax
@@ -58,7 +61,8 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
     private static bool IsTargetOperation(
         IInvocationOperation operation,
         IMethodSymbol okMethod,
-        IMethodSymbol okCtor)
+        IMethodSymbol okCtor,
+        IMethodSymbol okConversion)
     {
         // Check that the first argument is a lambda with an immediate return.
         if (operation.Arguments is not
@@ -85,8 +89,17 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
             invocation.TargetMethod.OriginalDefinition.Equals(okMethod, SymbolEqualityComparer.Default)) return true;
 
         // Check whether the return operation is an constructor invocation to new(T).
-        return returnValue is IObjectCreationOperation objectCreation &&
-               (objectCreation.Constructor?.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)
-                   ?? false);
+        if (returnValue is IObjectCreationOperation objectCreation &&
+            (objectCreation.Constructor?.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)
+             ?? false)) return true;
+
+        // Check whether the return operation is either a target-type new or implicit/explicit conversion.
+        // The conversion is implicit if it's a target-type new expression.
+        if (returnValue is IConversionOperation conversion &&
+            (conversion.IsImplicit ||
+             (conversion.OperatorMethod?.OriginalDefinition.Equals(okConversion, SymbolEqualityComparer.Default) ?? false)))
+            return true;
+        
+        return false;
     }
 }

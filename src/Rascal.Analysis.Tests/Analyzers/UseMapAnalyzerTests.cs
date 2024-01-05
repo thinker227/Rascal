@@ -53,4 +53,36 @@ public class UseMapAnalyzerTests
         }
     }
     """);
+    
+    [Fact]
+    public async Task ReportsOnLambdaCtorImplicit() => await VerifyCS.VerifyAnalyzerAsync("""
+    using System;
+    using Rascal;
+    using static Rascal.Prelude;
+
+    public static class Foo
+    {
+        public static void Bar()
+        {
+            var result = Ok(2);
+            var v = result.{|RASCAL0001:Then<int>|}(x => new(x));
+        }
+    }
+    """);
+    
+    [Fact]
+    public async Task ReportsOnLambdaConversion() => await VerifyCS.VerifyAnalyzerAsync("""
+        using System;
+        using Rascal;
+        using static Rascal.Prelude;
+
+        public static class Foo
+        {
+            public static void Bar()
+            {
+                var result = Ok(2);
+                var v = result.{|RASCAL0001:Then|}(x => (Result<int>)x);
+            }
+        }
+        """);
 }

@@ -79,6 +79,14 @@ public sealed class UseMapCodeFix : CodeFixProvider
         if (returnValue is IObjectCreationOperation returnObjectCreation)
             return (argumentExpression, returnExpression, (ExpressionSyntax)returnObjectCreation.Arguments[0].Value.Syntax);
 
+        if (returnValue is IConversionOperation conversion)
+        {
+            if (conversion is { IsImplicit: true, Operand: IObjectCreationOperation targetTypeNew })
+                return (argumentExpression, returnExpression, (ExpressionSyntax)targetTypeNew.Arguments[0].Value.Syntax);
+
+            return (argumentExpression, returnExpression, (ExpressionSyntax)conversion.Operand.Syntax);
+        }
+
         return null;
     }
 
