@@ -23,7 +23,7 @@ public class UseMapAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnLambda() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ReportsOnLambdaOk() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -37,9 +37,9 @@ public class UseMapAnalyzerTests
         }
     }
     """);
-    
+
     [Fact]
-    public async Task ReportOnBlockBody() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task ReportsOnLambdaCtor() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -49,10 +49,7 @@ public class UseMapAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0001:Then|}(x =>
-            {
-                return Ok(x);
-            });
+            var v = result.{|RASCAL0001:Then|}(x => new Result<int>(x));
         }
     }
     """);
