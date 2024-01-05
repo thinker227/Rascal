@@ -36,36 +36,16 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                 // Check that it is Then being called.
                 if (!operation.TargetMethod.OriginalDefinition.Equals(thenMethod, SymbolEqualityComparer.Default)) return;
 
-                // Check that the first argument is a lambda with an immediate return.
-                if (operation.Arguments is not
-                [
-                    {
-                        Value: IDelegateCreationOperation
-                        {
-                            Target: IAnonymousFunctionOperation
-                            {
-                                Body.Operations:
-                                [
-                                    IReturnOperation
-                                    {
-                                        ReturnedValue: IInvocationOperation returnInvocation
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                ]) return;
-
-                // Check that the return invocation expression is calling either Ok or new(T).
-                if (!returnInvocation.TargetMethod.OriginalDefinition.Equals(okMethod, SymbolEqualityComparer.Default) &&
-                    !returnInvocation.TargetMethod.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)) return;
+                // Check that the operation should be targeted.
+                if (!IsTargetOperation(operation, okMethod, okCtor)) return;
 
                 // Get the location of the method name.
-                if (operation.Syntax is not InvocationExpressionSyntax
+                var location = operation.Syntax is InvocationExpressionSyntax
                 {
                     Expression: MemberAccessExpressionSyntax memberAccessExpression
-                }) return;
-                var location = memberAccessExpression.Name.GetLocation();
+                }
+                    ? memberAccessExpression.Name.GetLocation()
+                    : operation.Syntax.GetLocation();
                 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
@@ -73,5 +53,40 @@ public sealed class UseMapAnalyzer : DiagnosticAnalyzer
                     location));
             }, OperationKind.Invocation);
         });
+    }
+
+    private static bool IsTargetOperation(
+        IInvocationOperation operation,
+        IMethodSymbol okMethod,
+        IMethodSymbol okCtor)
+    {
+        // Check that the first argument is a lambda with an immediate return.
+        if (operation.Arguments is not
+            [
+                {
+                    Value: IDelegateCreationOperation
+                    {
+                        Target: IAnonymousFunctionOperation
+                        {
+                            Body.Operations:
+                            [
+                                IReturnOperation
+                                {
+                                    ReturnedValue: var returnValue
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]) return false;
+
+        // Check whether the return operation is an invocation to Ok.
+        if (returnValue is IInvocationOperation invocation &&
+            invocation.TargetMethod.OriginalDefinition.Equals(okMethod, SymbolEqualityComparer.Default)) return true;
+
+        // Check whether the return operation is an constructor invocation to new(T).
+        return returnValue is IObjectCreationOperation objectCreation &&
+               (objectCreation.Constructor?.OriginalDefinition.Equals(okCtor, SymbolEqualityComparer.Default)
+                   ?? false);
     }
 }

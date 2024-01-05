@@ -34,7 +34,7 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                 if (!method.OriginalDefinition.Equals(toMethod, SymbolEqualityComparer.Default)) return;
 
                 // Get the location of the type argument
-                if (operation.Syntax is not InvocationExpressionSyntax
+                var location = operation.Syntax is InvocationExpressionSyntax
                 {
                     Expression: MemberAccessExpressionSyntax
                     {
@@ -43,8 +43,9 @@ public sealed class ToSusTypeAnalyzer : DiagnosticAnalyzer
                             TypeArgumentList.Arguments: [var typeSyntax]
                         }
                     }
-                }) return;
-                var location = typeSyntax.GetLocation();
+                }
+                    ? typeSyntax.GetLocation()
+                    : operation.Syntax.GetLocation();
 
                 // Get the source and target type for the conversion
                 var sourceType = method.ContainingType.TypeArguments[0];

@@ -55,11 +55,12 @@ public sealed class UseGetValueOrForIdMatchAnalyzer : DiagnosticAnalyzer
                 if (!returnReference.Parameter.Equals(lambdaParameter, SymbolEqualityComparer.Default)) return;
                 
                 // Get the location of the method invocation.
-                if (operation.Syntax is not InvocationExpressionSyntax
+                var location = operation.Syntax is InvocationExpressionSyntax
                 {
                     Expression: MemberAccessExpressionSyntax memberAccessExpression
-                }) return;
-                var location = memberAccessExpression.Name.GetLocation();
+                }
+                    ? memberAccessExpression.Name.GetLocation()
+                    : operation.Syntax.GetLocation();
 
                 // Report the diagnostic.
                 operationCtx.ReportDiagnostic(Diagnostic.Create(
