@@ -28,9 +28,9 @@ Run from the Visual Studio Package Manager console:
 NuGet\Install-Package Rascal -IncludePrerelease
 ```
 
-# [REPL environment](#tab/repl)
+# [Script environment](#tab/repl)
 
-In environments such as [C# REPL](https://github.com/waf/CSharpRepl) or [F# Interactive](https://learn.microsoft.com/en-us/dotnet/fsharp/tools/fsharp-interactive/), enter:
+In environments such as [C# REPL](https://github.com/waf/CSharpRepl) or [RoslynPad](https://roslynpad.net), enter:
 
 ```cs
 #r "nuget: Rascal"
