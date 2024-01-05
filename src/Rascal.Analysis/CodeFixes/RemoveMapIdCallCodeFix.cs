@@ -17,12 +17,19 @@ public sealed class RemoveMapIdCallCodeFix : CodeFixProvider
         
         var root = await document.GetSyntaxRootAsync();
         if (root is null) return;
+        
+        var invocation = root.FindNode(ctx.Span).FirstAncestorOrSelf<InvocationExpressionSyntax>();
+        if (invocation is null) return;
 
-        var invocation = (InvocationExpressionSyntax)root.FindNode(ctx.Span);
+        if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess) return;
 
         var codeAction = CodeAction.Create(
             "Remove Map call",
-            _ => Task.FromResult(ExecuteFix(document, root, invocation)),
+            _ => Task.FromResult(ExecuteFix(
+                document,
+                root,
+                invocation,
+                memberAccess)),
             nameof(RemoveMapIdCallCodeFix));
         
         ctx.RegisterCodeFix(codeAction, ctx.Diagnostics);
@@ -31,9 +38,9 @@ public sealed class RemoveMapIdCallCodeFix : CodeFixProvider
     private static Document ExecuteFix(
         Document document,
         SyntaxNode root,
-        InvocationExpressionSyntax invocation)
+        InvocationExpressionSyntax invocation,
+        MemberAccessExpressionSyntax memberAccess)
     {
-        var memberAccess = (MemberAccessExpressionSyntax)invocation.Expression;
         var expression = memberAccess.Expression;
         var newRoot = root.ReplaceNode(invocation, expression);
         return document.WithSyntaxRoot(newRoot);
