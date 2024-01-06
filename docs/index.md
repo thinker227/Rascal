@@ -30,13 +30,13 @@ NuGet\Install-Package Rascal -IncludePrerelease
 
 # [Script environment](#tab/repl)
 
-In environments such as [C# REPL](https://github.com/waf/CSharpRepl) or [RoslynPad](https://roslynpad.net), enter:
+In environments such as [dotnet-script](https://github.com/dotnet-script/dotnet-script), [C# REPL](https://github.com/waf/CSharpRepl), or [RoslynPad](https://roslynpad.net), enter:
 
 ```cs
 #r "nuget: Rascal"
 ```
 
-If you wish to install a pre-release version of the package, specify the package version:
+If you wish to install a specific version of the package, specify the package version:
 
 ```cs
 #r "nuget: Rascal, 1.0.1-pre"
@@ -89,9 +89,9 @@ public Task<User?> GetUser(int userId)
 ... you can replace it with:
 
 ```cs
-public Task<Result<User>> GetUser(int userId) => TryAsync(() =>
+public Task<Result<User>> GetUser(int userId) => TryAsync(async () =>
 {
-    var user = db.Users.FirstOrDefaultAsync(user => user.Id == userId);
+    var user = await db.Users.FirstOrDefaultAsync(user => user.Id == userId);
 
     if (user is null) return new NotFoundError($"User with ID {userId} does not exist.");
 
