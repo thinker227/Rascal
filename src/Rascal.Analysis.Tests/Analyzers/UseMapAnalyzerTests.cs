@@ -33,7 +33,7 @@ public class UseMapAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0001:Then|}(x => Ok(x));
+            var v = result.{|RASCAL001:Then|}(x => Ok(x));
         }
     }
     """);
@@ -49,7 +49,7 @@ public class UseMapAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0001:Then|}(x => new Result<int>(x));
+            var v = result.{|RASCAL001:Then|}(x => new Result<int>(x));
         }
     }
     """);
@@ -65,7 +65,7 @@ public class UseMapAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0001:Then<int>|}(x => new(x));
+            var v = result.{|RASCAL001:Then<int>|}(x => new(x));
         }
     }
     """);
@@ -81,7 +81,7 @@ public class UseMapAnalyzerTests
             public static void Bar()
             {
                 var result = Ok(2);
-                var v = result.{|RASCAL0001:Then|}(x => (Result<int>)x);
+                var v = result.{|RASCAL001:Then|}(x => (Result<int>)x);
             }
         }
         """);

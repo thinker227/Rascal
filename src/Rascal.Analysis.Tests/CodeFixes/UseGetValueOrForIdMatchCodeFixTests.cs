@@ -15,7 +15,7 @@ public class UseGetValueOrForIdMatchCodeFixTests
         public static void Bar()
         {
             var r = Ok("uwu");
-            var x = r.{|RASCAL0006:Match|}(x => x, e => e.Message);
+            var x = r.{|RASCAL006:Match|}(x => x, e => e.Message);
         }
     }
     """, """
@@ -45,7 +45,7 @@ public class UseGetValueOrForIdMatchCodeFixTests
         {
             var r = Ok("uwu");
             var v = "owo";
-            var x = r.{|RASCAL0006:Match|}(x => x, _ => v);
+            var x = r.{|RASCAL006:Match|}(x => x, _ => v);
         }
     }
     """, """
@@ -75,7 +75,7 @@ public class UseGetValueOrForIdMatchCodeFixTests
         public static void Bar()
         {
             var r = Ok("uwu");
-            var x = r.{|RASCAL0006:Match|}(x => x, _ => "owo");
+            var x = r.{|RASCAL006:Match|}(x => x, _ => "owo");
         }
     }
     """, """

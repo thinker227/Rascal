@@ -31,7 +31,7 @@ public class UseThenAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0002:Map|}(x => Ok(x)).Unnest();
+            var v = result.{|RASCAL002:Map|}(x => Ok(x)).Unnest();
         }
     }
     """);
@@ -47,7 +47,7 @@ public class UseThenAnalyzerTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = ResultExtensions.Unnest(result.{|RASCAL0002:Map|}(x => Ok(x)));
+            var v = ResultExtensions.Unnest(result.{|RASCAL002:Map|}(x => Ok(x)));
         }
     }
     """);

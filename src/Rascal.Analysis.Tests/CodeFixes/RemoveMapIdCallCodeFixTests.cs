@@ -15,7 +15,7 @@ public class RemoveMapIdCallCodeFixProviderTests
         public static void Bar()
         {
             var result = Ok(2);
-            var v = result.{|RASCAL0003:Map(x => x)|};
+            var v = result.{|RASCAL003:Map(x => x)|};
         }
     }
     """, """

@@ -15,7 +15,7 @@ public class ToSusTypeAnalyzerTests
         public static void Bar()
         {
             var x = Ok(2);
-            var r = x.To<{|RASCAL0004:int|}>();
+            var r = x.To<{|RASCAL004:int|}>();
         }
     }
     """);
@@ -31,7 +31,7 @@ public class ToSusTypeAnalyzerTests
         public static void Bar()
         {
             var x = Ok(2);
-            var r = x.To<{|RASCAL0005:bool|}>();
+            var r = x.To<{|RASCAL005:bool|}>();
         }
     }
     """);
@@ -47,7 +47,7 @@ public class ToSusTypeAnalyzerTests
         public static void Bar()
         {
             var x = Ok(new B());
-            var r = x.To<{|RASCAL0005:C|}>();
+            var r = x.To<{|RASCAL005:C|}>();
         }
     }
 

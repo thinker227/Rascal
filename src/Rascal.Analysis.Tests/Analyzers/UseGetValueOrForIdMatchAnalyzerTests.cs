@@ -31,7 +31,7 @@ public class UseGetValueOrForIdMatchAnalyzerTests
         public static void Bar()
         {
             var r = Ok(2);
-            var x = r.{|RASCAL0006:Match|}(x => x, _ => 0);
+            var x = r.{|RASCAL006:Match|}(x => x, _ => 0);
         }
     }
     """);
