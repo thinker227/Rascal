@@ -68,4 +68,6 @@ internal static class SyntaxInator
                     SingletonSeparatedList(
                         Argument(expression))))
             .NormalizeWhitespace();
+
+    public static NameSyntax ThenName() => IdentifierName("Then");
 }
