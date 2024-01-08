@@ -5,14 +5,21 @@ namespace Rascal.Analysis;
 public sealed record WellKnownSymbols(
     INamedTypeSymbol ObjectType,
     INamedTypeSymbol Result1Type,
+    ITypeParameterSymbol TypeParameterT,
     INamedTypeSymbol ResultExtensionsType,
+    INamedTypeSymbol PreludeType,
     IMethodSymbol MapMethod,
     IMethodSymbol ThenMethod,
     IMethodSymbol ToMethod,
-    IMethodSymbol UnnestMethod)
+    IMethodSymbol MatchMethod,
+    IMethodSymbol UnnestMethod,
+    IMethodSymbol OkMethod,
+    IMethodSymbol OkCtor,
+    IMethodSymbol OkConversion)
 {
     private const string Result1TypeName = "Rascal.Result`1";
     private const string ResultExtensionsTypeName = "Rascal.ResultExtensions";
+    private const string PreludeTypeName = "Rascal.Prelude";
     
     public static bool TryCreate(
         Compilation compilation,
@@ -26,12 +33,13 @@ public sealed record WellKnownSymbols(
         INamedTypeSymbol? GetType(string metadataName)
         {
             var type = compilation.GetTypeByMetadataName(metadataName);
-            if (type is null) es!.Add(new(metadataName));
+            if (type is null) es.Add(new(metadataName));
             return type;
         }
 
         var resultType = GetType(Result1TypeName);
         var resultExtensionsType = GetType(ResultExtensionsTypeName);
+        var preludeType = GetType(PreludeTypeName);
 
         if (es is not [])
         {
@@ -39,6 +47,8 @@ public sealed record WellKnownSymbols(
             errors = es;
             return false;
         }
+
+        var typeParameterT = resultType!.TypeParameters[0];
 
         Func<string, ImmutableArray<ISymbol>> GetMember(ITypeSymbol type, string typeMetadataName) => name =>
         {
@@ -48,17 +58,30 @@ public sealed record WellKnownSymbols(
         };
 
         var getResultMember = GetMember(resultType!, Result1TypeName);
-        
-        ISymbol GetSingleResultMethod(string name) =>
-            getResultMember(name).FirstOrDefault()!;
-        
-        ImmutableArray<ISymbol> GetExtensionMethod(string name) =>
-            GetMember(resultExtensionsType!, ResultExtensionsTypeName)(name);
+        var getResultExtensionsMember = GetMember(resultExtensionsType!, ResultExtensionsTypeName);
+        var getPreludeMember = GetMember(preludeType!, PreludeTypeName);
 
-        var mapMethod = (IMethodSymbol?)GetSingleResultMethod("Map");
-        var thenMethod = (IMethodSymbol?)GetSingleResultMethod("Then");
-        var toMethod = (IMethodSymbol?)GetSingleResultMethod("To");
-        var unnestMethod = (IMethodSymbol?)GetExtensionMethod("Unnest").FirstOrDefault();
+        IMethodSymbol? GetSingleResultMethod(string name) =>
+            (IMethodSymbol?)getResultMember!(name).FirstOrDefault();
+
+        IMethodSymbol? GetSinglePreludeMethod(string name) =>
+            (IMethodSymbol?)getPreludeMember!(name).FirstOrDefault();
+
+        var mapMethod = GetSingleResultMethod("Map");
+        var thenMethod = GetSingleResultMethod("Then");
+        var toMethod = GetSingleResultMethod("To");
+        var unnestMethod = (IMethodSymbol?)getResultExtensionsMember("Unnest").FirstOrDefault();
+        var matchMethod = GetSingleResultMethod("Match");
+        var okMethod = GetSinglePreludeMethod("Ok");
+        var okCtor = resultType!.InstanceConstructors
+            .FirstOrDefault(ctor =>
+                ctor.Parameters is [{ Type: ITypeParameterSymbol t }] &&
+                t.Equals(typeParameterT, SymbolEqualityComparer.Default));
+        var okConversion = resultType.GetMembers("op_Implicit")
+            .OfType<IMethodSymbol>()
+            .FirstOrDefault(method =>
+                method.Parameters is [{ Type: ITypeParameterSymbol t }] &&
+                t.Equals(typeParameterT, SymbolEqualityComparer.Default));
 
         if (es is not [])
         {
@@ -70,11 +93,17 @@ public sealed record WellKnownSymbols(
         symbols = new(
             objectType,
             resultType!,
+            typeParameterT!,
             resultExtensionsType!,
+            preludeType!,
             mapMethod!,
             thenMethod!,
             toMethod!,
-            unnestMethod!);
+            matchMethod!,
+            unnestMethod!,
+            okMethod!,
+            okCtor!,
+            okConversion!);
         errors = null;
         return true;
     }

@@ -3,64 +3,43 @@ using Microsoft.CodeAnalysis.Operations;
 namespace Rascal.Analysis.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class UseThenAnalyzer : DiagnosticAnalyzer
+public sealed class UseThenAnalyzer : BaseAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
         Diagnostics.UseThen);
 
-    public override void Initialize(AnalysisContext context)
+    protected override void Handle(CompilationStartAnalysisContext ctx, WellKnownSymbols symbols) => ctx.RegisterOperationAction(operationCtx =>
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-        context.EnableConcurrentExecution();
-        
-        context.RegisterCompilationStartAction(compilationCtx =>
-        {
-            var resultType = compilationCtx.Compilation.GetTypeByMetadataName("Rascal.Result`1");
-            if (resultType is null) return;
+        var operation = (IInvocationOperation)operationCtx.Operation;
 
-            var resultExtensionsType = compilationCtx.Compilation.GetTypeByMetadataName("Rascal.ResultExtensions");
-            if (resultExtensionsType is null) return;
-            
-            var resultMembers = resultType.GetMembers();
-            var resultExtensionsMembers = resultExtensionsType.GetMembers();
+        // Check that it is Unnest being called.
+        if (!operation.TargetMethod.OriginalDefinition.Equals(symbols.UnnestMethod, SymbolEqualityComparer.Default))
+            return;
 
-            var mapMethod = (IMethodSymbol)resultMembers.First(x => x.Name == "Map");
-            var unnestMethod = (IMethodSymbol)resultExtensionsMembers.First(x => x.Name == "Unnest");
-            
-            compilationCtx.RegisterOperationAction(operationCtx =>
-            {
-                var operation = (IInvocationOperation)operationCtx.Operation;
-
-                // Check that it is Unnest being called.
-                if (!operation.TargetMethod.OriginalDefinition.Equals(unnestMethod, SymbolEqualityComparer.Default))
-                    return;
-
-                // Check that the first argument is an invocation.
-                if (operation.Arguments is not
-                [
-                    {
-                        Value: IInvocationOperation argumentInvocation
-                    }
-                ]) return;
-
-                // Check that the invoked method is Map.
-                if (!argumentInvocation.TargetMethod.OriginalDefinition
-                        .Equals(mapMethod, SymbolEqualityComparer.Default))
-                    return;
-
-                // Get the location of the method name.
-                var location = argumentInvocation.Syntax is InvocationExpressionSyntax
+        // Check that the first argument is an invocation.
+        if (operation.Arguments is not
+            [
                 {
-                    Expression: MemberAccessExpressionSyntax memberAccessExpression
+                    Value: IInvocationOperation argumentInvocation
                 }
-                    ? memberAccessExpression.Name.GetLocation()
-                    : argumentInvocation.Syntax.GetLocation();
+            ]) return;
 
-                // Report the diagnostic.
-                operationCtx.ReportDiagnostic(Diagnostic.Create(
-                    Diagnostics.UseThen,
-                    location));
-            }, OperationKind.Invocation);
-        });
-    }
+        // Check that the invoked method is Map.
+        if (!argumentInvocation.TargetMethod.OriginalDefinition
+                .Equals(symbols.MapMethod, SymbolEqualityComparer.Default))
+            return;
+
+        // Get the location of the method name.
+        var location = argumentInvocation.Syntax is InvocationExpressionSyntax
+        {
+            Expression: MemberAccessExpressionSyntax memberAccessExpression
+        }
+            ? memberAccessExpression.Name.GetLocation()
+            : argumentInvocation.Syntax.GetLocation();
+
+        // Report the diagnostic.
+        operationCtx.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.UseThen,
+            location));
+    }, OperationKind.Invocation);
 }

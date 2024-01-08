@@ -62,4 +62,14 @@ public static class Diagnostics
         DiagnosticSeverity.Warning,
         true,
         "Calling 'Match' with an identity function for the 'ifOk' parameter is equivalent to 'DefaultOr'.");
+
+    public static DiagnosticDescriptor MissingSymbol { get; } = new(
+        "RASCAL007",
+        "Missing symbol required for analysis",
+        "Cannot find type or member '{0}' which is required for analysis. " +
+        "No analysis will be performed. " +
+        "Verify that the version of the analyzer package matches that of the library, or report this as a bug.",
+        "Analysis",
+        DiagnosticSeverity.Warning,
+        true);
 }

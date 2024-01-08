@@ -3,60 +3,34 @@ using Microsoft.CodeAnalysis.Operations;
 namespace Rascal.Analysis.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class UseMapAnalyzer : DiagnosticAnalyzer
+public sealed class UseMapAnalyzer : BaseAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
         Diagnostics.UseMap);
-    
-    public override void Initialize(AnalysisContext context)
+
+    protected override void Handle(CompilationStartAnalysisContext ctx, WellKnownSymbols symbols) => ctx.RegisterOperationAction(operationCtx =>
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-        context.EnableConcurrentExecution();
-        
-        context.RegisterCompilationStartAction(compilationCtx =>
+        var operation = (IInvocationOperation)operationCtx.Operation;
+
+        // Check that it is Then being called.
+        if (!operation.TargetMethod.OriginalDefinition.Equals(symbols.ThenMethod, SymbolEqualityComparer.Default)) return;
+
+        // Check that the operation should be targeted.
+        if (!IsTargetOperation(operation, symbols.OkMethod, symbols.OkCtor, symbols.OkConversion)) return;
+
+        // Get the location of the method name.
+        var location = operation.Syntax is InvocationExpressionSyntax
         {
-            var resultType = compilationCtx.Compilation.GetTypeByMetadataName("Rascal.Result`1");
-            if (resultType is null) return;
-
-            var preludeType = compilationCtx.Compilation.GetTypeByMetadataName("Rascal.Prelude");
-            if (preludeType is null) return;
-
-            var resultMembers = resultType.GetMembers();
-            var preludeMembers = preludeType.GetMembers();
-
-            var thenMethod = (IMethodSymbol)resultMembers.First(x => x.Name == "Then");
-            var okMethod = (IMethodSymbol)preludeMembers.First(x => x.Name == "Ok");
-            var okCtor = resultType.InstanceConstructors
-                .First(x => x.Parameters is [{ Type: ITypeParameterSymbol }]);
-            var okConversion = (IMethodSymbol)resultMembers
-                .OfType<IMethodSymbol>()
-                .First(x => x is { Name: "op_Implicit", Parameters: [{ Type: ITypeParameterSymbol }] });
-            
-            compilationCtx.RegisterOperationAction(operationCtx =>
-            {
-                var operation = (IInvocationOperation)operationCtx.Operation;
-
-                // Check that it is Then being called.
-                if (!operation.TargetMethod.OriginalDefinition.Equals(thenMethod, SymbolEqualityComparer.Default)) return;
-
-                // Check that the operation should be targeted.
-                if (!IsTargetOperation(operation, okMethod, okCtor, okConversion)) return;
-
-                // Get the location of the method name.
-                var location = operation.Syntax is InvocationExpressionSyntax
-                {
-                    Expression: MemberAccessExpressionSyntax memberAccessExpression
-                }
-                    ? memberAccessExpression.Name.GetLocation()
-                    : operation.Syntax.GetLocation();
+            Expression: MemberAccessExpressionSyntax memberAccessExpression
+        }
+            ? memberAccessExpression.Name.GetLocation()
+            : operation.Syntax.GetLocation();
                 
-                // Report the diagnostic.
-                operationCtx.ReportDiagnostic(Diagnostic.Create(
-                    Diagnostics.UseMap,
-                    location));
-            }, OperationKind.Invocation);
-        });
-    }
+        // Report the diagnostic.
+        operationCtx.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.UseMap,
+            location));
+    }, OperationKind.Invocation);
 
     private static bool IsTargetOperation(
         IInvocationOperation operation,
