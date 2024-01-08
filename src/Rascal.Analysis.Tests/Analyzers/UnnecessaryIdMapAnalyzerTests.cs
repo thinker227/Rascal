@@ -5,7 +5,7 @@ namespace Rascal.Analysis.Analyzers.Tests;
 public class UnnecessaryIdMapAnalyzerTests
 {
     [Fact]
-    public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task DoesNotReport_OnMapOperationCall() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -21,7 +21,7 @@ public class UnnecessaryIdMapAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnMapIdCall() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnMapIdCall() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;

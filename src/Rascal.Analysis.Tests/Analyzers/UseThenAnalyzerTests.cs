@@ -5,7 +5,7 @@ namespace Rascal.Analysis.Analyzers.Tests;
 public class UseThenAnalyzerTests
 {
     [Fact]
-    public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task DoesNotReport_OnMapWithoutUnnest() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -21,7 +21,7 @@ public class UseThenAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnMapUnnestExtensionForm() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Report_OnMapUnnest_ExtensionForm() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -37,7 +37,7 @@ public class UseThenAnalyzerTests
     """);
 
     [Fact]
-    public async Task ReportsOnMapUnnestCallForm() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnMapUnnest_MethodForm() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;

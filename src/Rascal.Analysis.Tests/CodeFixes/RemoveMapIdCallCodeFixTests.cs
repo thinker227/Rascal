@@ -5,7 +5,7 @@ namespace Rascal.Analysis.CodeFixes.Tests;
 public class RemoveMapIdCallCodeFixProviderTests
 {
     [Fact]
-    public async Task FixesMapIdCall() => await VerifyCS.VerifyCodeFixAsync("""
+    public async Task Fixes_MapIdCall() => await VerifyCS.VerifyCodeFixAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;

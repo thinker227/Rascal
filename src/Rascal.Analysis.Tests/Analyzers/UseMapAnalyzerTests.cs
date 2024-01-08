@@ -5,7 +5,7 @@ namespace Rascal.Analysis.Analyzers.Tests;
 public class UseMapAnalyzerTests
 {
     [Fact]
-    public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task DoesNotReport_OnOperation() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -23,7 +23,7 @@ public class UseMapAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnLambdaOk() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnIdOk() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -39,7 +39,7 @@ public class UseMapAnalyzerTests
     """);
 
     [Fact]
-    public async Task ReportsOnLambdaCtor() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnExplicitCtor() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -55,7 +55,7 @@ public class UseMapAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnLambdaCtorImplicit() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnImplicitCtor() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -71,7 +71,7 @@ public class UseMapAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnLambdaConversion() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnConversion() => await VerifyCS.VerifyAnalyzerAsync("""
         using System;
         using Rascal;
         using static Rascal.Prelude;

@@ -5,7 +5,7 @@ namespace Rascal.Analysis.Analyzers.Tests;
 public class UseGetValueOrForIdMatchAnalyzerTests
 {
     [Fact]
-    public async Task DoesNothingUsually() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task DoesNotReport_OnOperation() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -21,7 +21,7 @@ public class UseGetValueOrForIdMatchAnalyzerTests
     """);
     
     [Fact]
-    public async Task ReportsOnIdMatchCall() => await VerifyCS.VerifyAnalyzerAsync("""
+    public async Task Reports_OnId() => await VerifyCS.VerifyAnalyzerAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;

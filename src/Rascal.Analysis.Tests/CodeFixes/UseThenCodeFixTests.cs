@@ -5,7 +5,7 @@ namespace Rascal.Analysis.CodeFixes.Tests;
 public class UseThenCodeFixTests
 {
     [Fact]
-    public async Task FixesExtensionForm() => await VerifyCS.VerifyCodeFixAsync("""
+    public async Task Fixes_ExtensionForm() => await VerifyCS.VerifyCodeFixAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
@@ -34,7 +34,7 @@ public class UseThenCodeFixTests
     """);
     
     [Fact]
-    public async Task FixesCallForm() => await VerifyCS.VerifyCodeFixAsync("""
+    public async Task Fixes_CallForm() => await VerifyCS.VerifyCodeFixAsync("""
     using System;
     using Rascal;
     using static Rascal.Prelude;
