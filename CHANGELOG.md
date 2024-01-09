@@ -27,3 +27,5 @@
 - Add additional overloads for `Result<T>.Equals` which allow specifying an equality comparer to use for comparing values.
 
 - Rename `GetValueOrDefault(T @default)` and `GetValueOrDefault(Func<T> getDefault)` to `GetValueOr`.
+
+- Add analyzer and code-fix suite.
