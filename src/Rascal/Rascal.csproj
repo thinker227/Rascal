@@ -44,5 +44,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Include the analysis project into the package without adding it as a dependency -->
+    <ProjectReference Include="../Rascal.Analysis/Rascal.Analysis.csproj" PrivateAssets="true" ReferenceOutputAssembly="false" />
+    <None Include="../Rascal.Analysis/bin/$(Configuration)/netstandard2.0/Rascal.Analysis.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
 
 </Project>
