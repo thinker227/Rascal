@@ -8,6 +8,8 @@ Rascal is a simple and lightweight [result type](https://www.youtube.com/watch?v
 
 Rascal is first and foremost an aggregate of the result types I personally find myself implementing in a majority of my own projects, and a competetor other result libraries second. As such, this library implements some things I think other result implementations are lacking, while omitting some features other libraries do implement.
 
+Additionally, Rascal comes with a suite of analyzers and code fixes to help you write better and more reliable code using the library. The documentation for these analyzers can be found in the [diagnostics documentation](/diagnostics/index.html).
+
 <br/>
 
 ## Installation
@@ -142,6 +144,12 @@ public sealed class UsersController(IUserService userService) : ControllerBase
 ```
 
 ---
+
+<br/>
+
+### Explore the API
+
+Once you're ready to dive into the library, feel free to refer to the [API documentation](/api/index.html) for an in-depth look into each of the methods provided by the library. You can of course also explore the API through intellisense in your IDE of choice.
 
 <br/>
 
