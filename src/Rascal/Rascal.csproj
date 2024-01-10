@@ -24,7 +24,7 @@
     <Authors>thinker227</Authors>
     <Copyright>thinker227 2023</Copyright>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>package-readme.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/thinker227/Rascal</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -32,7 +32,7 @@
 
   <!-- Include additional files -->
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="./package-readme.md" Pack="true" PackagePath="/" />
     <None Include="../../LICENSE.txt" Pack="true" PackagePath="/" />
     <None Include="../../CHANGELOG.md" Pack="true" PackagePath="/"/>
   </ItemGroup>
