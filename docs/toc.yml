@@ -1,6 +1,9 @@
 - name: API
   href: api/
   homepage: api/index.md
+- name: Diagnostics
+  href: diagnostics/
+  homepage: diagnostics/index.md
 - name: Github
   href: https://github.com/thinker227/Rascal
 - name: Nuget
