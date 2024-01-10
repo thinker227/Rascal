@@ -8,10 +8,7 @@ Severity: *warning*
 
 ## Description
 
-Cannot find type or member '*member*' which is required for analysis. No analysis will be performed. Verify that the version of the analyzer package matches that of the library, or report this as a bug.
+*RASCAL007* is reported if any type or member which is required by the analysis suite to perform analysis is found to be missing. The most likely cause of this is referencing the analysis assembly without referencing the core Rascal assembly, or referencing a higher version of the analysis assembly than that of the core assembly. This may also be the result of a bug in the analysis suite.
 
-<br/>
-
-### Cause
-
-This diagnostic will only occur if the analyzer assembly is referenced without the main Rascal assembly being present. This is most probably the result of a bug.
+> [!IMPORTANT]
+> If *RASCAL007* occurs, all analyzers from the analysis suite will completely stop working until the warning is resolved.

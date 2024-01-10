@@ -8,14 +8,16 @@ Severity: *warning*
 
 ## Description
 
-Calling '[To](/api/Rascal.Result-1.html#Rascal_Result_1_To__1_Rascal_Error_)' with the same type as that of the result will always succeed.
+*RASCAL004* is reported when [`To`](/api/Rascal.Result-1.html#Rascal_Result_1_To__1_Rascal_Error_) is called with the same type as that of the result it is called on. Because `.To<T>()` is equivalent to an `is T` pattern, calling `.To<T>` on a `Result<T>` where both `T`s are the same type will always succeed if the result is ok, and the call is redundant. The warning can be resolved by removing the call altogether.
 
 <br/>
 
 ### Example
 
 ```cs
-var a = Ok(2);
+// Types added for clarity
 
-var b = a.To<int>(); // RASCAL004
+Result<int> a = Ok(2);
+
+Result<int> b = a.To<int>(); // RASCAL004
 ```
