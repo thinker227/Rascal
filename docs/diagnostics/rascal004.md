@@ -1,8 +1,15 @@
 # 'To' called with same type as result
 
-Id: *RASCAL004*
+<br/>
 
-Severity: *warning*
+<div class="text-secondary lh-lg" style="font-size: 14px;">
+Id: RASCAL004
+<br/>
+Severity: <span class="text-warning">warning</span>
+<br/>
+Has code fix: <span class="text-danger">no</span>
+<br/>
+</div>
 
 <br/>
 

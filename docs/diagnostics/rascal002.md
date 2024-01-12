@@ -1,11 +1,15 @@
 # Use Then instead of 'Map(...).Unnest()'
 
-Id: *RASCAL002*
+<br/>
 
-Severity: *warning*
-
-> [!TIP]
-> This diagnostic has an associated automatic code fix.
+<div class="text-secondary lh-lg" style="font-size: 14px;">
+Id: RASCAL002
+<br/>
+Severity: <span class="text-warning">warning</span>
+<br/>
+Has code fix: <span class="text-success">yes</span>
+<br/>
+</div>
 
 <br/>
 
