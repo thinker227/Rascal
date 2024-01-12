@@ -32,7 +32,7 @@ NuGet\Install-Package Rascal -IncludePrerelease
 
 # [Script environment](#tab/repl)
 
-In environments such as [dotnet-script](https://github.com/dotnet-script/dotnet-script), [C# REPL](https://github.com/waf/CSharpRepl), or [RoslynPad](https://roslynpad.net), enter:
+In environments such as [C# REPL](https://github.com/waf/CSharpRepl) or [RoslynPad](https://roslynpad.net), enter:
 
 ```cs
 #r "nuget: Rascal"
@@ -43,15 +43,6 @@ If you wish to install a specific version of the package, specify the package ve
 ```cs
 #r "nuget: Rascal, 1.0.1-pre"
 ```
-
-For the special flavor of C# script mode used by the [MODiX REPL](https://github.com/discord-csharp/CSharpRepl):
-
-```cs
-#nuget Rascal
-```
-
-> [!NOTE]
-> The MODiX REPL currently doesn't support referencing specific package versions and therefore does not support pre-release versions of the package.
 
 # [`PackageReference`](#tab/csproj)
 
@@ -144,6 +135,12 @@ public sealed class UsersController(IUserService userService) : ControllerBase
 ```
 
 ---
+
+<br/>
+
+### More samples
+
+A plethora of additional code samples are available in the [samples](/samples/index.html) section of the documentation.
 
 <br/>
 
