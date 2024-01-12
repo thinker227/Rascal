@@ -2,8 +2,8 @@ namespace Rascal.Analysis;
 
 public static class Diagnostics
 {
-    private const string CorrectnessCategory = "Correctness";
-    private const string AnalysisCategory = "Analysis";
+    private const string CorrectnessCategory = "RascalCorrectness";
+    private const string AnalysisCategory = "RascalAnalysis";
 
     public static DiagnosticDescriptor UseMap { get; } = new(
         "RASCAL001",
