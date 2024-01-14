@@ -16,7 +16,7 @@
   <!-- Package metadata -->
   <PropertyGroup>
     <PackageId>Rascal</PackageId>
-    <PackageVersion>1.0.1-pre</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Description>
       A simple and lightweight result type implementation for C#.
     </Description>
