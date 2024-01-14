@@ -10,7 +10,7 @@ Rascal is a simple yet powerful [result type](https://www.youtube.com/watch?v=sr
 
 Rascal is first and foremost an aggregate of the result types I personally find myself implementing in a majority of my own projects, and a competetor other result libraries second. As such, this library implements some things I think other result implementations are lacking, while omitting some features other libraries do implement.
 
-**TODO**: Link to the Github Pages docfx documentation.
+The full library documentation is available [here](https://thinker227.github.io/Rascal/).
 
 <br/>
 
