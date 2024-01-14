@@ -15,7 +15,7 @@ Has code fix: <span class="text-danger">no</span>
 
 ## Description
 
-*RASCAL005* is reported when [`To`](/api/Rascal.Result-1.html#Rascal_Result_1_To__1_Rascal_Error_) is called with a type which is incompatible with the type of the result. This mainly applies to class types which do not inherit each other, and structs which aren't the same type. Interfaces, type parameters, and `object` may always succeed regardless of which type they are casted to/from.
+*RASCAL005* is reported when [`To`](~/api/Rascal.Result-1.yml#Rascal_Result_1_To__1_Rascal_Error_) is called with a type which is incompatible with the type of the result. This mainly applies to class types which do not inherit each other, and structs which aren't the same type. Interfaces, type parameters, and `object` may always succeed regardless of which type they are casted to/from.
 
 <br/>
 

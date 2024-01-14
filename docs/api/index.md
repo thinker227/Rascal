@@ -4,6 +4,6 @@ See the table of contents for an overview of the library API.
 
 ## Important types
 
-- [`Result<T>`](/api/Rascal.Result-1.html)
-- [`Prelude`](/api/Rascal.Prelude.html)
-- [`Error`](/api/Rascal.Error.html)
+- [`Result<T>`](~/api/Rascal.Result-1.yml)
+- [`Prelude`](~/api/Rascal.Prelude.yml)
+- [`Error`](~/api/Rascal.Error.yml)

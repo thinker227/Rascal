@@ -15,7 +15,7 @@ Has code fix: <span class="text-success">yes</span>
 
 ## Description
 
-*RASCAL002* is reported when [`Unnest`](/api/Rascal.ResultExtensions.html#Rascal_ResultExtensions_Unnest__1_Rascal_Result_Rascal_Result___0___) is called immediately after a [`Map`](/api/Rascal.Result-1.html#Rascal_Result_1_Map__1_System_Func__0___0__) call. This operation is equivalent to calling [`Then`](/api/Rascal.Result-1.html#Rascal_Result_1_Then__1_System_Func__0_Rascal_Result___0___) with the same mapping function, which improves clarity and performance. The warning can be resolved by removing the [`Unnest`](/api/Rascal.ResultExtensions.html#Rascal_ResultExtensions_Unnest__1_Rascal_Result_Rascal_Result___0___) call and replacing the [`Then`](/api/Rascal.Result-1.html#Rascal_Result_1_Then__1_System_Func__0_Rascal_Result___0___) call with a [`Map`](/api/Rascal.Result-1.html#Rascal_Result_1_Map__1_System_Func__0___0__).
+*RASCAL002* is reported when [`Unnest`](~/api/Rascal.ResultExtensions.yml#Rascal_ResultExtensions_Unnest__1_Rascal_Result_Rascal_Result___0___) is called immediately after a [`Map`](~/api/Rascal.Result-1.yml#Rascal_Result_1_Map__1_System_Func__0___0__) call. This operation is equivalent to calling [`Then`](~/api/Rascal.Result-1.yml#Rascal_Result_1_Then__1_System_Func__0_Rascal_Result___0___) with the same mapping function, which improves clarity and performance. The warning can be resolved by removing the [`Unnest`](~/api/Rascal.ResultExtensions.yml#Rascal_ResultExtensions_Unnest__1_Rascal_Result_Rascal_Result___0___) call and replacing the [`Then`](~/api/Rascal.Result-1.yml#Rascal_Result_1_Then__1_System_Func__0_Rascal_Result___0___) call with a [`Map`](~/api/Rascal.Result-1.yml#Rascal_Result_1_Map__1_System_Func__0___0__).
 
 <br/>
 

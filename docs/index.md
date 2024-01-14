@@ -8,7 +8,7 @@ Rascal is a simple yet powerful [result type](https://www.youtube.com/watch?v=sr
 
 Rascal is first and foremost an aggregate of the result types I personally find myself implementing in a majority of my own projects, and a competetor other result libraries second. As such, this library implements some things I think other result implementations are lacking, while omitting some features other libraries do implement.
 
-Additionally, Rascal comes with a suite of analyzers and code fixes to help you write better and more reliable code using the library. The documentation for these analyzers can be found in the [diagnostics documentation](/diagnostics/index.html).
+Additionally, Rascal comes with a suite of analyzers and code fixes to help you write better and more reliable code using the library. The documentation for these analyzers can be found in the [diagnostics documentation](~/diagnostics/index.md).
 
 <br/>
 
@@ -66,7 +66,7 @@ After installing the package, create a file called `Usings.cs` and add the follo
 global using static Rascal.Prelude;
 ```
 
-[`Prelude`](/api/Rascal.Prelude.html) includes a variety of utility functions which you can now access from anywhere in your project.
+[`Prelude`](~/api/Rascal.Prelude.yml) includes a variety of utility functions which you can now access from anywhere in your project.
 
 Now, let's pretend you have an ASP.NET Core app with the following method in a service:
 
@@ -92,7 +92,7 @@ public Task<Result<User>> GetUser(int userId) => TryAsync(async () =>
 });
 ```
 
-This code will handle catching any exceptions thrown by [`FirstOrDefaultAsync`](https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.queryableextensions.firstordefaultasync) and will return a [`NotFoundError`](/api/Rascal.Errors.NotFoundError.html) if the user isn't found. Now you can use this method as such:
+This code will handle catching any exceptions thrown by [`FirstOrDefaultAsync`](https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.queryableextensions.firstordefaultasync) and will return a [`NotFoundError`](~/api/Rascal.Errors.NotFoundError.yml) if the user isn't found. Now you can use this method as such:
 
 # [Minimal API](#tab/minimal)
 
@@ -140,13 +140,13 @@ public sealed class UsersController(IUserService userService) : ControllerBase
 
 ### More samples
 
-A plethora of additional code samples are available in the [samples](/samples/index.html) section of the documentation.
+A plethora of additional code samples are available in the [samples](~/samples/index.md) section of the documentation.
 
 <br/>
 
 ### Explore the API
 
-Once you're ready to dive into the library, feel free to refer to the [API documentation](/api/index.html) for an in-depth look into each of the methods provided by the library. You can of course also explore the API through intellisense in your IDE of choice.
+Once you're ready to dive into the library, feel free to refer to the [API documentation](~/api/index.md) for an in-depth look into each of the methods provided by the library. You can of course also explore the API through intellisense in your IDE of choice.
 
 <br/>
 
