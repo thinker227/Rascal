@@ -207,4 +207,23 @@ public static class ResultExtensions
         }
     }
 #endif
+    
+#if NET7_0_OR_GREATER // Support for generic math
+    
+    // These are just extension variants of their corresponding Prelude methods
+    // since extension methods in statically imported classes as not accessible.
+    
+    /// <inheritdoc cref="Prelude.ParseR{T}(string?, IFormatProvider?, Error?)"/>
+    [Pure]
+    public static Result<T> Parse<T>(this string? s, IFormatProvider? provider = null, Error? error = null)
+        where T : IParsable<T> =>
+        Prelude.ParseR<T>(s, provider, error);
+
+    /// <inheritdoc cref="Prelude.ParseR{T}(ReadOnlySpan{char}, IFormatProvider?, Error?)"/>
+    [Pure]
+    public static Result<T> Parse<T>(this ReadOnlySpan<char> s, IFormatProvider? provider = null, Error? error = null)
+        where T : ISpanParsable<T> =>
+        Prelude.ParseR<T>(s, provider, error);
+    
+#endif
 }
