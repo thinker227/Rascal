@@ -1,6 +1,6 @@
-# Version `1.1.0-pre`
+# Version 1.1.0
 
-- Rewrite and update a lot of documentation.
+## API changes
 
 - Rename `Result<T>.HasValue` to `IsOk`.
 
@@ -28,4 +28,14 @@
 
 - Rename `GetValueOrDefault(T @default)` and `GetValueOrDefault(Func<T> getDefault)` to `GetValueOr`.
 
+- Add `Parse` extensions for `string` and `ReadOnlySpan<char>`.
+
+## Analyzers and diagnostics
+
 - Add analyzer and code-fix suite.
+
+## Documentation
+
+- Rewrite and update a lot of documentation.
+
+- Create a documentation website.
