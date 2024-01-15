@@ -1,0 +1,13 @@
+- name: Samples
+  href: samples/
+  homepage: samples/index.md
+- name: API
+  href: api/
+  homepage: api/index.md
+- name: Diagnostics
+  href: diagnostics/
+  homepage: diagnostics/index.md
+- name: Github
+  href: https://github.com/thinker227/Rascal
+- name: Nuget
+  href: https://www.nuget.org/packages/Rascal

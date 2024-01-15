@@ -1,6 +1,6 @@
 namespace Rascal.Tests;
 
-public class EqualityTests
+public class EqualityCoreTests
 {
     [Fact]
     public void Equals_T_ReturnsTrue_ForOkAndEqualValue()
@@ -8,7 +8,7 @@ public class EqualityTests
         var a = Ok(2);
         var b = 2;
 
-        a.Equals(b).ShouldBeTrue();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeTrue();
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public class EqualityTests
         var a = Ok(2);
         var b = 3;
 
-        a.Equals(b).ShouldBeFalse();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeFalse();
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class EqualityTests
         var a = Err<int>("error");
         var b = 2;
 
-        a.Equals(b).ShouldBeFalse();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeFalse();
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class EqualityTests
         var a = Ok(2);
         var b = Ok(2);
 
-        a.Equals(b).ShouldBeTrue();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeTrue();
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class EqualityTests
         var a = Ok(2);
         var b = Ok(3);
 
-        a.Equals(b).ShouldBeFalse();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeFalse();
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class EqualityTests
         var a = Ok(2);
         var b = Err<int>("error");
 
-        a.Equals(b).ShouldBeFalse();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeFalse();
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class EqualityTests
         var a = Err<int>("error");
         var b = Ok(2);
 
-        a.Equals(b).ShouldBeFalse();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeFalse();
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class EqualityTests
         var a = Err<int>("error 1");
         var b = Err<int>("error 2");
 
-        a.Equals(b).ShouldBeTrue();
+        EqualityCore.Equals(a, b, EqualityComparer<int>.Default).ShouldBeTrue();
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class EqualityTests
     {
         var r = Ok(2);
 
-        r.GetHashCode().ShouldBe(2.GetHashCode());
+        EqualityCore.GetHashCode(r, EqualityComparer<int>.Default).ShouldBe(2.GetHashCode());
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class EqualityTests
     {
         var r = Ok<string?>(null);
 
-        r.GetHashCode().ShouldBe(0);
+        EqualityCore.GetHashCode(r, EqualityComparer<string?>.Default).ShouldBe(0);
     }
 
     [Fact]
@@ -95,6 +95,6 @@ public class EqualityTests
     {
         var r = Err<int>("error");
 
-        r.GetHashCode().ShouldBe(0);
+        EqualityCore.GetHashCode(r, EqualityComparer<int>.Default).ShouldBe(0);
     }
 }

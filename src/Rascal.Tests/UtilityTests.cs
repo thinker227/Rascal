@@ -1,16 +1,27 @@
 using System.Runtime.CompilerServices;
+using Rascal.Errors;
 
 namespace Rascal.Tests;
 
 public class UtilityTests
 {
     [Fact]
-    public void ImplicitConversion()
+    public void ImplicitConversion_FromValue_IsOk()
     {
         Result<int> x = 2;
 
         x.value.ShouldBe(2);
-        x.HasValue.ShouldBeTrue();
+        x.IsOk.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void ImplicitConversion_FromError_IsErr()
+    {
+        var error = new TestError();
+        Result<int> x = error;
+
+        x.IsOk.ShouldBeFalse();
+        x.error.ShouldBeOfType<TestError>();
     }
 
     [Fact]
@@ -20,7 +31,7 @@ public class UtilityTests
         var b = Ok("uwu");
         var r = a.Combine(b);
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe((2, "uwu"));
     }
 
@@ -31,7 +42,7 @@ public class UtilityTests
         var b = Err<string>("error");
         var r = a.Combine(b);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -42,7 +53,7 @@ public class UtilityTests
         var b = Ok("uwu");
         var r = a.Combine(b);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -53,37 +64,35 @@ public class UtilityTests
         var b = Err<string>("error b");
         var r = a.Combine(b);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         var error = r.error.ShouldBeOfType<AggregateError>();
-        error.Errors.Length.ShouldBe(2);
-        error.Errors[0].Message.ShouldBe("error a");
-        error.Errors[1].Message.ShouldBe("error b");
+        error.Errors.Select(x => x.Message).ShouldBe(["error a", "error b"]);
     }
 
     [Fact]
-    public void OfType_ReturnsOk_ForOkToValidType()
+    public void To_ReturnsOk_ForOkToValidType()
     {
-        var r = Ok<object>("uwu").ToType<string>();
+        var r = Ok<object>("uwu").To<string>();
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe("uwu");
     }
 
     [Fact]
-    public void OfType_ReturnsErr_ForOkToInvalidType()
+    public void To_ReturnsErr_ForOkToInvalidType()
     {
-        var r = Ok<object>("uwu").ToType<int>();
+        var r = Ok<object>("uwu").To<int>();
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldNotBeNull();
     }
 
     [Fact]
-    public void OfType_ReturnsErr_ForErr()
+    public void To_ReturnsErr_ForErr()
     {
-        var r = Err<object>("error").ToType<int>();
+        var r = Err<object>("error").To<int>();
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -92,7 +101,7 @@ public class UtilityTests
     {
         var r = Ok(2).Validate(_ => false);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldNotBeNull();
     }
 
@@ -101,7 +110,7 @@ public class UtilityTests
     {
         var r = Ok(2).Validate(_ => false, _ => "error");
         
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
     
@@ -110,7 +119,7 @@ public class UtilityTests
     {
         var r = Ok(2).Validate(_ => true, _ => "error");
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -119,7 +128,7 @@ public class UtilityTests
     {
         var r = Err<int>("error a").Validate(_ => false, _ => "error b");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error a");
     }
 
