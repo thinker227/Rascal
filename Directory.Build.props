@@ -8,6 +8,11 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <!-- Package properties -->
+  <PropertyGroup>
+    <PackageOutputPath>../../package</PackageOutputPath>
+  </PropertyGroup>
+
   <!-- Package metadata -->
   <PropertyGroup>
     <Authors>thinker227</Authors>

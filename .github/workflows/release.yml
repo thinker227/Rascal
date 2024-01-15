@@ -7,7 +7,23 @@ on:
 
 jobs:
   release:
-    name: Release
-    uses: Arthri/deploy-nuget/.github/workflows/deploy.yml@v1
-    secrets:
-      NUGET-API-KEY: ${{ secrets.NUGET_API_KEY }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    - name: Install dependencies
+      run: dotnet restore src/Rascal
+    - name: Build
+      run: dotnet build src/Rascal --no-restore
+    - name: Create package
+      run: dotnet pack -c Release --no-build
+    - name: Push to Nuget
+      run: dotnet nuget push package/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }}
