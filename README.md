@@ -1,7 +1,7 @@
 <div align="center">
     <h1>Rascal</h1>
-    <img alt="Build and test status" src="https://img.shields.io/github/actions/workflow/status/thinker227/Rascal/build-test.yml?style=for-the-badge&label=Build%20%26%20Test">
-    <img alt="Nuget" src="https://img.shields.io/nuget/vpre/Rascal?style=for-the-badge&label=Nuget%3A%20Rascal">
+    <a href="https://github.com/thinker227/Rascal/actions/workflows/build-test.yml"><img alt="Build and test status" src="https://img.shields.io/github/actions/workflow/status/thinker227/Rascal/build-test.yml?style=for-the-badge&label=Build%20%26%20Test"></a>
+    <a href="https://www.nuget.org/packages/Rascal"><img alt="Nuget" src="https://img.shields.io/nuget/vpre/Rascal?style=for-the-badge&label=Nuget%3A%20Rascal"></a>
 </div>
 
 <br></br>
