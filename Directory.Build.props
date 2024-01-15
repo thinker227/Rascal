@@ -1,0 +1,25 @@
+<Project>
+
+  <!-- Build properties -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Package metadata -->
+  <PropertyGroup>
+    <Authors>thinker227</Authors>
+    <Copyright>thinker227 2023</Copyright>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/thinker227/Rascal</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- Additional package files -->
+  <ItemGroup>
+    <None Include="../../LICENSE.txt" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>
