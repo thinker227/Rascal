@@ -1,4 +1,5 @@
 using System.Globalization;
+using Rascal.Errors;
 
 namespace Rascal.Tests;
 
@@ -9,7 +10,7 @@ public class PreludeTests
     {
         var r = Ok(2);
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -18,7 +19,7 @@ public class PreludeTests
     {
         var r = Err<int>("error");
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error?.Message.ShouldBe("error");
     }
 
@@ -27,7 +28,7 @@ public class PreludeTests
     {
         var r = ParseR<int>("123", CultureInfo.InvariantCulture);
         
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(123);
     }
 
@@ -36,7 +37,7 @@ public class PreludeTests
     {
         var r = ParseR<int>("24a", CultureInfo.InvariantCulture);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error.ShouldNotBeNull();
     }
 
@@ -46,7 +47,7 @@ public class PreludeTests
         var s = "123".AsSpan();
         var r = ParseR<int>(s, CultureInfo.InvariantCulture);
         
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(123);
     }
 
@@ -56,7 +57,7 @@ public class PreludeTests
         var s = "24a".AsSpan();
         var r = ParseR<int>(s, CultureInfo.InvariantCulture);
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
         r.error.ShouldNotBeNull();
     }
 
@@ -65,7 +66,7 @@ public class PreludeTests
     {
         var r = Try(() => 2);
 
-        r.HasValue.ShouldBeTrue();
+        r.IsOk.ShouldBeTrue();
         r.value.ShouldBe(2);
     }
 
@@ -74,7 +75,26 @@ public class PreludeTests
     {
         var r = Try<int>(() => throw new TestException());
 
-        r.HasValue.ShouldBeFalse();
+        r.IsOk.ShouldBeFalse();
+        var e = r.error.ShouldBeOfType<ExceptionError>();
+        e.Exception.ShouldBeOfType<TestException>();
+    }
+    
+    [Fact]
+    public async Task TryAsync_ReturnsOk_ForNoException()
+    {
+        var r = await TryAsync(() => Task.FromResult(2));
+
+        r.IsOk.ShouldBeTrue();
+        r.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task TryAsync_ReturnsErr_ForException()
+    {
+        var r = await TryAsync<int>(() => throw new TestException());
+
+        r.IsOk.ShouldBeFalse();
         var e = r.error.ShouldBeOfType<ExceptionError>();
         e.Exception.ShouldBeOfType<TestException>();
     }

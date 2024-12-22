@@ -1,30 +1,44 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
 
 namespace Rascal;
 
 /// <summary>
-/// A type which contains either a successful value or an error.
+/// A type which contains either an ok value or an error.
 /// </summary>
-/// <typeparam name="T">The type of a successful value.</typeparam>
+/// <typeparam name="T">The type of an ok value.</typeparam>
+[DebuggerTypeProxy(typeof(ResultDebugProxy<>))]
 public readonly partial struct Result<T>
 {
     internal readonly T? value;
     internal readonly Error? error;
 
-    internal Error Error => error ?? StringError.DefaultError;
+    /// <summary>
+    /// Same as <see cref="error"/> but returns <see cref="Error.DefaultValueError"/>
+    /// in case <see cref="error"/> is null. This is primarily meant as a fail-safe in case
+    /// the result is <see langword="default"/>.
+    /// </summary>
+    internal Error Error => error ?? Error.DefaultValueError;
 
     /// <summary>
-    /// Whether the result has a value or not.
+    /// Whether the result is ok.
     /// </summary>
-    public bool HasValue { get; }
+    public bool IsOk { get; }
 
     /// <summary>
-    /// Creates a new result with a successful value.
+    /// Whether the result is an error.
     /// </summary>
-    /// <param name="value">The successful value.</param>
+    /// <remarks>
+    /// This is always the inverse of <see cref="IsOk"/> but is more specific about intent.
+    /// </remarks>
+    public bool IsError => !IsOk;
+
+    /// <summary>
+    /// Creates a new result with an ok value.
+    /// </summary>
+    /// <param name="value">The ok value.</param>
     public Result(T value)
     {
-        HasValue = true;
+        IsOk = true;
         this.value = value;
         error = null;
     }
@@ -35,14 +49,17 @@ public readonly partial struct Result<T>
     /// <param name="error">The error of the result.</param>
     public Result(Error error)
     {
-        HasValue = false;
+        IsOk = false;
         value = default;
         this.error = error;
     }
 
+    /// <summary>
+    /// Gets a string representation of the result.
+    /// </summary>
     [Pure]
     public override string ToString() =>
-        HasValue
+        IsOk
             ? $"Ok {{ {value} }}"
-            : $"Error {{ {Error.Message} }}";
+            : $"Error {{ {Error} }}";
 }

@@ -40,7 +40,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBe(2);
     }
 
@@ -54,7 +54,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeFalse();
+        result.IsOk.ShouldBeFalse();
         result.error?.Message.ShouldBe("error");
     }
 
@@ -71,7 +71,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBe(2);
     }
     
@@ -88,7 +88,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeFalse();
+        result.IsOk.ShouldBeFalse();
         result.error?.Message.ShouldBe("error");
     }
     
@@ -105,7 +105,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBe(2);
     }
     
@@ -122,7 +122,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
         
-        result.HasValue.ShouldBeFalse();
+        result.IsOk.ShouldBeFalse();
         result.error?.Message.ShouldBe("error");
     }
 
@@ -165,7 +165,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
 
-        result.HasValue.ShouldBeTrue();
+        result.IsOk.ShouldBeTrue();
         result.value.ShouldBe(2);
     }
 
@@ -180,7 +180,7 @@ public class ResultConverterTests
 
         var result = JsonSerializer.Deserialize<Result<int>>(json, options);
 
-        result.HasValue.ShouldBeFalse();
+        result.IsOk.ShouldBeFalse();
         result.error?.Message.ShouldBe("error");
     }
 }

@@ -5,44 +5,69 @@ namespace Rascal;
 public readonly partial struct Result<T>
 {
     /// <summary>
-    /// Matches over the value or error of the result and returns another value.
+    /// Matches over the ok value or error of the result and returns another value.
     /// Can be conceptualized as an exhaustive <c>switch</c> expression matching
     /// all possible values of the type.
     /// </summary>
     /// <typeparam name="TResult">The type to return from the match.</typeparam>
-    /// <param name="ifValue">The function to apply to the
-    /// value of the result if it does contain a value.</param>
-    /// <param name="ifError">The function to apply to the
-    /// result's error if it does not contain a value.</param>
+    /// <param name="ifOk">The function to apply to the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to apply to the result's error if the result is an error.</param>
     /// <returns>The result of applying either
-    /// <paramref name="ifValue"/> or <paramref name="ifError"/>
-    /// on the value or error of the result.</returns>
+    /// <paramref name="ifOk"/> or <paramref name="ifError"/>
+    /// on the ok value or error of the result.</returns>
     [Pure]
-    public TResult Match<TResult>(Func<T, TResult> ifValue, Func<Error, TResult> ifError) =>
-        HasValue
-            ? ifValue(value!)
+    public TResult Match<TResult>(Func<T, TResult> ifOk, Func<Error, TResult> ifError) =>
+        IsOk
+            ? ifOk(value!)
             : ifError(Error);
 
     /// <summary>
-    /// Matches over the value or error of the result and invokes an effectful action onto the value or error.
-    /// Can be conceptualized as an exhaustive <c>switch</c> statement matching
-    /// all possible values of the type.
+    /// Matches over the ok value or error of the result and invokes an effect-ful action onto the ok value or error.
+    /// Can be conceptualized as an exhaustive <c>switch</c> statement matching all possible values of the type.
     /// </summary>
-    /// <param name="ifValue">The function to call with the
-    /// value of the result if it does contain a value.</param>
-    /// <param name="ifError">The function to call with the
-    /// result's error if it does not contain a value.</param>
-    public void Switch(Action<T> ifValue, Action<Error> ifError)
+    /// <param name="ifOk">The function to call with the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to call with the result's error if the result is an error.</param>
+    public void Switch(Action<T> ifOk, Action<Error> ifError)
     {
-        if (HasValue) ifValue(value!);
+        if (IsOk) ifOk(value!);
         else ifError(Error);
     }
 
     /// <summary>
-    /// Tries to get the value from the result.
+    /// Asynchronously matches over the ok value or error of the result and returns another value.
+    /// Can be conceptualized as an exhaustive <c>switch</c> expression matching
+    /// all possible values of the type.
     /// </summary>
-    /// <param name="value">The value of the result.</param>
-    /// <returns>Whether the result contains a value.</returns>
+    /// <typeparam name="TResult">The type to return from the match.</typeparam>
+    /// <param name="ifOk">The function to apply to the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to apply to the result's error if the result is an error.</param>
+    /// <returns>The result of applying either
+    /// <paramref name="ifOk"/> or <paramref name="ifError"/>
+    /// on the ok value or error of the result.</returns>
+    [Pure]
+    public async Task<TResult> MatchAsync<TResult>(Func<T, Task<TResult>> ifOk, Func<Error, Task<TResult>> ifError) =>
+        IsOk
+            ? await ifOk(value!)
+            : await ifError(Error);
+
+    /// <summary>
+    /// Asynchronously matches over the ok value or error of the result
+    /// and invokes an effect-ful action onto the ok value or error.
+    /// Can be conceptualized as an exhaustive <c>switch</c> statement matching all possible values of the type.
+    /// </summary>
+    /// <param name="ifOk">The function to call with the ok value of the result if the result is ok.</param>
+    /// <param name="ifError">The function to call with the result's error if the result is an error.</param>
+    public async Task SwitchAsync(Func<T, Task> ifOk, Func<Error, Task> ifError)
+    {
+        if (IsOk) await ifOk(value!);
+        else await ifError(Error);
+    }
+
+    /// <summary>
+    /// Tries to get the ok value from the result.
+    /// </summary>
+    /// <param name="value">The ok value of the result.</param>
+    /// <returns>Whether the result is ok.</returns>
     [Pure]
 #if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value)
@@ -51,15 +76,15 @@ public readonly partial struct Result<T>
 #endif
     {
         value = this.value!;
-        return HasValue;
+        return IsOk;
     }
 
     /// <summary>
-    /// Tries to get the value from the result.
+    /// Tries to get the ok value from the result.
     /// </summary>
-    /// <param name="value">The value of the result.</param>
+    /// <param name="value">The ok value of the result.</param>
     /// <param name="error">The error of the result.</param>
-    /// <returns>Whether the result contains a value.</returns>
+    /// <returns>Whether the result is ok.</returns>
     [Pure]
 #if NETCOREAPP
     public bool TryGetValue([MaybeNullWhen(false)] out T value, [MaybeNullWhen(true)] out Error error)
@@ -68,18 +93,18 @@ public readonly partial struct Result<T>
 #endif
     {
         value = this.value!;
-        error = !HasValue
+        error = !IsOk
             ? Error
             : null!;
         
-        return HasValue;
+        return IsOk;
     }
 
     /// <summary>
     /// Tries to get an error from the result.
     /// </summary>
     /// <param name="error">The error of the result.</param>
-    /// <returns>Whether the result contains an error.</returns>
+    /// <returns>Whether the result is an error.</returns>
     [Pure]
 #if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error)
@@ -87,19 +112,19 @@ public readonly partial struct Result<T>
     public bool TryGetError(out Error error)
 #endif
     {
-        error = !HasValue
+        error = !IsOk
             ? Error
             : null!;
 
-        return !HasValue;
+        return !IsOk;
     }
 
     /// <summary>
     /// Tries to get an error from the result.
     /// </summary>
     /// <param name="error">The error of the result.</param>
-    /// <param name="value">The value of the result.</param>
-    /// <returns>Whether the result contains an error.</returns>
+    /// <param name="value">The ok value of the result.</param>
+    /// <returns>Whether the result is an error.</returns>
     [Pure]
 #if NETCOREAPP
     public bool TryGetError([MaybeNullWhen(false)] out Error error, [MaybeNullWhen(true)] out T value)
@@ -107,61 +132,68 @@ public readonly partial struct Result<T>
     public bool TryGetError(out Error error, out T value)
 #endif
     {
-        error = !HasValue
+        error = !IsOk
             ? Error
             : null!;
         value = this.value!;
 
-        return !HasValue;
+        return !IsOk;
     }
 
     /// <summary>
-    /// Gets the value within the result,
-    /// or <see langword="default"/> if the result does not contain a value.
+    /// Gets the ok value of the result, or <see langword="default"/> if the result is an error.
     /// </summary>
     [Pure]
     public T? GetValueOrDefault() =>
-        HasValue
+        IsOk
             ? value
             : default;
 
     /// <summary>
-    /// Gets the value within the result,
-    /// or a default value if the result does not contain a value.
+    /// Gets the ok value of the result, or a default value if the result is an error.
     /// </summary>
-    /// <param name="default">The default value to return if the result does not contain a value.</param>
+    /// <param name="default">The default value to return if the result is an error.</param>
     [Pure]
-    public T GetValueOrDefault(T @default) =>
-        HasValue
+    public T GetValueOr(T @default) =>
+        IsOk
             ? value!
             : @default;
 
     /// <summary>
-    /// Gets the value within the result,
-    /// or a default value if the result does not contain a value.
+    /// Gets the ok value of the result, or a default value if the result is an error.
     /// </summary>
-    /// <param name="default">A function to get a default value to return
-    /// if the result does not contain a value.</param>
+    /// <param name="getDefault">A function to get a default value to return if the result is an error.</param>
     [Pure]
-    public T GetValueOrDefault(Func<T> getDefault) =>
-        HasValue
+    public T GetValueOr(Func<T> getDefault) =>
+        IsOk
             ? value!
             : getDefault();
 
     /// <summary>
-    /// Unwraps the value in the result.
-    /// Throws an <see cref="UnwrapException"/> if the result does not contain a value.
+    /// Gets the ok value of the result, or a default value if the result is an error.
+    /// </summary>
+    /// <param name="getValue">A function to get a value to return if the result is an error.</param>
+    /// <returns></returns>
+    [Pure]
+    public T GetValueOr(Func<Error, T> getValue) =>
+        IsOk
+            ? value!
+            : getValue(Error);
+
+    /// <summary>
+    /// Unwraps the ok value of the result.
+    /// Throws an <see cref="UnwrapException"/> if the result is an error.
     /// </summary>
     /// <remarks>
     /// This API is <b>unsafe</b> in the sense that it might intentionally throw an exception.
     /// Please only use this API if the caller knows without a reasonable shadow of a doubt
     /// that this operation is safe, or that an exception is acceptable to be thrown.
     /// </remarks>
-    /// <returns>The value in the result.</returns>
-    /// <exception cref="UnwrapException">The result does not contain a value.</exception>
+    /// <returns>The ok value of the result.</returns>
+    /// <exception cref="UnwrapException">The result is not ok.</exception>
     [Pure]
     public T Unwrap() =>
-        HasValue
+        IsOk
             ? value!
             : throw new UnwrapException();
 
@@ -171,21 +203,21 @@ public readonly partial struct Result<T>
         result.Unwrap();
 
     /// <summary>
-    /// Expects the result to contain a value, throwing an <see cref="UnwrapException"/>
-    /// with a specified message if the result does not contain a value.
+    /// Expects the result to be ok, throwing an <see cref="UnwrapException"/>
+    /// with a specified message if the result is an error.
     /// </summary>
     /// <param name="error">The message to construct the <see cref="UnwrapException"/>
-    /// to throw using if the result does not contain a value.</param>
+    /// to throw using if the result is an error.</param>
     /// <remarks>
     /// This API is <b>unsafe</b> in the sense that it might intentionally throw an exception.
     /// Please only use this API if the caller knows without a reasonable shadow of a doubt
     /// that this operation is safe, or that an exception is acceptable to be thrown.
     /// </remarks>
-    /// <returns>The value in the result.</returns>
-    /// <exception cref="UnwrapException">The result does not contain a value.</exception>
+    /// <returns>The ok value of the result.</returns>
+    /// <exception cref="UnwrapException">The result is an error.</exception>
     [Pure]
     public T Expect(string error) =>
-        HasValue
+        IsOk
             ? value!
             : throw new UnwrapException(error);
 }

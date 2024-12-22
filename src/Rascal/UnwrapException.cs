@@ -1,8 +1,7 @@
 namespace Rascal;
 
 /// <summary>
-/// The exception thrown when a <see cref="Result{T}"/>
-/// is attempted to be unwraped but does not contain a value.
+/// The exception thrown when a <see cref="Result{T}"/> is attempted to be unwrapped but is an error.
 /// </summary>
 public sealed class UnwrapException : Exception
 {

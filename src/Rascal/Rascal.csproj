@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Package properties -->
@@ -16,32 +12,32 @@
   <!-- Package metadata -->
   <PropertyGroup>
     <PackageId>Rascal</PackageId>
-    <PackageVersion>1.0.0-pre</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Description>
       A simple and lightweight result type implementation for C#.
     </Description>
-    <Tags>result monad functional utility</Tags>
-    <Authors>thinker227</Authors>
-    <Copyright>thinker227 2023</Copyright>
-    <License>LICENSE.txt</License>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/thinker227/Rascal</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <PackageTags>result monad functional utility</PackageTags>
+    <PackageReadmeFile>package-readme.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- Include additional files -->
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
-    <None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
+    <None Include="./package-readme.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
   <!-- Polyfills for netstandard2.0 -->
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageReference Include="PolySharp" Version="1.14.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Include the analysis project into the package without adding it as a dependency -->
+    <ProjectReference Include="../Rascal.Analysis/Rascal.Analysis.csproj" PrivateAssets="true" ReferenceOutputAssembly="false" />
+    <None Include="../Rascal.Analysis/bin/$(Configuration)/netstandard2.0/Rascal.Analysis.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>

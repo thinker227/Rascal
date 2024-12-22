@@ -1,0 +1,53 @@
+{
+    "metadata": [
+        {
+            "src": [
+                {
+                    "src": "../src",
+                    "files": [
+                        "Rascal/Rascal.csproj"
+                    ]
+                }
+            ],
+            "dest": "api"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "**/*.{md,yml}"
+                ],
+                "exclude": [
+                    "apidocs/**.md",
+                    "_site/**"
+                ]
+            }
+        ],
+        "resource": [
+            {
+                "files": [
+                    "images/**"
+                ]
+            }
+        ],
+        "overwrite": [
+            {
+                "files": [
+                    "apidocs/**.md"
+                ]
+            }
+        ],
+        "output": "_site",
+        "template": [
+            "default",
+            "modern"
+        ],
+        "globalMetadata": {
+            "_appName": "Rascal Docs",
+            "_appTitle": "Rascal Docs",
+            "_enableSearch": false,
+            "pdf": false
+        }
+    }
+}
