@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rascal\Rascal.csproj" />
+    <ProjectReference Include="..\Rascal.Json\Rascal.Json.csproj"/>
     <ProjectReference Include="..\Rascal.Analysis\Rascal.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
