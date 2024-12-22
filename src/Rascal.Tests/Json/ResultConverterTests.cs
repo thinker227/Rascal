@@ -13,7 +13,7 @@ public class ResultConverterTests
         var json = JsonSerializer.Serialize(result, options);
 
         json.ShouldBe("""
-        {"ok":2}
+        {"Ok":2}
         """);
     }
 
@@ -26,6 +26,38 @@ public class ResultConverterTests
         var json = JsonSerializer.Serialize(result, options);
 
         json.ShouldBe("""
+        {"Err":"error"}
+        """);
+    }
+
+    [Fact]
+    public void SerializedOkWithPropertyNamingPolicy()
+    {
+        var result = Ok(2);
+        var options = new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        }.AddResultConverters();
+        
+        var json = JsonSerializer.Serialize(result, options);
+
+        json.ShouldBe("""
+        {"ok":2}
+        """);
+    }
+
+    [Fact]
+    public void SerializesErrWithPropertyNamingPolicy()
+    {
+        var result = Err<int>("error");
+        var options = new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        }.AddResultConverters();
+        
+        var json = JsonSerializer.Serialize(result, options);
+
+        json.ShouldBe("""
         {"err":"error"}
         """);
     }
@@ -34,7 +66,7 @@ public class ResultConverterTests
     public void DeserializesOk()
     {
         var json = """
-        {"ok":2}
+        {"Ok":2}
         """;
         var options = new JsonSerializerOptions().AddResultConverters();
 
@@ -48,7 +80,7 @@ public class ResultConverterTests
     public void DeserializesErr()
     {
         var json = """
-        {"err":"error"}
+        {"Err":"error"}
         """;
         var options = new JsonSerializerOptions().AddResultConverters();
 
@@ -62,7 +94,7 @@ public class ResultConverterTests
     public void DeserializesOkPreferred()
     {
         var json = """
-        {"err":"error","ok":2}
+        {"Err":"error","Ok":2}
         """;
         var options = new JsonSerializerOptions().AddResultConverters(o => o with
         {
@@ -79,7 +111,7 @@ public class ResultConverterTests
     public void DeserializesErrPreferred()
     {
         var json = """
-        {"ok":2,"err":"error"}
+        {"Ok":2,"Err":"error"}
         """;
         var options = new JsonSerializerOptions().AddResultConverters(o => o with
         {
@@ -96,7 +128,7 @@ public class ResultConverterTests
     public void DeserializesOkFirst()
     {
         var json = """
-        {"ok":2,"err":"error"}
+        {"Ok":2,"Err":"error"}
         """;
         var options = new JsonSerializerOptions().AddResultConverters(o => o with
         {
@@ -113,7 +145,7 @@ public class ResultConverterTests
     public void DeserializesErrFirst()
     {
         var json = """
-        {"err":"error","ok":2}
+        {"Err":"error","Ok":2}
         """;
         var options = new JsonSerializerOptions().AddResultConverters(o => o with
         {

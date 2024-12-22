@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Rascal.Json;
@@ -23,13 +24,19 @@ public readonly struct ResultConverterOptions
 
     /// <summary>
     /// The name for the property which ok values are written to and read from.
+    /// The default name is <c>Ok</c>.
     /// </summary>
-    public string OkPropertyName { get; init; } = "ok";
+    /// <remarks>
+    /// When serialized, this name will be converted to the property naming policy specified by
+    /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/> in the serialization options.
+    /// </remarks>
+    public string OkPropertyName { get; init; } = "Ok";
 
     /// <summary>
     /// The name for the property which error values are written to and read from.
+    /// The default name is <c>Err</c>.
     /// </summary>
-    public string ErrorPropertyName { get; init; } = "err";
+    public string ErrorPropertyName { get; init; } = "Err";
 
     /// <summary>
     /// Sets what to prefer when deserializing a JSON object where both <c>ok</c> and <c>err</c> are present.

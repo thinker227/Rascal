@@ -121,13 +121,19 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
             x =>
             {
                 var converter = (JsonConverter<T>)options.GetConverter(typeof(T));
-                
-                writer.WritePropertyName(converterOptions.OkPropertyName);
+
+                var okName = options.PropertyNamingPolicy is not null
+                    ? options.PropertyNamingPolicy.ConvertName(converterOptions.OkPropertyName)
+                    : converterOptions.OkPropertyName;
+                writer.WritePropertyName(okName);
                 converter.Write(writer, x, options);
             },
             e =>
             {
-                writer.WritePropertyName(converterOptions.ErrorPropertyName);
+                var errorName = options.PropertyNamingPolicy is not null
+                    ? options.PropertyNamingPolicy.ConvertName(converterOptions.ErrorPropertyName)
+                    : converterOptions.ErrorPropertyName;
+                writer.WritePropertyName(errorName);
                 writer.WriteStringValue(e.Message);
             }
         );
