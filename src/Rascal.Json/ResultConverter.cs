@@ -97,23 +97,21 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         if (reader.TokenType != JsonTokenType.EndObject)
             throw new JsonException("Expected '}'.");
 
-        var result = (readOk, readErr) switch
+        return (readOk, readErr) switch
         {
-            (true, false) => new Result<T>(ok!),
-            (false, true) => new Result<T>(err!),
+            (true, false) => new(ok!),
+            (false, true) => new(err!),
             (true, true) => converterOptions.PropertyPreference switch
             {
-                ResultPropertyPreference.PreferOk => new Result<T>(ok!),
-                ResultPropertyPreference.PreferErr => new Result<T>(err!),
+                ResultPropertyPreference.PreferOk => new(ok!),
+                ResultPropertyPreference.PreferErr => new(err!),
                 ResultPropertyPreference.First => readOkFirst
-                    ? new Result<T>(ok!)
+                    ? new(ok!)
                     : new Result<T>(err!),
                 _ => throw new UnreachableException(),
             },
             _ => throw new UnreachableException(),
         };
-
-        return result;
 
         string GetExpectedPropertyMessage() =>
             options.PropertyNameCaseInsensitive
