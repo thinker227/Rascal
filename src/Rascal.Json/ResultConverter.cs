@@ -33,6 +33,9 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
 
         var okName = converterOptions.OkPropertyName;
         var errorName = converterOptions.ErrorPropertyName;
+        var comparison = options.PropertyNameCaseInsensitive
+            ? StringComparison.InvariantCultureIgnoreCase
+            : StringComparison.InvariantCulture;
 
         var ok = default(T);
         var readOk = false;
@@ -41,35 +44,37 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         var readErr = false;
 
         bool readOkFirst;
+
+        // This could potentially be done in a better way which doesn't allocate a string
+        // for the property name, since ReadOnlySpan<char>.Equals *does* support StringComparison.
+        var propertyName = reader.GetString()!;
+        reader.Read();
         
-        if (reader.ValueTextEquals(okName))
+        if (propertyName.Equals(okName, comparison))
         {
-            reader.Read();
-            
             ok = valueConverter.Read(ref reader, typeof(T), options);
             reader.Read();
             
             readOk = true;
             readOkFirst = true;
         }
-        else if (reader.ValueTextEquals(errorName))
+        else if (propertyName.Equals(errorName, comparison))
         {
-            reader.Read();
-            
             err = errorConverter.Read(ref reader, typeof(string), options);
             reader.Read();
             
             readErr = true;
             readOkFirst = false;
         }
-        else throw new JsonException($"Expected property '{okName}' or '{errorName}'.");
+        else throw new JsonException(GetExpectedPropertyMessage());
 
         if (reader.TokenType == JsonTokenType.PropertyName)
         {
-            if (reader.ValueTextEquals(converterOptions.OkPropertyName))
+            propertyName = reader.GetString()!;
+            reader.Read();
+            
+            if (propertyName.Equals(okName, comparison))
             {
-                reader.Read();
-                
                 if (readOk) throw new JsonException($"Duplicate '{okName}' properties.");
             
                 ok = valueConverter.Read(ref reader, typeof(T), options);
@@ -77,10 +82,8 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
                 
                 readOk = true;
             }
-            else if (reader.ValueTextEquals(errorName))
+            else if (propertyName.Equals(errorName, comparison))
             {
-                reader.Read();
-                
                 if (readErr) throw new JsonException($"Duplicate '{errorName}' properties.");
             
                 err = errorConverter.Read(ref reader, typeof(Error), options);
@@ -88,7 +91,7 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
                 
                 readErr = true;
             }
-            else throw new JsonException($"Expected property '{okName}' or '{errorName}'.");
+            else throw new JsonException(GetExpectedPropertyMessage());
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)
@@ -111,6 +114,11 @@ public sealed class ResultConverter<T>(ResultConverterOptions converterOptions) 
         };
 
         return result;
+
+        string GetExpectedPropertyMessage() =>
+            options.PropertyNameCaseInsensitive
+                ? $"Expected property '{okName}' or '{errorName}' (case-insensitive)."
+                : $"Expected property '{okName}' or '{errorName}'.";
     }
 
     public override void Write(Utf8JsonWriter writer, Result<T> value, JsonSerializerOptions options)

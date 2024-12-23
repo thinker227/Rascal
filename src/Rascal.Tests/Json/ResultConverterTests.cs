@@ -91,6 +91,40 @@ public class ResultConverterTests
     }
 
     [Fact]
+    public void DeserializesOkWithCaseInsensitive()
+    {
+        var json = """
+        {"ok":2}
+        """;
+        var options = new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        }.AddResultConverters();
+
+        var result = JsonSerializer.Deserialize<Result<int>>(json, options);
+        
+        result.IsOk.ShouldBeTrue();
+        result.value.ShouldBe(2);
+    }
+
+    [Fact]
+    public void DeserializesErrWithCaseInsensitive()
+    {
+        var json = """
+        {"Err":"error"}
+        """;
+        var options = new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        }.AddResultConverters();
+
+        var result = JsonSerializer.Deserialize<Result<int>>(json, options);
+        
+        result.IsOk.ShouldBeFalse();
+        result.error?.Message.ShouldBe("error");
+    }
+
+    [Fact]
     public void DeserializesOkPreferred()
     {
         var json = """
