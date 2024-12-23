@@ -11,7 +11,7 @@ namespace Rascal.Json;
 /// <remarks>
 /// This type should not itself be registered as a JSON converter
 /// because it is not general over all results, merely a single type.
-/// Instead use <see cref="JsonSerializerOptionsExtensions.AddResultConverters"/>
+/// Instead, use <see cref="JsonSerializerOptionsExtensions.AddResultConverters"/>
 /// to register converters for <see cref="Result{T}"/>.
 /// </remarks>
 /// <seealso cref="ResultConverterFactory"/>
