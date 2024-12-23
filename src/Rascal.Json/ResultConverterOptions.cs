@@ -27,8 +27,10 @@ public readonly struct ResultConverterOptions
     /// The default name is <c>Ok</c>.
     /// </summary>
     /// <remarks>
-    /// When serialized, this name will be converted to the property naming policy specified by
+    /// When serializing, this name will be converted to the property naming policy specified by
     /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/> in the serialization options.
+    /// It will also respect <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive"/>
+    /// when deserializing.
     /// </remarks>
     public string OkPropertyName { get; init; } = "Ok";
 
@@ -36,6 +38,12 @@ public readonly struct ResultConverterOptions
     /// The name for the property which error values are written to and read from.
     /// The default name is <c>Err</c>.
     /// </summary>
+    /// <remarks>
+    /// When serializing, this name will be converted to the property naming policy specified by
+    /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/> in the serialization options.
+    /// It will also respect <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive"/>
+    /// when deserializing.
+    /// </remarks>
     public string ErrorPropertyName { get; init; } = "Err";
 
     /// <summary>
@@ -56,16 +64,30 @@ public readonly struct ResultConverterOptions
 
     /// <summary>
     /// Sets the name for the property which ok values are written to and read from.
+    /// The default name is <c>Ok</c>.
     /// </summary>
     /// <param name="okPropertyName">The name to set.</param>
+    /// <remarks>
+    /// When serializing, this name will be converted to the property naming policy specified by
+    /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/> in the serialization options.
+    /// It will also respect <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive"/>
+    /// when deserializing.
+    /// </remarks>
     /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="OkPropertyName"/> set.</returns>
     public ResultConverterOptions WithOkPropertyName(string okPropertyName) =>
         this with { OkPropertyName = okPropertyName };
 
     /// <summary>
     /// Sets the name for the property which error values are written to and read from.
+    /// The default name is <c>Err</c>.
     /// </summary>
     /// <param name="errorPropertyName">The name to set.</param>
+    /// <remarks>
+    /// When serializing, this name will be converted to the property naming policy specified by
+    /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/> in the serialization options.
+    /// It will also respect <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive"/>
+    /// when deserializing.
+    /// </remarks>
     /// <returns>A new <see cref="ResultConverterOptions"/> with <see cref="ErrorPropertyName"/> set.</returns>
     public ResultConverterOptions WithErrorPropertyName(string errorPropertyName) =>
         this with { ErrorPropertyName = errorPropertyName };
